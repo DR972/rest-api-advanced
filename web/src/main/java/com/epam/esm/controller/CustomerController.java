@@ -1,0 +1,133 @@
+package com.epam.esm.controller;
+
+import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.hateoas.HateoasAdder;
+import com.epam.esm.service.CustomerOrderService;
+import com.epam.esm.service.CustomerService;
+import com.epam.esm.dto.CustomerDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import java.util.List;
+
+@RestController
+@RequestMapping("/customers")
+@Validated
+public class CustomerController {
+    private static final String ROWS = "rows";
+    private static final String PAGE_NUMBER = "pageNumber";
+    /**
+     * TagService tagService.
+     */
+    private final CustomerService customerService;
+    private final CustomerOrderService customerOrderService;
+    private final HateoasAdder<CustomerDto> customerHateoasAdder;
+    private final HateoasAdder<CustomerOrderDto> orderHateoasAdder;
+
+    @Autowired
+    public CustomerController(CustomerService customerService, CustomerOrderService customerOrderService, HateoasAdder<CustomerDto> customerHateoasAdder,
+                              HateoasAdder<CustomerOrderDto> orderHateoasAdder) {
+        this.customerService = customerService;
+        this.customerOrderService = customerOrderService;
+        this.customerHateoasAdder = customerHateoasAdder;
+        this.orderHateoasAdder = orderHateoasAdder;
+    }
+
+    /**
+     * Method for getting TagDto by ID.
+     *
+     * @param id TagDto id
+     * @return TagDto
+     */
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDto getCustomerById(@PathVariable @Positive(message = "ex.customerIdPositive") long id) {
+        CustomerDto customerDto = customerService.findCustomerById(id);
+        customerHateoasAdder.addLinks(customerDto);
+        return customerDto;
+    }
+
+    /**
+     * Method for getting list of all TagDto objects.
+     *
+     * @return list of TagDto objects
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerDto> getCustomerList(@RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
+                                             @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
+        List<CustomerDto> customers = customerService.findListCustomers((pageNumber - 1) * rows, rows);
+        customers.forEach(customerHateoasAdder::addLinks);
+        return customers;
+    }
+
+    /**
+     * Method for saving new Tag.
+     * Annotated by {@link Validated} with parameters TagDto.OnCreate.class provides validation of the fields of the TagDto object when creating.
+     *
+     * @param customer CustomerDto
+     * @return created TagDto
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerDto createCustomer(@Valid @RequestBody CustomerDto customer) {
+        CustomerDto customerDto = customerService.createCustomer(customer);
+        customerHateoasAdder.addLinks(customerDto);
+        return customerDto;
+    }
+
+    /**
+     * Method for getting TagDto by ID.
+     *
+     * @param orderId TagDto id
+     * @return TagDto
+     */
+    @GetMapping("{customerId}/orders/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerOrderDto getCustomerOrderByCustomerIdAndOrderId(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
+                                                                   @PathVariable @Positive(message = "ex.customerOrderIdPositive") long orderId) {
+        CustomerOrderDto customerOrderDto = customerService.findCustomerOrderByCustomerIdAndOrderId(customerId, orderId);
+        orderHateoasAdder.addLinks(customerOrderDto);
+        return customerOrderDto;
+    }
+
+    /**
+     * Method for getting list of all TagDto objects.
+     *
+     * @return list of TagDto objects
+     */
+    @GetMapping("{customerId}/orders")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
+                                                       @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
+                                                       @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
+        List<CustomerOrderDto> customerOrders = customerService.findAllCustomerOrdersByCustomerId(customerId, (pageNumber - 1) * rows, rows);
+        customerOrders.forEach(orderHateoasAdder::addLinks);
+        return customerOrders;
+    }
+
+    /**
+     * Method for removing Tag by ID.
+     * <p>
+     * //     * @param id CustomerDto id
+     */
+    @PostMapping("{customerId}/orders")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerOrderDto createCustomerOrder(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
+                                                @Validated(CustomerOrderDto.OnCreate.class) @RequestBody CustomerOrderDto customerOrder) {
+        CustomerOrderDto customerOrderDto = customerOrderService.createCustomerOrder(customerId, customerOrder);
+        orderHateoasAdder.addLinks(customerOrderDto);
+        return customerOrderDto;
+    }
+}

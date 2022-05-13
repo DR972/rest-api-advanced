@@ -1,0 +1,76 @@
+package com.epam.esm.dao;
+
+import com.epam.esm.entity.BaseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.MultiValueMap;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The interface {@code Dao} describes abstract behavior for working with
+ * {@link com.epam.esm.dao.impl.AbstractDao} in database.
+ *
+ * @param <T> indicates that for this instantiation of the DAO, will be used this type of Entity implementation.
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
+@Repository
+public interface Dao<T extends BaseEntity<ID>, ID> {
+
+    /**
+     * The method finds objects T in the table 'T'.
+     * <p>
+     * //     * @param query  database query
+     *
+     * @param id array of parameters for the query
+     * @return T object
+     */
+    Optional<T> findEntityById(long id);
+
+    /**
+     * The method finds objects T in the table 'T'.
+     * <p>
+     * //     * @param query  database query
+     * //     * @param id array of parameters for the query
+     *
+     * @return T object
+     */
+    Optional<T> findEntityByName(String name);
+
+    /**
+     * The method finds all T objects in the table `T`.
+     * <p>
+     * //     * @param query  database query
+     *
+     * @param params array of parameters for the query
+     * @return list of T objects
+     */
+    List<T> findListEntities(MultiValueMap<String, String> params, int pageNumber, int rows);
+
+    /**
+     * The method performs the operation of saving the object T in the table 'T'.
+     * <p>
+     * //     * @param query  database query
+     * //     * @param params array of parameters for the query
+     *
+     * @return the value of the key of the object T in the table 'T'
+     */
+    T createEntity(T t);
+
+    /**
+     * The method performs various operations (update and delete) on the object T in the table 'T'.
+     * <p>
+     * //     * @param query  database query
+     * //     * @param params array of parameters for the query
+     */
+    T updateEntity(T t);
+
+    /**
+     * The method performs various operations (update and delete) on the object T in the table 'T'.
+     * <p>
+     * //     * @param query  database query
+     * //     * @param params array of parameters for the query
+     */
+    void deleteEntity(T t);
+}
