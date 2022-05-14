@@ -14,7 +14,6 @@ import java.util.List;
  */
 @Repository
 public interface TagDao extends Dao<Tag, Long> {
-    void createNewTag(String tagName);
 
     List<Tag> findListTags(int pageNumber, int rows);
 

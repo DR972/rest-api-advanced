@@ -25,14 +25,6 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
     }
 
     @Override
-    public void createNewTag(String tagName) {
-        String query = "INSERT INTO tag (name)  SELECT :name WHERE NOT EXISTS (SELECT name FROM tag WHERE name = :name)";
-        entityManager.unwrap(Session.class).createNativeQuery(query, Tag.class)
-                .setParameter("name", tagName)
-                .executeUpdate();
-    }
-
-    @Override
     public List<Tag> findListTags(int pageNumber, int rows) {
         String query = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer in " +
                 "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o on c.id = o.customer GROUP BY c.id " +

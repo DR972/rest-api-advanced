@@ -107,6 +107,17 @@ public class GiftCertificate extends BaseEntity<Long> {
         this.tags = tags;
     }
 
+    public GiftCertificate(String name, String description, BigDecimal price, int duration, LocalDateTime createDate,
+                           LocalDateTime lastUpdateDate, List<Tag> tags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
+
     /**
      * The constructor creates a GiftCertificate object
      *

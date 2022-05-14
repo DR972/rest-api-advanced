@@ -30,7 +30,7 @@ public abstract class BaseEntity<ID> extends RepresentationModel<BaseEntity<ID>>
      */
     @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected ID id;
 
     @Column(name = "operation")

@@ -1,8 +1,10 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.mapper.TagMapper;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.service.DateHandler;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
@@ -35,10 +37,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     private final GiftCertificateDao certificateDao;
     /**
-     * TagDao tagDao.
-     */
-    private final TagDao tagDao;
-    /**
      * DateHandler dateHandler.
      */
     private final DateHandler dateHandler;
@@ -48,25 +46,27 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagService tagService;
 
     private final GiftCertificateMapper certificateMapper;
+    private final TagMapper tagMapper;
+
 
     /**
      * The constructor creates a GiftCertificateServiceImpl object
-     *
-     * @param validator      SortTypeValidator
+     *  @param validator      SortTypeValidator
      * @param certificateDao GiftCertificateDao certificateDao
      *                       //     * @param certificateTagDao       GiftCertificateTagDao certificateTagDao
-     * @param tagDao         TagDao tagDao
+//     * @param tagDao         TagDao tagDao
      * @param dateHandler    DateHandler dateHandler
+//     * @param tagMapper
      */
     @Autowired
-    public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler,
-                                      TagService tagService, GiftCertificateMapper certificateMapper) {
+    public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, DateHandler dateHandler,
+                                      TagService tagService, GiftCertificateMapper certificateMapper, TagMapper tagMapper) {
         this.validator = validator;
         this.certificateDao = certificateDao;
-        this.tagDao = tagDao;
         this.dateHandler = dateHandler;
         this.tagService = tagService;
         this.certificateMapper = certificateMapper;
+        this.tagMapper = tagMapper;
     }
 
 
@@ -86,15 +86,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto createCertificate(GiftCertificateDto certificateDto) {
-        certificateDto.setCreateDate(dateHandler.getCurrentDate());
-        certificateDto.setLastUpdateDate(dateHandler.getCurrentDate());
-
-        GiftCertificate certificate = certificateMapper.convertToEntity(certificateDto);
-        certificate.setTags(certificateDto.getTags().stream().map(t -> {
-            tagDao.createNewTag(t.getName());
-            return tagService.findTagByName(t.getName());
-        }).collect(Collectors.toList()));
-        return certificateMapper.convertToDto(certificateDao.createEntity(certificate));
+        GiftCertificateDto createdCertificate = certificateMapper.convertToDto(certificateDao.createEntity(
+                new GiftCertificate(certificateDto.getName(), certificateDto.getDescription(), certificateDto.getPrice(), certificateDto.getDuration(),
+                        dateHandler.getCurrentDate(), dateHandler.getCurrentDate(), createListTags(certificateDto.getTags()))));
+        createdCertificate.setTags(createdCertificate.getTags().stream().map(t -> tagMapper.convertToDto(tagService.findTagByName(t.getName()))).collect(Collectors.toList()));
+        return createdCertificate;
     }
 
     @Override
@@ -104,11 +100,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         certificateMapper.updateGiftCertificateFromDto(certificateDto, certificate);
         certificate.setLastUpdateDate(dateHandler.getCurrentDate());
         certificate.setId(id);
-        certificate.setTags(certificateDto.getTags().stream().map(t -> {
-            tagDao.createNewTag(t.getName());
-            return tagService.findTagByName(t.getName());
-        }).collect(Collectors.toList()));
-        return certificateMapper.convertToDto(certificateDao.updateEntity(certificate));
+        certificate.setTags(createListTags(certificateDto.getTags()));
+        GiftCertificateDto updatedCertificate = certificateMapper.convertToDto(certificateDao.updateEntity(certificate));
+        updatedCertificate.setTags(updatedCertificate.getTags().stream().map(t -> tagMapper.convertToDto(tagService.findTagByName(t.getName()))).collect(Collectors.toList()));
+        return updatedCertificate;
     }
 
     @Override
@@ -116,5 +111,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void deleteCertificate(long id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateDao.deleteEntity(certificate);
+    }
+
+    private List<Tag> createListTags(List<TagDto> tags) {
+        return tags.stream().map(t -> {
+            if (tagService.findTagByName(t.getName()).getName() == null) {
+                return new Tag(t.getName());
+            } else {
+                return tagService.findTagByName(t.getName());
+            }
+        }).collect(Collectors.toList());
     }
 }

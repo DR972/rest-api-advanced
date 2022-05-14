@@ -1,8 +1,8 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
+import com.epam.esm.dto.mapper.TagMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.DateHandler;
@@ -46,7 +46,6 @@ class GiftCertificateServiceImplTest {
     private static final String RIDING = "riding";
     private static final String VISIT = "visit";
     private static final String REST = "rest";
-    private static final String NEW = "new";
     private static final LocalDateTime DATE_TIME = LocalDateTime.parse("2022-05-01T00:00:00.001");
 
     private static final GiftCertificate GIFT_CERTIFICATE_1 = new GiftCertificate(1, "ATV riding",
@@ -78,7 +77,7 @@ class GiftCertificateServiceImplTest {
             LocalDateTime.parse("2022-03-14T14:15:13.257"), Arrays.asList(new Tag(1, "rest"), new Tag(2, "nature"), new Tag(11, "flight")));
 
     private static final GiftCertificate GIFT_CERTIFICATE_8 = new GiftCertificate("new GiftCertificate",
-            "new description", new BigDecimal("10"), 10, Arrays.asList(new Tag("rest"), new Tag("nature"), new Tag("new")));
+            "new description", new BigDecimal("10"), 10, LocalDateTime.parse("2022-05-01T00:00:00.001"), LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new Tag("rest"), new Tag("nature"), new Tag("new")));
 
     private static final GiftCertificate GIFT_CERTIFICATE_9 = new GiftCertificate(5, null,
             "Description shopping at the tool store", null, 10, null,
@@ -118,7 +117,7 @@ class GiftCertificateServiceImplTest {
             LocalDateTime.parse("2022-03-14T14:15:13.257"), Arrays.asList(new TagDto(1, "rest"), new TagDto(2, "nature"), new TagDto(11, "flight")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_8 = new GiftCertificateDto("new GiftCertificate",
-            "new description", new BigDecimal("10"), 10, Arrays.asList(new TagDto("rest"), new TagDto("nature"), new TagDto("new")));
+            "new description", new BigDecimal("10"), 10, LocalDateTime.parse("2022-05-01T00:00:00.001"), LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("rest"), new TagDto("nature"), new TagDto("new")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_9 = new GiftCertificateDto(5, null,
             "Description shopping at the tool store", null, 10, null,
@@ -131,8 +130,6 @@ class GiftCertificateServiceImplTest {
     @Mock
     private GiftCertificateDao certificateDao = mock(GiftCertificateDao.class);
     @Mock
-    private TagDao tagDao = mock(TagDao.class);
-    @Mock
     private TagService tagService = mock(TagService.class);
     @Mock
     private SortTypeValidator validator = mock(SortTypeValidator.class);
@@ -140,6 +137,8 @@ class GiftCertificateServiceImplTest {
     private DateHandler dateHandler = mock(DateHandler.class);
     @Mock
     private GiftCertificateMapper certificateMapper = mock(GiftCertificateMapper.class);
+    @Mock
+    private TagMapper tagMapper = mock(TagMapper.class);
     @InjectMocks
     private GiftCertificateServiceImpl certificateServiceImpl;
 
@@ -204,15 +203,15 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void createCertificateShouldReturnResult() {
-        when(certificateMapper.convertToEntity(GIFT_CERTIFICATE_DTO_8)).thenReturn(GIFT_CERTIFICATE_8);
         when(dateHandler.getCurrentDate()).thenReturn(DATE_TIME);
-        certificateServiceImpl.createCertificate(GIFT_CERTIFICATE_DTO_8);
         IntStream.range(0, GIFT_CERTIFICATE_8.getTags().size()).forEach(i ->
                 when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_8.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_8.getTags().get(i)));
-        verify(certificateDao, times(1)).createEntity(GIFT_CERTIFICATE_8);
-        verify(tagDao, times(1)).createNewTag(NEW);
+        IntStream.range(0, GIFT_CERTIFICATE_8.getTags().size()).forEach(i ->
+                when(tagMapper.convertToDto(GIFT_CERTIFICATE_8.getTags().get(i))).thenReturn(GIFT_CERTIFICATE_DTO_8.getTags().get(i)));
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_DTO_8);
         when(certificateDao.createEntity(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_8);
+        certificateServiceImpl.createCertificate(GIFT_CERTIFICATE_DTO_8);
+        verify(certificateDao, times(1)).createEntity(GIFT_CERTIFICATE_8);
         assertEquals(GIFT_CERTIFICATE_DTO_8, certificateServiceImpl.createCertificate(GIFT_CERTIFICATE_DTO_8));
     }
 
@@ -225,6 +224,9 @@ class GiftCertificateServiceImplTest {
 
         IntStream.range(0, GIFT_CERTIFICATE_DTO_9.getTags().size()).forEach(i ->
                 when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_9.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_9.getTags().get(i)));
+        IntStream.range(0, GIFT_CERTIFICATE_9.getTags().size()).forEach(i ->
+                when(tagMapper.convertToDto(GIFT_CERTIFICATE_9.getTags().get(i))).thenReturn(GIFT_CERTIFICATE_DTO_9.getTags().get(i)));
+
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_5_NEW)).thenReturn(GIFT_CERTIFICATE_DTO_5_NEW);
         when(certificateDao.updateEntity(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_5_NEW);
         certificateServiceImpl.updateCertificate(GIFT_CERTIFICATE_DTO_9, 5);
