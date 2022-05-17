@@ -19,14 +19,20 @@ import java.util.List;
  */
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> implements GiftCertificateDao {
+    /**
+     * EntityManager entityManager.
+     */
     @PersistenceContext
     protected EntityManager entityManager;
+    /**
+     * queryBuilderForGiftCertificate QueryBuilderForGiftCertificate.
+     */
     private final QueryBuilderForGiftCertificate queryBuilderForGiftCertificate;
 
     /**
      * The constructor creates an GiftCertificateDaoImpl object
-     * <p>
-     * //     * @param jdbcTemplate JdbcTemplate
+     *
+     * @param queryBuilderForGiftCertificate QueryBuilderForGiftCertificate
      */
     protected GiftCertificateDaoImpl(QueryBuilderForGiftCertificate queryBuilderForGiftCertificate) {
         super(GiftCertificate.class);

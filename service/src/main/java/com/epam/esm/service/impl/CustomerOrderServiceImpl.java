@@ -18,14 +18,45 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The class {@code CustomerOrderServiceImpl} is implementation of interface {@link CustomerOrderService}
+ * and provides logic to work with {@link com.epam.esm.entity.CustomerOrder}.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @Service
 public class CustomerOrderServiceImpl implements CustomerOrderService {
+    /**
+     * CustomerOrderDao customerOrderDao.
+     */
     private final CustomerOrderDao customerOrderDao;
+    /**
+     * CustomerOrderMapper customerOrderMapper.
+     */
     private final CustomerOrderMapper customerOrderMapper;
+    /**
+     * DateHandler dateHandler.
+     */
     private final DateHandler dateHandler;
+    /**
+     * GiftCertificateService certificateService.
+     */
     private final GiftCertificateService certificateService;
+    /**
+     * CustomerService customerService.
+     */
     private final CustomerService customerService;
 
+    /**
+     * The constructor creates a CustomerOrderServiceImpl object
+     *
+     * @param customerOrderDao    CustomerOrderDao customerOrderDao
+     * @param customerOrderMapper CustomerOrderMapper customerOrderMapper
+     * @param dateHandler         DateHandler dateHandler
+     * @param certificateService  GiftCertificateService certificateService
+     * @param customerService     CustomerService customerService
+     */
     @Autowired
     public CustomerOrderServiceImpl(CustomerOrderDao customerOrderDao, CustomerOrderMapper customerOrderMapper, DateHandler dateHandler,
                                     GiftCertificateService certificateService, CustomerService customerService) {

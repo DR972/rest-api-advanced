@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The class {@code IdentifiableValidator} provides method to Sorting Type validate.
+ * The class {@code SortTypeValidator} provides method to Sorting Type validate.
  *
  * @author Dzmitry Rozmysl
  * @version 1.0
@@ -22,10 +22,9 @@ public class SortTypeValidator {
     private static final String ID = "id";
 
     /**
-     * Validate type of sort.
-     * <p>
-     * //     * @param sortType sort type string type
-     * //     * @param er       the object to which the validation results will be written
+     * This method validate type of sort.
+     *
+     * @param types List<String> types
      */
     public void validateSortType(List<String> types) {
         List<String> fields = Arrays.stream(GiftCertificate.class.getDeclaredFields()).map(Field::getName)

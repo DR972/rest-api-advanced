@@ -17,9 +17,15 @@ import java.util.List;
  */
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
+    /**
+     * EntityManager entityManager.
+     */
     @PersistenceContext
     protected EntityManager entityManager;
 
+    /**
+     * The constructor creates an TagDaoImpl object
+     */
     public TagDaoImpl() {
         super(Tag.class);
     }

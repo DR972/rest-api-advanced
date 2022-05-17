@@ -33,6 +33,9 @@ public class Tag extends BaseEntity<Long> {
      */
     private String name;
 
+    /**
+     * List<GiftCertificate> giftCertificates.
+     */
     @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
     private List<GiftCertificate> giftCertificates = new ArrayList<>();
 
@@ -47,10 +50,20 @@ public class Tag extends BaseEntity<Long> {
         this.name = name;
     }
 
+    /**
+     * The constructor creates a Tag object
+     *
+     * @param id long id
+     */
     public Tag(long id) {
         super(id);
     }
 
+    /**
+     * The constructor creates a Tag object
+     *
+     * @param name String name
+     */
     public Tag(String name) {
         this.name = name;
     }

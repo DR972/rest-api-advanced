@@ -105,6 +105,17 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
         this.tags = tags;
     }
 
+    /**
+     * The constructor creates a GiftCertificateDto object
+     *
+     * @param name           String name
+     * @param description    String description
+     * @param price          BigDecimal price
+     * @param duration       int duration
+     * @param createDate     LocalDateTime createDate
+     * @param lastUpdateDate LocalDateTime lastUpdateDate
+     * @param tags           List<Tag> tags
+     */
     public GiftCertificateDto(String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<TagDto> tags) {
         this.name = name;
         this.description = description;

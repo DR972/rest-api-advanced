@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+/**
+ * The class {@code Customer} represents Customer entity.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -22,7 +28,7 @@ import java.util.StringJoiner;
 @AllArgsConstructor
 public class Customer extends BaseEntity<Long> {
     /**
-     * Username.
+     * String name.
      */
     private String name;
     /**
@@ -31,12 +37,24 @@ public class Customer extends BaseEntity<Long> {
     @OneToMany(mappedBy = "customer")
     private List<CustomerOrder> customerOrders = new ArrayList<>();
 
+    /**
+     * The constructor creates a Customer object
+     *
+     * @param id             long id
+     * @param name           String name
+     * @param customerOrders List<CustomerOrder> customerOrders
+     */
     public Customer(long id, String name, List<CustomerOrder> customerOrders) {
         super(id);
         this.name = name;
         this.customerOrders = customerOrders;
     }
 
+    /**
+     * The constructor creates a Customer object
+     *
+     * @param id long id
+     */
     public Customer(long id) {
         super(id);
     }

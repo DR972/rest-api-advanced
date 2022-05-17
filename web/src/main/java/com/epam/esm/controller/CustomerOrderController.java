@@ -16,6 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+/**
+ * Class {@code CustomerOrderController} is an endpoint of the API which allows you to perform operations on Customer Orders.
+ * Annotated by {@link RestController} without parameters to provide an answer in application/json.
+ * Annotated by {@link RequestMapping} with parameter value = "/orders".
+ * Annotated by {@link Validated} without parameters  provides checking of constraints in method parameters.
+ * So that {@code TagController} is accessed by sending request to /orders.
+ *
+ * @author Dzmitry Rozmysl
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/orders")
 @Validated
@@ -23,11 +33,20 @@ public class CustomerOrderController {
     private static final String ROWS = "rows";
     private static final String PAGE_NUMBER = "pageNumber";
     /**
-     * TagService tagService.
+     * CustomerOrderService customerOrderService.
      */
     private final CustomerOrderService customerOrderService;
+    /**
+     * HateoasAdder<CustomerOrderDto> hateoasAdder.
+     */
     private final HateoasAdder<CustomerOrderDto> hateoasAdder;
 
+    /**
+     * The constructor creates a CustomerOrderController object
+     *
+     * @param customerOrderService CustomerOrderService customerOrderService
+     * @param hateoasAdder         HateoasAdder<CustomerOrderDto> hateoasAdder
+     */
     @Autowired
     public CustomerOrderController(CustomerOrderService customerOrderService, HateoasAdder<CustomerOrderDto> hateoasAdder) {
         this.customerOrderService = customerOrderService;
@@ -36,10 +55,10 @@ public class CustomerOrderController {
 
 
     /**
-     * Method for getting TagDto by ID.
+     * Method for getting CustomerOrderDto by ID.
      *
-     * @param id TagDto id
-     * @return TagDto
+     * @param id CustomerOrderDto id
+     * @return CustomerOrderDto
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -51,9 +70,11 @@ public class CustomerOrderController {
 
 
     /**
-     * Method for getting list of all TagDto objects.
+     * Method for getting list of all CustomerOrderDto objects.
      *
-     * @return list of TagDto objects
+     * @param rows       number of lines per page (5 by default)
+     * @param pageNumber page number(default 0)
+     * @return list of CustomerOrderDto objects
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

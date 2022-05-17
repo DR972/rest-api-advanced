@@ -18,13 +18,40 @@ import org.springframework.util.LinkedMultiValueMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The class {@code CustomerServiceImpl} is implementation of interface {@link CustomerService}
+ * and provides logic to work with {@link com.epam.esm.entity.Customer}.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
+    /**
+     * CustomerMapper customerMapper.
+     */
     private final CustomerMapper customerMapper;
+    /**
+     * CustomerDao customerDao.
+     */
     private final CustomerDao customerDao;
+    /**
+     * CustomerOrderMapper customerOrderMapper.
+     */
     private final CustomerOrderMapper customerOrderMapper;
+    /**
+     * CustomerOrderDao customerOrderDao.
+     */
     private final CustomerOrderDao customerOrderDao;
 
+    /**
+     * The constructor creates a CustomerServiceImpl object
+     *
+     * @param customerMapper      CustomerMapper customerMapper
+     * @param customerDao         CustomerDao customerDao
+     * @param customerOrderMapper CustomerOrderMapper customerOrderMapper
+     * @param customerOrderDao    CustomerOrderDao customerOrderDao
+     */
     @Autowired
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerDao customerDao, CustomerOrderMapper customerOrderMapper, CustomerOrderDao customerOrderDao) {
         this.customerMapper = customerMapper;

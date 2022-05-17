@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CustomerDaoImpl extends AbstractDao<Customer, Long> implements CustomerDao {
 
+    /**
+     * The constructor creates an CustomerDaoImpl object
+     */
     protected CustomerDaoImpl() {
         super(Customer.class);
     }

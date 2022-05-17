@@ -5,11 +5,29 @@ import com.epam.esm.entity.Tag;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * The interface {@code CustomerMapper} generates code for mapping Tag entity and TagDto.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @Mapper(componentModel = "spring")
 public interface TagMapper {
     TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
+    /**
+     * The method for converting dto to entity.
+     *
+     * @param tag Tag tag
+     * @return converted dto
+     */
     TagDto convertToDto(Tag tag);
 
+    /**
+     * The method for converting entity to dto.
+     *
+     * @param dto TagDto dto
+     * @return converted entity
+     */
     Tag convertToEntity(TagDto dto);
 }

@@ -42,6 +42,9 @@ public class CertificateController {
      * GiftCertificateService certificateService.
      */
     private final GiftCertificateService certificateService;
+    /**
+     * HateoasAdder<GiftCertificateDto> hateoasAdder.
+     */
     private final HateoasAdder<GiftCertificateDto> hateoasAdder;
 
     /**

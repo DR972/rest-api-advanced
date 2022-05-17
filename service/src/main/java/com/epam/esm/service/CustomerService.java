@@ -6,6 +6,12 @@ import com.epam.esm.entity.Customer;
 
 import java.util.List;
 
+/**
+ * The interface {@code CustomerService} describes abstract behavior for working with {@link com.epam.esm.service.impl.CustomerServiceImpl} objects.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 public interface CustomerService {
     /**
      * The method finds Customer by id.
@@ -24,8 +30,10 @@ public interface CustomerService {
     Customer findCustomerByName(String name);
 
     /**
-     * The method finds all Customers.
+     * The method finds list Customers.
      *
+     * @param pageNumber int pageNumber
+     * @param rows       int rows
      * @return list of CustomerDto objects
      */
     List<CustomerDto> findListCustomers(int pageNumber, int rows);
@@ -39,22 +47,21 @@ public interface CustomerService {
     CustomerDto createCustomer(CustomerDto customerDto);
 
     /**
-     * The method performs the operation of updating Customer.
-     * <p>
-     * //     * @param customerDto new CustomerDto parameters
-     * //     * @param id          CustomerDto id
+     * The method finds Customer by Customer id and Order id.
      *
+     * @param customerId long customerId
+     * @param orderId    long orderId
      * @return CustomerDto object
      */
     CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(long customerId, long orderId);
 
     /**
-     * The method performs the operation of updating Customer.
-     * <p>
-     * //     * @param customerDto new CustomerDto parameters
-     * //     * @param id          CustomerDto id
+     * The method finds list Customer orders by Customer id.
      *
-     * @return CustomerDto object
+     * @param customerId long customerId
+     * @param pageNumber int pageNumber
+     * @param rows       int rows
+     * @return list of CustomerDto objects
      */
     List<CustomerOrderDto> findAllCustomerOrdersByCustomerId(long customerId, int pageNumber, int rows);
 }

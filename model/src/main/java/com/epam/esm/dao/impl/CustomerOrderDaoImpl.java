@@ -12,9 +12,15 @@ import java.util.Optional;
 
 @Repository
 public class CustomerOrderDaoImpl extends AbstractDao<CustomerOrder, Long> implements CustomerOrderDao {
+    /**
+     * EntityManager entityManager.
+     */
     @PersistenceContext
     protected EntityManager entityManager;
 
+    /**
+     * The constructor creates an CustomerOrderDaoImpl object
+     */
     protected CustomerOrderDaoImpl() {
         super(CustomerOrder.class);
     }

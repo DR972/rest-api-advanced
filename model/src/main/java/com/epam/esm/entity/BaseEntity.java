@@ -42,34 +42,60 @@ public abstract class BaseEntity<ID> extends RepresentationModel<BaseEntity<ID>>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected ID id;
 
+    /**
+     * String operation.
+     */
     @Column(name = "operation")
     protected String operation;
 
+    /**
+     * LocalDateTime timestamp.
+     */
     @Column(name = "timestamp")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     protected LocalDateTime timestamp;
 
+
+    /**
+     * The constructor creates a BaseEntity object
+     *
+     * @param id ID id
+     */
+    public BaseEntity(ID id) {
+    }
+
+    /**
+     * The method is called before creating an entity in the database.
+     */
     @PrePersist
     public void onPrePersist() {
         audit("INSERT");
     }
 
+    /**
+     * The method is called before saving entity changes to the database.
+     */
     @PreUpdate
     public void onPreUpdate() {
         audit("UPDATE");
     }
 
+    /**
+     * The method is called before deleting an entity in the database.
+     */
     @PreRemove
     public void onPreRemove() {
         audit("DELETE");
     }
 
+    /**
+     * The method performs an audit of database changes.
+     *
+     * @param operation String operation
+     */
     private void audit(String operation) {
         setOperation(operation);
         setTimestamp(LocalDateTime.now());
-    }
-
-    public BaseEntity(ID id) {
     }
 
     @Override

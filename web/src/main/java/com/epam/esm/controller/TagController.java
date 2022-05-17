@@ -41,6 +41,9 @@ public class TagController {
      * TagService tagService.
      */
     private final TagService tagService;
+    /**
+     * HateoasAdder<TagDto> hateoasAdder.
+     */
     private final HateoasAdder<TagDto> hateoasAdder;
 
     /**
@@ -73,6 +76,8 @@ public class TagController {
     /**
      * Method for getting list of all TagDto objects.
      *
+     * @param rows       number of lines per page (5 by default)
+     * @param pageNumber page number(default 0)
      * @return list of TagDto objects
      */
     @GetMapping
@@ -129,13 +134,11 @@ public class TagController {
 
 
     /**
-     * Method for updating Tag.
-     * Annotated by {@link Validated} with parameters TagDto.OnCreate.class provides validation of the fields of the TagDto object when updating.
-     * <p>
-     * //     * @param customer new CustomerDto parameters
-     * //     * @param id       CustomerDto id
+     * Method for getting list the most widely used tags Of Customers with the highest cost of all orders.
      *
-     * @return updated TagDto
+     * @param rows       number of lines per page (5 by default)
+     * @param pageNumber page number(default 0)
+     * @return list of TagDto objects
      */
 
     @GetMapping("/popular")

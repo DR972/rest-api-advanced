@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+/**
+ * The class {@code CustomerOrder} represents CustomerOrder entity.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -28,14 +34,23 @@ import java.util.StringJoiner;
 @Table(name = "customer_order")
 @Audited
 public class CustomerOrder extends BaseEntity<Long> {
+    /**
+     * customer.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    /**
+     * LocalDateTime purchaseTime.
+     */
     @Column(name = "purchase_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime purchaseTime;
 
+    /**
+     * List<GiftCertificate> giftCertificates.
+     */
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "customer_order_gift_certificate",
@@ -44,8 +59,20 @@ public class CustomerOrder extends BaseEntity<Long> {
     )
     private List<GiftCertificate> giftCertificates;
 
+    /**
+     * BigDecimal amount.
+     */
     private BigDecimal amount;
 
+    /**
+     * The constructor creates a CustomerOrder object
+     *
+     * @param id               long id
+     * @param customer         Customer
+     * @param purchaseTime     LocalDateTime purchaseTime
+     * @param giftCertificates ArrayList<GiftCertificate> giftCertificates
+     * @param amount           BigDecimal amount
+     */
     public CustomerOrder(long id, Customer customer, LocalDateTime purchaseTime, List<GiftCertificate> giftCertificates, BigDecimal amount) {
         super(id);
         this.customer = customer;
@@ -54,10 +81,23 @@ public class CustomerOrder extends BaseEntity<Long> {
         this.amount = amount;
     }
 
+    /**
+     * The constructor creates a CustomerOrder object
+     *
+     * @param id long id
+     */
     public CustomerOrder(long id) {
         super(id);
     }
 
+    /**
+     * The constructor creates a CustomerOrder object
+     *
+     * @param id               long id
+     * @param purchaseTime     LocalDateTime purchaseTime
+     * @param giftCertificates ArrayList<GiftCertificate> giftCertificates
+     * @param amount           BigDecimal amount
+     */
     public CustomerOrder(long id, LocalDateTime purchaseTime, ArrayList<GiftCertificate> giftCertificates, BigDecimal amount) {
         super(id);
         this.purchaseTime = purchaseTime;

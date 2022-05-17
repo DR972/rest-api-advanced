@@ -30,7 +30,7 @@ public interface TagService {
     Tag findTagByName(String name);
 
     /**
-     * The method finds all Tags.
+     * The method finds list Tags.
      *
      * @return list of TagDto objects
      */
@@ -62,9 +62,10 @@ public interface TagService {
 
 
     /**
-     * The method performs the operation of deleting Customer.
-     * <p>
-     * //     * @param id Customer id
+     * The method finds list the most widely used tags Of Customers with the highest cost of all orders.
+     *
+     * @param pageNumber int pageNumber
+     * @param rows       int rows
      */
     List<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 }

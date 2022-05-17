@@ -27,6 +27,11 @@ import javax.sql.DataSource;
 @Profile("test")
 public class DatabaseTestConfiguration {
 
+    /**
+     * This method creates a component that will be used as a data source.
+     *
+     * @return the ComboPooledDataSource
+     */
     @SneakyThrows
     @Bean
     public DataSource dataSource(@Value("${spring.datasource.driver}") String driver,
@@ -44,6 +49,11 @@ public class DatabaseTestConfiguration {
         return dataSource;
     }
 
+    /**
+     * This method creates a component that will be used as a session factory bean.
+     *
+     * @return the LocalSessionFactoryBean
+     */
     @Bean
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -52,6 +62,11 @@ public class DatabaseTestConfiguration {
         return sessionFactory;
     }
 
+    /**
+     * This method creates a component that will be used as a platform transaction manager.
+     *
+     * @return the PlatformTransactionManager
+     */
     @Bean
     public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager transactionManager

@@ -38,12 +38,10 @@ public class GiftCertificate extends BaseEntity<Long> {
      * GiftCertificate price.
      */
     private BigDecimal price;
-
     /**
      * GiftCertificate duration.
      */
     private Integer duration;
-
     /**
      * GiftCertificate createDate.
      */
@@ -69,6 +67,9 @@ public class GiftCertificate extends BaseEntity<Long> {
     )
     private List<Tag> tags = new ArrayList<>();
 
+    /**
+     * List<CustomerOrder> customerOrders
+     */
     @ManyToMany(mappedBy = "giftCertificates")
     private List<CustomerOrder> customerOrders;
 
@@ -95,6 +96,18 @@ public class GiftCertificate extends BaseEntity<Long> {
         this.lastUpdateDate = lastUpdateDate;
         this.tags = tags;
     }
+
+    /**
+     * The constructor creates a GiftCertificate object
+     *
+     * @param name           String name
+     * @param description    String description
+     * @param price          BigDecimal price
+     * @param duration       int duration
+     * @param createDate     LocalDateTime createDate
+     * @param lastUpdateDate LocalDateTime lastUpdateDate
+     * @param tags           List<Tag> tags
+     */
 
     public GiftCertificate(String name, String description, BigDecimal price, int duration, LocalDateTime createDate,
                            LocalDateTime lastUpdateDate, List<Tag> tags) {
@@ -123,6 +136,12 @@ public class GiftCertificate extends BaseEntity<Long> {
         this.duration = duration;
         this.tags = tags;
     }
+
+    /**
+     * The constructor creates a GiftCertificate object
+     *
+     * @param id long id
+     */
 
     public GiftCertificate(long id) {
         super(id);

@@ -23,10 +23,11 @@ public interface GiftCertificateService {
     GiftCertificateDto findCertificateById(long id);
 
     /**
-     * The method finds all GiftCertificates.
+     * The method finds list GiftCertificates.
      *
-     * @param params MultiValueMap<String, String> all request params
-     *               //     * @param queryParams array of parameters for the query
+     * @param params     MultiValueMap<String, String> all request params
+     * @param pageNumber int pageNumber
+     * @param rows       int rows
      * @return list of GiftCertificateDto objects
      */
     List<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows);

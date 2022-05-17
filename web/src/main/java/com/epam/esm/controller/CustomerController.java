@@ -21,6 +21,16 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+/**
+ * Class {@code CustomerController} is an endpoint of the API which allows you to perform operations on Customers.
+ * Annotated by {@link RestController} without parameters to provide an answer in application/json.
+ * Annotated by {@link RequestMapping} with parameter value = "/customers".
+ * Annotated by {@link Validated} without parameters  provides checking of constraints in method parameters.
+ * So that {@code CustomerController} is accessed by sending request to /customers.
+ *
+ * @author Dzmitry Rozmysl
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/customers")
 @Validated
@@ -28,13 +38,30 @@ public class CustomerController {
     private static final String ROWS = "rows";
     private static final String PAGE_NUMBER = "pageNumber";
     /**
-     * TagService tagService.
+     * CustomerService customerService.
      */
     private final CustomerService customerService;
+    /**
+     * CustomerOrderService customerOrderService.
+     */
     private final CustomerOrderService customerOrderService;
+    /**
+     * HateoasAdder<CustomerDto> customerHateoasAdder.
+     */
     private final HateoasAdder<CustomerDto> customerHateoasAdder;
+    /**
+     * HateoasAdder<CustomerOrderDto> orderHateoasAdder.
+     */
     private final HateoasAdder<CustomerOrderDto> orderHateoasAdder;
 
+    /**
+     * The constructor creates a CustomerController object
+     *
+     * @param customerService      CustomerService customerService
+     * @param customerOrderService CustomerOrderService customerOrderService
+     * @param customerHateoasAdder HateoasAdder<CustomerDto> customerHateoasAdder
+     * @param orderHateoasAdder    HateoasAdder<CustomerOrderDto> orderHateoasAdder
+     */
     @Autowired
     public CustomerController(CustomerService customerService, CustomerOrderService customerOrderService, HateoasAdder<CustomerDto> customerHateoasAdder,
                               HateoasAdder<CustomerOrderDto> orderHateoasAdder) {
@@ -45,10 +72,10 @@ public class CustomerController {
     }
 
     /**
-     * Method for getting TagDto by ID.
+     * Method for getting CustomerDto by ID.
      *
-     * @param id TagDto id
-     * @return TagDto
+     * @param id CustomerDto id
+     * @return CustomerDto
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -59,9 +86,11 @@ public class CustomerController {
     }
 
     /**
-     * Method for getting list of all TagDto objects.
+     * Method for getting list of all CustomerDto objects.
      *
-     * @return list of TagDto objects
+     * @param rows       number of lines per page (5 by default)
+     * @param pageNumber page number(default 0)
+     * @return list of CustomerDto objects
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -73,8 +102,8 @@ public class CustomerController {
     }
 
     /**
-     * Method for saving new Tag.
-     * Annotated by {@link Validated} with parameters TagDto.OnCreate.class provides validation of the fields of the TagDto object when creating.
+     * Method for saving new CustomerDto.
+     * Annotated by {@link Validated} provides validation of the fields of the CustomerDto object when creating.
      *
      * @param customer CustomerDto
      * @return created TagDto
@@ -88,10 +117,11 @@ public class CustomerController {
     }
 
     /**
-     * Method for getting TagDto by ID.
+     * Method for getting CustomerOrderDto by Customer id and CustomerOrder id.
      *
-     * @param orderId TagDto id
-     * @return TagDto
+     * @param customerId long customerId
+     * @param orderId    long orderId
+     * @return CustomerOrderDto
      */
     @GetMapping("{customerId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
@@ -103,9 +133,12 @@ public class CustomerController {
     }
 
     /**
-     * Method for getting list of all TagDto objects.
+     * Method for getting list of CustomerOrderDto objects.
      *
-     * @return list of TagDto objects
+     * @param customerId long customerId
+     * @param rows       number of lines per page (5 by default)
+     * @param pageNumber page number(default 0)
+     * @return list of CustomerOrderDto objects
      */
     @GetMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.OK)
@@ -118,9 +151,12 @@ public class CustomerController {
     }
 
     /**
-     * Method for removing Tag by ID.
-     * <p>
-     * //     * @param id CustomerDto id
+     * Method for saving new CustomerOrderDto.
+     * Annotated by {@link Validated} with parameters CustomerOrderDto.OnCreate.class provides validation of the fields of the CustomerOrderDto object when creating.
+     *
+     * @param customerId    long customerId
+     * @param customerOrder CustomerOrderDto customerOrder
+     * @return created TagDto
      */
     @PostMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.CREATED)

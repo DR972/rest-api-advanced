@@ -30,7 +30,9 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private static final String SORTING = "sorting";
-
+    /**
+     * SortTypeValidator validator.
+     */
     private final SortTypeValidator validator;
     /**
      * GiftCertificateDao certificateDao.
@@ -41,22 +43,28 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     private final DateHandler dateHandler;
     /**
-     * GiftCertificateDtoConverter certificateDtoConverter.
+     * TagService tagService.
      */
     private final TagService tagService;
-
+    /**
+     * GiftCertificateMapper certificateMapper.
+     */
     private final GiftCertificateMapper certificateMapper;
+    /**
+     * TagMapper tagMapper.
+     */
     private final TagMapper tagMapper;
 
 
     /**
      * The constructor creates a GiftCertificateServiceImpl object
-     *  @param validator      SortTypeValidator
-     * @param certificateDao GiftCertificateDao certificateDao
-     *                       //     * @param certificateTagDao       GiftCertificateTagDao certificateTagDao
-//     * @param tagDao         TagDao tagDao
-     * @param dateHandler    DateHandler dateHandler
-//     * @param tagMapper
+     *
+     * @param validator         SortTypeValidator
+     * @param certificateDao    GiftCertificateDao certificateDao
+     * @param dateHandler       DateHandler dateHandler
+     * @param tagService        TagService tagService
+     * @param certificateMapper GiftCertificateMapper certificateMapper
+     * @param tagMapper         TagMapper tagMapper
      */
     @Autowired
     public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, DateHandler dateHandler,
@@ -69,7 +77,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagMapper = tagMapper;
     }
 
-
+    @Override
     public GiftCertificateDto findCertificateById(long id) {
         return certificateMapper.convertToDto(certificateDao.findEntityById(id).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));

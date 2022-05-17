@@ -11,18 +11,38 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class {@code CustomerDto} represents CustomerDto.
+ *
+ * @author Dzmitry Rozmysl
+ * @version 1.0
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDto extends RepresentationModel<CustomerDto> {
+    /**
+     * long id.
+     */
     private long id;
+    /**
+     * String name.
+     */
     @NotNull(message = "ex.customerNameNotNull")
     @Size(min = 2, max = 30, message = "ex.customerNameSize")
     private String name;
-
+    /**
+     * List<CustomerOrderDto> customerOrders.
+     */
     private List<CustomerOrderDto> customerOrders = new ArrayList<>();
 
+
+    /**
+     * The constructor creates a CustomerDto object
+     *
+     * @param name String name
+     */
     public CustomerDto(String name) {
         this.name = name;
     }

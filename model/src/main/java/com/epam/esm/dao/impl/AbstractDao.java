@@ -23,12 +23,20 @@ import java.util.Optional;
 
 public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T, ID> {
     /**
-     * JdbcTemplate jdbcTemplate.
+     * EntityManager entityManager.
      */
     @PersistenceContext
     protected EntityManager entityManager;
+    /**
+     * Class<T> entityType.
+     */
     protected final Class<T> entityType;
 
+    /**
+     * The constructor creates an AbstractDao object
+     *
+     * @param entityType Class<T>
+     */
     @Autowired
     protected AbstractDao(Class<T> entityType) {
         this.entityType = entityType;
