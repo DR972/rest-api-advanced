@@ -1,25 +1,34 @@
 package com.epam.esm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
-@NoArgsConstructor
-@Table(name = "customerOrder")
+@Table(name = "customer_order")
 @Audited
 public class CustomerOrder extends BaseEntity<Long> {
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -35,7 +44,6 @@ public class CustomerOrder extends BaseEntity<Long> {
     )
     private List<GiftCertificate> giftCertificates;
 
-    @Column(name = "amount")
     private BigDecimal amount;
 
     public CustomerOrder(long id, Customer customer, LocalDateTime purchaseTime, List<GiftCertificate> giftCertificates, BigDecimal amount) {
@@ -55,5 +63,32 @@ public class CustomerOrder extends BaseEntity<Long> {
         this.purchaseTime = purchaseTime;
         this.giftCertificates = giftCertificates;
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CustomerOrder)) return false;
+
+        CustomerOrder customerOrder = (CustomerOrder) o;
+
+        if (!purchaseTime.equals(customerOrder.purchaseTime)) return false;
+        if (!giftCertificates.equals(customerOrder.giftCertificates)) return false;
+        return amount.equals(customerOrder.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", CustomerOrder.class.getSimpleName() + "[", "]")
+                .add("customer=" + customer)
+                .add("purchaseTime=" + purchaseTime)
+                .add("giftCertificates=" + giftCertificates)
+                .add("amount=" + amount)
+                .toString();
     }
 }

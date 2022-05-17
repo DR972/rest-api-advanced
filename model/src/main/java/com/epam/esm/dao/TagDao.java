@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface TagDao extends Dao<Tag, Long> {
 
-    List<Tag> findListTags(int pageNumber, int rows);
+    List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 
     void deleteGiftCertificateTagByTagId(long id);
 }

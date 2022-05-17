@@ -1,12 +1,11 @@
 package com.epam.esm.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -21,10 +20,10 @@ import java.util.StringJoiner;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "tag")
 @Audited
@@ -32,7 +31,6 @@ public class Tag extends BaseEntity<Long> {
     /**
      * Tag name.
      */
-    @Column(name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
@@ -60,8 +58,20 @@ public class Tag extends BaseEntity<Long> {
     @Override
     public String toString() {
         return new StringJoiner(", ", Tag.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
                 .add("name='" + name + "'")
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+        Tag tag = (Tag) o;
+        return name.equals(tag.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

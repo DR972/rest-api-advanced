@@ -25,7 +25,7 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
     }
 
     @Override
-    public List<Tag> findListTags(int pageNumber, int rows) {
+    public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
         String query = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer in " +
                 "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o on c.id = o.customer GROUP BY c.id " +
                 "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
@@ -39,7 +39,6 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
 
     @Override
     public void deleteGiftCertificateTagByTagId(long id) {
-        System.out.println("deleteGiftCertificateTagByTagId " + id);
         entityManager.unwrap(Session.class).createNativeQuery("DELETE FROM gift_certificate_tag WHERE tag_id = :id")
                 .setParameter("id", id).executeUpdate();
         entityManager.flush();

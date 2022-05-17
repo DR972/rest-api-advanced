@@ -1,30 +1,29 @@
 package com.epam.esm.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "customer")
 @Audited
-@NoArgsConstructor
 @AllArgsConstructor
 public class Customer extends BaseEntity<Long> {
     /**
      * Username.
      */
-    @Column(name = "name")
     private String name;
     /**
      * List<CustomerOrder> customerOrder.
@@ -40,5 +39,26 @@ public class Customer extends BaseEntity<Long> {
 
     public Customer(long id) {
         super(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        Customer customer = (Customer) o;
+        return name.equals(customer.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Customer.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("customerOrders=" + customerOrders)
+                .toString();
     }
 }

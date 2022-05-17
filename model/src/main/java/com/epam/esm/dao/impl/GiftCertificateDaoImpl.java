@@ -1,9 +1,8 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.criteria.CriteriaQueryBuilderForGiftCertificate;
+import com.epam.esm.dao.builder.QueryBuilderForGiftCertificate;
 import com.epam.esm.entity.GiftCertificate;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.MultiValueMap;
 
@@ -22,21 +21,21 @@ import java.util.List;
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> implements GiftCertificateDao {
     @PersistenceContext
     protected EntityManager entityManager;
-    private final CriteriaQueryBuilderForGiftCertificate criteriaQueryBuilderForGiftCertificate;
+    private final QueryBuilderForGiftCertificate queryBuilderForGiftCertificate;
 
     /**
      * The constructor creates an GiftCertificateDaoImpl object
      * <p>
      * //     * @param jdbcTemplate JdbcTemplate
      */
-    protected GiftCertificateDaoImpl(CriteriaQueryBuilderForGiftCertificate criteriaQueryBuilderForGiftCertificate) {
+    protected GiftCertificateDaoImpl(QueryBuilderForGiftCertificate queryBuilderForGiftCertificate) {
         super(GiftCertificate.class);
-        this.criteriaQueryBuilderForGiftCertificate = criteriaQueryBuilderForGiftCertificate;
+        this.queryBuilderForGiftCertificate = queryBuilderForGiftCertificate;
     }
 
     @Override
-    public List<GiftCertificate> findListEntities(MultiValueMap<String, String> params, int pageNumber, int rows) {
-        return entityManager.unwrap(Session.class).createQuery(criteriaQueryBuilderForGiftCertificate.build(entityManager, params))
-                .setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+    public List<GiftCertificate> findListEntities(MultiValueMap<String, String> requestParams, int pageNumber, int rows) {
+        return queryBuilderForGiftCertificate.build(entityManager, requestParams).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+
     }
 }

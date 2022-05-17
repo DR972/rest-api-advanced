@@ -148,9 +148,9 @@ public class TagServiceImplTest {
     void findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrdersShouldReturnResult() {
         when(tagMapper.convertToDto(TAG_1)).thenReturn(TAG_DTO_1);
         when(tagMapper.convertToDto(TAG_2)).thenReturn(TAG_DTO_2);
-        when(tagDao.findListTags(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2));
+        when(tagDao.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2));
         tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5);
-        verify(tagDao, times(1)).findListTags(0, 5);
+        verify(tagDao, times(1)).findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5);
         assertEquals(Arrays.asList(TAG_DTO_1, TAG_DTO_2), tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5));
     }
 }

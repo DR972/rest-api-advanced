@@ -1,23 +1,17 @@
 package com.epam.esm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * The class {@code GiftCertificate} represents GiftCertificate entity.
@@ -25,34 +19,29 @@ import java.util.List;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
-@NoArgsConstructor
 @Table(name = "gift_certificate")
 @Audited
 public class GiftCertificate extends BaseEntity<Long> {
     /**
      * GiftCertificate name.
      */
-    @Column(name = "name")
     private String name;
     /**
      * GiftCertificate description.
      */
-    @Column(name = "description")
-
     private String description;
     /**
      * GiftCertificate price.
      */
-    @Column(name = "price")
     private BigDecimal price;
 
     /**
      * GiftCertificate duration.
      */
-    @Column(name = "duration")
     private Integer duration;
 
     /**
@@ -137,5 +126,39 @@ public class GiftCertificate extends BaseEntity<Long> {
 
     public GiftCertificate(long id) {
         super(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GiftCertificate)) return false;
+
+        GiftCertificate giftCertificate = (GiftCertificate) o;
+
+        if (!name.equals(giftCertificate.name)) return false;
+        if (!description.equals(giftCertificate.description)) return false;
+        if (!price.equals(giftCertificate.price)) return false;
+        if (!duration.equals(giftCertificate.duration)) return false;
+        if (!createDate.equals(giftCertificate.createDate)) return false;
+        if (!lastUpdateDate.equals(giftCertificate.lastUpdateDate)) return false;
+        return (!tags.equals(giftCertificate.tags));
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", GiftCertificate.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("description='" + description + "'")
+                .add("price=" + price)
+                .add("duration=" + duration)
+                .add("createDate=" + createDate)
+                .add("lastUpdateDate=" + lastUpdateDate)
+                .add("tags=" + tags)
+                .toString();
     }
 }

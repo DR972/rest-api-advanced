@@ -5,9 +5,7 @@ import com.epam.esm.entity.CustomerOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Service;
 
-@Service
 @Mapper(componentModel = "spring", uses = {GiftCertificateMapper.class, CustomerOrderMapper.class})
 public interface CustomerOrderMapper {
     CustomerOrderMapper INSTANCE = Mappers.getMapper(CustomerOrderMapper.class);

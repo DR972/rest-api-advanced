@@ -5,7 +5,6 @@ import com.epam.esm.entity.BaseEntity;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityManager;
@@ -21,6 +20,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
+
 public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T, ID> {
     /**
      * JdbcTemplate jdbcTemplate.
@@ -36,8 +36,7 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
 
     @Override
     public Optional<T> findEntityById(long id) {
-        return entityManager.unwrap(Session.class).createQuery("SELECT e FROM " + entityType.getSimpleName() +
-                        " e WHERE e.id = :id", entityType)
+        return entityManager.unwrap(Session.class).createQuery("SELECT e FROM " + entityType.getSimpleName() + " e WHERE e.id = :id", entityType)
                 .setParameter("id", id)
                 .getResultList().stream()
                 .findFirst();
@@ -45,8 +44,7 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
 
     @Override
     public Optional<T> findEntityByName(String name) {
-        return entityManager.unwrap(Session.class).createQuery("SELECT e FROM " + entityType.getSimpleName() +
-                        " e WHERE e.name = :name", entityType)
+        return entityManager.unwrap(Session.class).createQuery("SELECT e FROM " + entityType.getSimpleName() + " e WHERE e.name = :name", entityType)
                 .setParameter("name", name)
                 .getResultList().stream()
                 .findFirst();
@@ -72,7 +70,6 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
     }
 
     @Override
-    @Transactional
     public void deleteEntity(T t) {
         entityManager.unwrap(Session.class).delete(entityManager.merge(t));
     }
