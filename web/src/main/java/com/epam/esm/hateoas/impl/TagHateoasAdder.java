@@ -22,35 +22,35 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
 
     @Override
     public void addLinks(TagDto tagDto) {
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(tagDto.getId())).withSelfRel());
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(5, 1)).withRel("getTagList"));
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tagDto.getId()))).withSelfRel());
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("5", "1")).withRel("getTagList"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tagDto)).withRel("createTag"));
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(tagDto.getId(), tagDto)).withRel("updateTag"));
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(tagDto.getId())).withRel("deleteTag"));
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(5, 1))
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tagDto.getId()), tagDto)).withRel("updateTag"));
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(String.valueOf(tagDto.getId()))).withRel("deleteTag"));
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(String.valueOf(5), String.valueOf(1)))
                 .withRel("getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders"));
     }
 
     @Override
     public void addLinksForListEntity(ListEntitiesDto<TagDto> tags, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
-        tags.getEntities().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(t.getId())).withRel("getTagById")));
+        tags.getEntities().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
         if (pageNumber < numberPages + 1) {
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(tags.getEntities().get(0).getId())).withRel("getTagById"));
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tags.getEntities().get(0).getId()))).withRel("getTagById"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tags.getEntities().get(0))).withRel("createTag"));
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(tags.getEntities().get(0).getId(), tags.getEntities().get(0))).withRel("updateTag"));
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(tags.getEntities().get(0).getId())).withRel("deleteTag"));
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tags.getEntities().get(0).getId()), tags.getEntities().get(0))).withRel("updateTag"));
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(String.valueOf(tags.getEntities().get(0).getId()))).withRel("deleteTag"));
         }
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(5, 1))
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(String.valueOf(5), String.valueOf(1)))
                 .withRel("getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders"));
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(1, rows)).withRel("getTagList page 1"));
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("1", String.valueOf(rows))).withRel("getTagList page 1"));
         if (pageNumber > 2 && pageNumber < numberPages + 1) {
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(pageNumber - 1, rows)).withRel("getTagList page " + (pageNumber - 1)));
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber - 1)));
         }
         if (pageNumber < numberPages - 1) {
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(pageNumber + 1, rows)).withRel("getTagList page " + (pageNumber + 1)));
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber + 1)));
         }
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(numberPages, rows))
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(numberPages), String.valueOf(rows)))
                 .withRel("getTagList last page " + numberPages));
     }
 }

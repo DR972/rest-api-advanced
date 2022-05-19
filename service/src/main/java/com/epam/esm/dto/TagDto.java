@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 /**
@@ -30,6 +31,8 @@ public class TagDto extends RepresentationModel<TagDto> {
     /**
      * TagDto id.
      */
+
+    @Null(groups = TagDto.OnCreate.class, message = "ex.tagIdNull")
     private long id;
     /**
      * TagDto name.

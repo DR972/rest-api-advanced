@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Digits;
 
 /**
  * Class {@code CustomerController} is an endpoint of the API which allows you to perform operations on Customers.
@@ -79,8 +79,8 @@ public class CustomerController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDto getCustomerById(@PathVariable @Positive(message = "ex.customerIdPositive") long id) {
-        CustomerDto customerDto = customerService.findCustomerById(id);
+    public CustomerDto getCustomerById(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String id) {
+        CustomerDto customerDto = customerService.findCustomerById(Long.parseLong(id));
         customerHateoasAdder.addLinks(customerDto);
         return customerDto;
     }
@@ -94,10 +94,10 @@ public class CustomerController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
-                                                        @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
-        ListEntitiesDto<CustomerDto> customers = customerService.findListCustomers(pageNumber, rows);
-        customerHateoasAdder.addLinksForListEntity(customers, rows, pageNumber);
+    public ListEntitiesDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                        @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+        ListEntitiesDto<CustomerDto> customers = customerService.findListCustomers(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        customerHateoasAdder.addLinksForListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return customers;
     }
 
@@ -125,9 +125,9 @@ public class CustomerController {
      */
     @GetMapping("{customerId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerOrderDto getCustomerOrderByCustomerIdAndOrderId(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
-                                                                   @PathVariable @Positive(message = "ex.customerOrderIdPositive") long orderId) {
-        CustomerOrderDto customerOrderDto = customerService.findCustomerOrderByCustomerIdAndOrderId(customerId, orderId);
+    public CustomerOrderDto getCustomerOrderByCustomerIdAndOrderId(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
+                                                                   @PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerOrderIdPositive") String orderId) {
+        CustomerOrderDto customerOrderDto = customerService.findCustomerOrderByCustomerIdAndOrderId(Long.parseLong(customerId), Long.parseLong(orderId));
         orderHateoasAdder.addLinks(customerOrderDto);
         return customerOrderDto;
     }
@@ -142,11 +142,11 @@ public class CustomerController {
      */
     @GetMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
-                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
-                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
-        ListEntitiesDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, pageNumber, rows);
-        orderHateoasAdder.addLinksForListEntity(orders, rows, pageNumber);
+    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
+                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+        ListEntitiesDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(Long.parseLong(customerId), Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        orderHateoasAdder.addLinksForListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;
     }
 
@@ -160,9 +160,9 @@ public class CustomerController {
      */
     @PostMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerOrderDto createCustomerOrder(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
+    public CustomerOrderDto createCustomerOrder(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
                                                 @Validated(CustomerOrderDto.OnCreate.class) @RequestBody CustomerOrderDto customerOrder) {
-        CustomerOrderDto customerOrderDto = customerOrderService.createCustomerOrder(customerId, customerOrder);
+        CustomerOrderDto customerOrderDto = customerOrderService.createCustomerOrder(Long.parseLong(customerId), customerOrder);
         orderHateoasAdder.addLinks(customerOrderDto);
         return customerOrderDto;
     }

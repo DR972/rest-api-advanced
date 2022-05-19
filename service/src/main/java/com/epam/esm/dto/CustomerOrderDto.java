@@ -8,6 +8,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,23 +36,28 @@ public class CustomerOrderDto extends RepresentationModel<CustomerOrderDto> {
     /**
      * long id.
      */
+    @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerOrderIdNull")
     private long id;
     /**
      * long customer id.
      */
+//    @NotNull(groups = CustomerOrderDto.OnCreate.class, message = "ex.CustomerIdNotNull")
+//    @Positive(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerIdPositive")
     private long customer;
     /**
      * LocalDateTime purchaseTime.
      */
+    @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerOrderPurchaseTimeNull")
     private LocalDateTime purchaseTime;
     /**
      * List<GiftCertificateDto> giftCertificates.
      */
-    @NotEmpty(message = "ex.giftCertificatesNotNull")
+    @NotEmpty(groups = CustomerOrderDto.OnCreate.class, message = "ex.giftCertificatesNotNull")
     @Valid
     private List<GiftCertificateDto> giftCertificates;
     /**
      * BigDecimal amount.
      */
+    @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerOrderAmountNull")
     private BigDecimal amount;
 }

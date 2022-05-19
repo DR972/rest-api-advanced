@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,12 +42,14 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     /**
      * GiftCertificateDto id.
      */
-    @Positive(groups = CustomerOrderDto.OnCreate.class, message = "ex.giftCertificateIdPositive")
+    @Null(groups = GiftCertificateDto.OnCreate.class, message = "ex.certificateIdNull")
+    @NotNull(groups = CustomerOrderDto.OnCreate.class, message = "ex.certificateIdNotNull")
+    @Positive(groups = CustomerOrderDto.OnCreate.class, message = "ex.certificateIdPositive")
     private long id;
     /**
      * GiftCertificateDto name.
      */
-    @NotNull(groups = {GiftCertificateDto.OnCreate.class}, message = "ex.certificateNameNotNull")
+    @NotNull(groups = GiftCertificateDto.OnCreate.class, message = "ex.certificateNameNotNull")
     @Size(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, min = 2, max = 30, message = "ex.certificateNameSize")
     private String name;
     /**
@@ -62,24 +61,26 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     /**
      * GiftCertificateDto price.
      */
-    @NotNull(groups = {GiftCertificateDto.OnCreate.class}, message = "ex.priceNotNull")
-    @Positive(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.pricePositive")
+    @NotNull(groups = GiftCertificateDto.OnCreate.class, message = "ex.priceNotNull")
+    @Digits(integer = 4, fraction = 0, groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.pricePositive")
     private BigDecimal price;
     /**
      * GiftCertificateDto duration.
      */
     @NotNull(groups = {GiftCertificateDto.OnCreate.class}, message = "ex.durationNotNull")
-    @Positive(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.durationPositive")
+    @Digits(integer = 3, fraction = 0, groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.durationPositive")
     private Integer duration;
     /**
      * GiftCertificateDto createDate.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Null(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.certificateCreateDateNull")
     private LocalDateTime createDate;
     /**
      * GiftCertificateDto lastUpdateDate.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Null(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.certificateLastUpdateDateNull")
     private LocalDateTime lastUpdateDate;
     /**
      * List<Tag> tags.

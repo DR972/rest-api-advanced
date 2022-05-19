@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CustomerDto extends RepresentationModel<CustomerDto> {
     /**
      * long id.
      */
+    @Null(message = "ex.customerIdNull")
     private long id;
     /**
      * String name.

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Digits;
 
 /**
  * Class {@code GiftCertificateController} is an endpoint of the API which allows you to perform CRUD operations on GiftCertificates.
@@ -67,8 +67,8 @@ public class CertificateController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto getCertificateById(@PathVariable @Positive(message = "ex.giftCertificateIdPositive") long id) {
-        GiftCertificateDto certificateDto = certificateService.findCertificateById(id);
+    public GiftCertificateDto getCertificateById(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.giftCertificateIdPositive") String id) {
+        GiftCertificateDto certificateDto = certificateService.findCertificateById(Long.parseLong(id));
         hateoasAdder.addLinks(certificateDto);
         return certificateDto;
     }
@@ -84,10 +84,10 @@ public class CertificateController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ListEntitiesDto<GiftCertificateDto> getCertificateList(@RequestParam(required = false) MultiValueMap<String, String> allRequestParams,
-                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
-                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
-        ListEntitiesDto<GiftCertificateDto> certificates = certificateService.findListCertificates(allRequestParams, pageNumber, rows);
-        hateoasAdder.addLinksForListEntity(certificates, rows, pageNumber);
+                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+        ListEntitiesDto<GiftCertificateDto> certificates = certificateService.findListCertificates(allRequestParams, Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        hateoasAdder.addLinksForListEntity(certificates, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return certificates;
     }
 
@@ -119,8 +119,8 @@ public class CertificateController {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto updateCertificate(@Validated(GiftCertificateDto.OnUpdate.class) @RequestBody GiftCertificateDto certificate,
-                                                @PathVariable @Positive(message = "ex.giftCertificateIdPositive") long id) {
-        GiftCertificateDto certificateDto = certificateService.updateCertificate(certificate, id);
+                                                @PathVariable @Digits(integer = 9, fraction = 0, message = "ex.giftCertificateIdPositive") String id) {
+        GiftCertificateDto certificateDto = certificateService.updateCertificate(certificate, Long.parseLong(id));
         hateoasAdder.addLinks(certificateDto);
         return certificateDto;
     }
@@ -132,8 +132,8 @@ public class CertificateController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteCertificate(@PathVariable @Positive(message = "ex.giftCertificateIdPositive") long id) {
-        certificateService.deleteCertificate(id);
+    public ResponseEntity<Void> deleteCertificate(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.giftCertificateIdPositive") String id) {
+        certificateService.deleteCertificate(Long.parseLong(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
