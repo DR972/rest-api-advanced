@@ -66,4 +66,11 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
      * @param t T t
      */
     void deleteEntity(T t);
+
+    /**
+     * The method finds count number of rows objects T in the table 'T'.
+     *
+     * @return count number of rows objects
+     */
+    long countNumberEntityRows();
 }

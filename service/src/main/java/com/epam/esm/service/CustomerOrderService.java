@@ -1,8 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.CustomerOrderDto;
-
-import java.util.List;
+import com.epam.esm.dto.ListEntitiesDto;
 
 /**
  * The interface {@code CustomerOrderService} describes abstract behavior for working with
@@ -25,9 +24,9 @@ public interface CustomerOrderService {
      *
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return list of customerOrderDto objects
+     * @return ListEntitiesDto<CustomerOrderDto>
      */
-    List<CustomerOrderDto> findAllCustomerOrders(int pageNumber, int rows);
+    ListEntitiesDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving CustomerOrder.

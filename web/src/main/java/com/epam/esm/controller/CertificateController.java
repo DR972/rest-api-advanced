@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 /**
  * Class {@code GiftCertificateController} is an endpoint of the API which allows you to perform CRUD operations on GiftCertificates.
@@ -79,15 +79,15 @@ public class CertificateController {
      * @param allRequestParams request parameters, which include the information needed for the search
      * @param rows             number of lines per page (5 by default)
      * @param pageNumber       page number(default 0)
-     * @return list of GiftCertificateDto objects
+     * @return ListEntitiesDto<GiftCertificateDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificateDto> getCertificateList(@RequestParam(required = false) MultiValueMap<String, String> allRequestParams,
-                                                       @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
-                                                       @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
-        List<GiftCertificateDto> certificates = certificateService.findListCertificates(allRequestParams, (pageNumber - 1) * rows, rows);
-        certificates.forEach(hateoasAdder::addLinks);
+    public ListEntitiesDto<GiftCertificateDto> getCertificateList(@RequestParam(required = false) MultiValueMap<String, String> allRequestParams,
+                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
+                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
+        ListEntitiesDto<GiftCertificateDto> certificates = certificateService.findListCertificates(allRequestParams, pageNumber, rows);
+        hateoasAdder.addLinksForListEntity(certificates, rows, pageNumber);
         return certificates;
     }
 

@@ -81,4 +81,10 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
     public void deleteEntity(T t) {
         entityManager.unwrap(Session.class).delete(entityManager.merge(t));
     }
+
+    @Override
+    public long countNumberEntityRows() {
+        return entityManager.unwrap(Session.class).createQuery("SELECT COUNT(e) FROM " + entityType.getSimpleName() + " e", Long.class)
+                .getSingleResult();
+    }
 }

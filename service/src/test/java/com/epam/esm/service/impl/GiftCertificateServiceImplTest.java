@@ -158,28 +158,28 @@ class GiftCertificateServiceImplTest {
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
-    @Test
-    void findListCertificatesShouldReturnResult() {
-        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, null, Collections.singletonList(LAST_UPDATE_DATE)),
-                Arrays.asList(GIFT_CERTIFICATE_6, GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3, GIFT_CERTIFICATE_5, GIFT_CERTIFICATE_7),
-                Arrays.asList(GIFT_CERTIFICATE_DTO_6, GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2, GIFT_CERTIFICATE_DTO_3,
-                        GIFT_CERTIFICATE_DTO_5, GIFT_CERTIFICATE_DTO_7));
-
-        testFindListCertificatesShouldReturnResult(Arrays.asList(null, Collections.singletonList(VISIT), null, Collections.singletonList(LAST_UPDATE_DATE)),
-                Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3), Arrays.asList(GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_3));
-
-        testFindListCertificatesShouldReturnResult(Arrays.asList(Collections.singletonList(VISIT), null, null, Collections.singletonList(LAST_UPDATE_DATE)),
-                Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3), Arrays.asList(GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_3));
-
-        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, Collections.singletonList(REST), Collections.singletonList(LAST_UPDATE_DATE)),
-                Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_7), Arrays.asList(GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2, GIFT_CERTIFICATE_DTO_7));
-
-        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, Arrays.asList(REST, HORSE), Collections.singletonList(LAST_UPDATE_DATE)),
-                Collections.singletonList(GIFT_CERTIFICATE_2), Collections.singletonList(GIFT_CERTIFICATE_DTO_2));
-
-        testFindListCertificatesShouldReturnResult(Arrays.asList(null, Collections.singletonList(RIDING), Collections.singletonList(REST), Arrays.asList(LAST_UPDATE_DATE, NAME)),
-                Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2), Arrays.asList(GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2));
-    }
+//    @Test
+//    void findListCertificatesShouldReturnResult() {
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, null, Collections.singletonList(LAST_UPDATE_DATE)),
+//                Arrays.asList(GIFT_CERTIFICATE_6, GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3, GIFT_CERTIFICATE_5, GIFT_CERTIFICATE_7),
+//                Arrays.asList(GIFT_CERTIFICATE_DTO_6, GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2, GIFT_CERTIFICATE_DTO_3,
+//                        GIFT_CERTIFICATE_DTO_5, GIFT_CERTIFICATE_DTO_7));
+//
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(null, Collections.singletonList(VISIT), null, Collections.singletonList(LAST_UPDATE_DATE)),
+//                Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3), Arrays.asList(GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_3));
+//
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(Collections.singletonList(VISIT), null, null, Collections.singletonList(LAST_UPDATE_DATE)),
+//                Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3), Arrays.asList(GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_3));
+//
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, Collections.singletonList(REST), Collections.singletonList(LAST_UPDATE_DATE)),
+//                Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_7), Arrays.asList(GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2, GIFT_CERTIFICATE_DTO_7));
+//
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(null, null, Arrays.asList(REST, HORSE), Collections.singletonList(LAST_UPDATE_DATE)),
+//                Collections.singletonList(GIFT_CERTIFICATE_2), Collections.singletonList(GIFT_CERTIFICATE_DTO_2));
+//
+//        testFindListCertificatesShouldReturnResult(Arrays.asList(null, Collections.singletonList(RIDING), Collections.singletonList(REST), Arrays.asList(LAST_UPDATE_DATE, NAME)),
+//                Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2), Arrays.asList(GIFT_CERTIFICATE_DTO_1, GIFT_CERTIFICATE_DTO_2));
+//    }
 
     private void testFindListCertificatesShouldReturnResult(List<List<String>> list, List<GiftCertificate> certificates,
                                                             List<GiftCertificateDto> certificateDtos) {

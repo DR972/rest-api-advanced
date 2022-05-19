@@ -1,9 +1,8 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import org.springframework.util.MultiValueMap;
-
-import java.util.List;
 
 /**
  * The interface {@code GiftCertificateService} describes abstract behavior for working with
@@ -28,9 +27,9 @@ public interface GiftCertificateService {
      * @param params     MultiValueMap<String, String> all request params
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return list of GiftCertificateDto objects
+     * @return ListEntitiesDto<GiftCertificateDto>
      */
-    List<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows);
+    ListEntitiesDto<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving GiftCertificate.

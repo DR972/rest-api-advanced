@@ -69,8 +69,7 @@ public class DatabaseTestConfiguration {
      */
     @Bean
     public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
-        HibernateTransactionManager transactionManager
-                = new HibernateTransactionManager();
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory.getObject());
         return transactionManager;
     }

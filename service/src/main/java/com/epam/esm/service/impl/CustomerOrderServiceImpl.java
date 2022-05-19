@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.CustomerOrderService;
@@ -74,8 +75,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrderDto> findAllCustomerOrders(int pageNumber, int rows) {
-        return customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), pageNumber, rows).stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
+    @Transactional
+    public ListEntitiesDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows) {
+        long countRows = customerOrderDao.countNumberEntityRows();
+        List<CustomerOrderDto> customerOrders = customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+                .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), countRows);
     }
 
     @Override

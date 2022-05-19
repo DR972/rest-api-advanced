@@ -53,7 +53,6 @@ public class QueryBuilderForGiftCertificate {
         } else {
             finalQuery = QUERY_PART_1 + "GROUP BY g.id" + buildOrder(requestParams.get(SORTING));
         }
-        System.out.println(finalQuery);
         Query<GiftCertificate> query = entityManager.unwrap(Session.class).createQuery(finalQuery, GiftCertificate.class);
         List<String> finalQueryParams = allQueryParams.get(1);
         IntStream.range(0, finalQueryParams.size()).forEach(i -> query.setParameter(i + 1, finalQueryParams.get(i)));

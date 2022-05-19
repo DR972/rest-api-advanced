@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.dto.TagDto;
@@ -57,8 +58,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> findListTags(int pageNumber, int rows) {
-        return tagDao.findListEntities(new LinkedMultiValueMap<>(), pageNumber, rows).stream().map(tagMapper::convertToDto).collect(Collectors.toList());
+    @Transactional
+    public ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows) {
+        long countRows = tagDao.countNumberEntityRows();
+        List<TagDto> tags = tagDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+                .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
     }
 
     @Override

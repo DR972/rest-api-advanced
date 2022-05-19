@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.CustomerDao;
 import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.mapper.CustomerMapper;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.Customer;
@@ -72,8 +73,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> findListCustomers(int pageNumber, int rows) {
-        return customerDao.findListEntities(new LinkedMultiValueMap<>(), pageNumber, rows).stream().map(customerMapper::convertToDto).collect(Collectors.toList());
+    @Transactional
+    public ListEntitiesDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
+        long countRows = customerDao.countNumberEntityRows();
+        List<CustomerDto> tags = customerDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+                .stream().map(customerMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
     }
 
     @Override
@@ -93,8 +98,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerOrderDto> findAllCustomerOrdersByCustomerId(long customerId, int pageNumber, int rows) {
+    @Transactional
+    public ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(long customerId, int pageNumber, int rows) {
         findCustomerById(customerId);
-        return customerOrderDao.findCustomerOrderList(customerId, pageNumber, rows).stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
+        long countRows = customerOrderDao.countNumberEntityRows();
+        List<CustomerOrderDto> tags = customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+                .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.service.CustomerService;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 /**
  * Class {@code CustomerController} is an endpoint of the API which allows you to perform operations on Customers.
@@ -90,14 +90,14 @@ public class CustomerController {
      *
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return list of CustomerDto objects
+     * @return ListEntitiesDto<CustomerDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerDto> getCustomerList(@RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
-                                             @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
-        List<CustomerDto> customers = customerService.findListCustomers((pageNumber - 1) * rows, rows);
-        customers.forEach(customerHateoasAdder::addLinks);
+    public ListEntitiesDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
+                                                        @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
+        ListEntitiesDto<CustomerDto> customers = customerService.findListCustomers(pageNumber, rows);
+        customerHateoasAdder.addLinksForListEntity(customers, rows, pageNumber);
         return customers;
     }
 
@@ -138,16 +138,16 @@ public class CustomerController {
      * @param customerId long customerId
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return list of CustomerOrderDto objects
+     * @return ListEntitiesDto<CustomerOrderDto>
      */
     @GetMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
-                                                       @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
-                                                       @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
-        List<CustomerOrderDto> customerOrders = customerService.findAllCustomerOrdersByCustomerId(customerId, (pageNumber - 1) * rows, rows);
-        customerOrders.forEach(orderHateoasAdder::addLinks);
-        return customerOrders;
+    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive") long customerId,
+                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
+                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
+        ListEntitiesDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, pageNumber, rows);
+        orderHateoasAdder.addLinksForListEntity(orders, rows, pageNumber);
+        return orders;
     }
 
     /**

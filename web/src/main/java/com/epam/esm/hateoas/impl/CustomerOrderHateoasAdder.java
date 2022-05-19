@@ -4,6 +4,7 @@ import com.epam.esm.controller.CertificateController;
 import com.epam.esm.controller.CustomerOrderController;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import org.springframework.stereotype.Component;
 
@@ -32,5 +33,30 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
             c.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(c.getId())).withRel("getCertificateById"));
             c.getTags().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(t.getId())).withRel("getTagById")));
         });
+    }
+
+    @Override
+    public void addLinksForListEntity(ListEntitiesDto<CustomerOrderDto> customerOrders, int rows, int pageNumber) {
+        int numberPages = (int) Math.ceil((float) customerOrders.getTotalNumberObjects() / rows);
+        customerOrders.getEntities().forEach(c -> c.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderById(c.getId())).withRel("getCustomerOrderById")));
+        if (pageNumber < numberPages + 1) {
+            customerOrders.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderById(customerOrders.getEntities().get(0).getId())).withRel("getCustomerOrderById"));
+            customerOrders.getEntities().forEach(o -> o.getGiftCertificates().forEach(c -> {
+                c.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(c.getId())).withRel("getCertificateById"));
+                c.getTags().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(t.getId())).withRel("getTagById")));
+            }));
+        }
+
+        customerOrders.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderList(1, rows)).withRel("getCustomerOrderList page 1"));
+        if (pageNumber > 2 && pageNumber < numberPages + 1) {
+            customerOrders.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderList(pageNumber - 1, rows))
+                    .withRel("getCustomerOrderList page " + (pageNumber - 1)));
+        }
+        if (pageNumber < numberPages - 1) {
+            customerOrders.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderList(pageNumber + 1, rows))
+                    .withRel("getCustomerOrderList page " + (pageNumber + 1)));
+        }
+        customerOrders.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderList(numberPages, rows))
+                .withRel("getCustomerOrderList last page " + numberPages));
     }
 }

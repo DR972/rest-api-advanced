@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.TagMapper;
 import com.epam.esm.entity.GiftCertificate;
@@ -84,11 +85,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows) {
+    public ListEntitiesDto<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows) {
         if (params.get(SORTING) != null) {
             validator.validateSortType(params.get(SORTING));
         }
-        return certificateDao.findListEntities(params, pageNumber, rows).stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
+        long countRows = certificateDao.countNumberEntityRows();
+        List<GiftCertificateDto> certificates = certificateDao.findListEntities(params, (pageNumber - 1) * rows, rows)
+                .stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(certificates, pageNumber, certificates.size(), countRows);
+//        return certificateDao.findListEntities(params, pageNumber, rows).stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -102,7 +107,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, long id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateMapper.updateGiftCertificateFromDto(certificateDto, certificate);
@@ -115,7 +120,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteCertificate(long id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateDao.deleteEntity(certificate);

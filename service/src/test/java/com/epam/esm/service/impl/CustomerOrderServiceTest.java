@@ -101,9 +101,9 @@ public class CustomerOrderServiceTest {
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_3)).thenReturn(CUSTOMER_ORDER_DTO_3);
         when(customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), 0, 5))
                 .thenReturn(Arrays.asList(CUSTOMER_ORDER_1, CUSTOMER_ORDER_2, CUSTOMER_ORDER_3));
-        customerOrderService.findAllCustomerOrders(0, 5);
+        customerOrderService.findListCustomerOrders(0, 5);
         verify(customerOrderDao, times(1)).findListEntities(new LinkedMultiValueMap<>(), 0, 5);
-        assertEquals(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), customerOrderService.findAllCustomerOrders(0, 5));
+        assertEquals(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), customerOrderService.findListCustomerOrders(0, 5));
     }
 
     @Test

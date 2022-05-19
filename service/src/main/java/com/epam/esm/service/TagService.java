@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.dto.TagDto;
 
@@ -32,9 +33,11 @@ public interface TagService {
     /**
      * The method finds list Tags.
      *
-     * @return list of TagDto objects
+     * @param pageNumber int pageNumber
+     * @param rows       int rows
+     * @return ListEntitiesDto<TagDto>
      */
-    List<TagDto> findListTags(int pageNumber, int rows);
+    ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving Tag.
@@ -60,12 +63,12 @@ public interface TagService {
      */
     void deleteTag(long id);
 
-
     /**
      * The method finds list the most widely used tags Of Customers with the highest cost of all orders.
      *
      * @param pageNumber int pageNumber
      * @param rows       int rows
+     * @return List<TagDto>
      */
     List<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 }

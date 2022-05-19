@@ -144,9 +144,9 @@ public class CustomerServiceTest {
         when(customerMapper.convertToDto(CUSTOMER_3)).thenReturn(CUSTOMER_DTO_3);
         when(customerDao.findEntityById(3L)).thenReturn(Optional.of(CUSTOMER_3));
         when(customerOrderDao.findCustomerOrderList(3, 0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_3, CUSTOMER_ORDER_7));
-        customerService.findAllCustomerOrdersByCustomerId(3, 0, 5);
+        customerService.findListCustomerOrdersByCustomerId(3, 0, 5);
         verify(customerOrderDao, times(1)).findCustomerOrderList(3, 0, 5);
-        assertEquals(Arrays.asList(CUSTOMER_ORDER_DTO_3, CUSTOMER_ORDER_DTO_7), customerService.findAllCustomerOrdersByCustomerId(3, 0, 5));
+        assertEquals(Arrays.asList(CUSTOMER_ORDER_DTO_3, CUSTOMER_ORDER_DTO_7), customerService.findListCustomerOrdersByCustomerId(3, 0, 5));
     }
 
     @Test

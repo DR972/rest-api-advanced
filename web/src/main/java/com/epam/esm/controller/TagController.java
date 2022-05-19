@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.TagService;
@@ -72,20 +73,19 @@ public class TagController {
         return tagDto;
     }
 
-
     /**
      * Method for getting list of all TagDto objects.
      *
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return list of TagDto objects
+     * @return ListEntitiesDto<TagDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDto> getTagList(@RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows,
-                                   @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber) {
-        List<TagDto> tags = tagService.findListTags((pageNumber - 1) * rows, rows);
-        tags.forEach(hateoasAdder::addLinks);
+    public ListEntitiesDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page") int pageNumber,
+                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows") int rows) {
+        ListEntitiesDto<TagDto> tags = tagService.findListTags(pageNumber, rows);
+        hateoasAdder.addLinksForListEntity(tags, rows, pageNumber);
         return tags;
     }
 
