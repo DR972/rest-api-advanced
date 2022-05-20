@@ -40,4 +40,10 @@ public class CustomerOrderDaoImpl extends AbstractDao<CustomerOrder, Long> imple
                 .setParameter("customerId", customerId)
                 .setFirstResult(pageNumber).setMaxResults(rows).getResultList();
     }
+
+    @Override
+    public long countNumberEntityRowsInListCustomerOrders(long customerId) {
+        return entityManager.unwrap(Session.class).createQuery("SELECT e FROM CustomerOrder e WHERE e.customer.id = :customerId", CustomerOrder.class)
+                .setParameter("customerId", customerId).getResultList().size();
+    }
 }

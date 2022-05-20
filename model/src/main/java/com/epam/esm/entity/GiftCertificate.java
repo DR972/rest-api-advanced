@@ -9,7 +9,6 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -65,7 +64,7 @@ public class GiftCertificate extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<>();
+    private List<Tag> tags;
 
     /**
      * List<CustomerOrder> customerOrders

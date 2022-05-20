@@ -23,6 +23,7 @@ public interface CustomerOrderMapper {
      * @return converted dto
      */
     @Mapping(source = "customer.id", target = "customer")
+    @Mapping(source = "id", target = "orderId")
     CustomerOrderDto convertToDto(CustomerOrder customerOrder);
 
     /**
@@ -32,5 +33,6 @@ public interface CustomerOrderMapper {
      * @return converted entity
      */
     @Mapping(source = "customer", target = "customer.id")
+    @Mapping(source = "orderId", target = "id")
     CustomerOrder convertToEntity(CustomerOrderDto dto);
 }

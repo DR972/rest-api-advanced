@@ -7,10 +7,8 @@ import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -36,8 +34,8 @@ public class Tag extends BaseEntity<Long> {
     /**
      * List<GiftCertificate> giftCertificates.
      */
-    @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
-    private List<GiftCertificate> giftCertificates = new ArrayList<>();
+    @ManyToMany(mappedBy = "tags")
+    private List<GiftCertificate> giftCertificates;
 
     /**
      * The constructor creates a Tag object
@@ -69,13 +67,6 @@ public class Tag extends BaseEntity<Long> {
     }
 
     @Override
-    public String toString() {
-        return new StringJoiner(", ", Tag.class.getSimpleName() + "[", "]")
-                .add("name='" + name + "'")
-                .toString();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Tag)) return false;
@@ -87,4 +78,12 @@ public class Tag extends BaseEntity<Long> {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Tag.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .toString();
+    }
+
 }

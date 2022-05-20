@@ -34,8 +34,10 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
     @Override
     public void addLinksForListEntity(ListEntitiesDto<TagDto> tags, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
-        tags.getEntities().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber), String.valueOf(rows))).withSelfRel());
+
         if (pageNumber < numberPages + 1) {
+            tags.getEntities().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tags.getEntities().get(0).getId()))).withRel("getTagById"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tags.getEntities().get(0))).withRel("createTag"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tags.getEntities().get(0).getId()), tags.getEntities().get(0))).withRel("updateTag"));

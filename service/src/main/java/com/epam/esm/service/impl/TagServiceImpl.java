@@ -47,8 +47,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findTagById(long id) {
-        return tagMapper.convertToDto(tagDao.findEntityById(id).orElseThrow(() ->
+    public TagDto findTagById(String id) {
+        return tagMapper.convertToDto(tagDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
     }
 
@@ -60,10 +60,9 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows) {
-        long countRows = tagDao.countNumberEntityRows();
         List<TagDto> tags = tagDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
                 .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
+        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
     }
 
     @Override
@@ -78,21 +77,21 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public TagDto updateTag(TagDto tagDto, long id) {
+    public TagDto updateTag(TagDto tagDto, String id) {
         Tag tag = tagMapper.convertToEntity(tagDto);
         if (findTagByName(tag.getName()).getName() != null) {
             throw new DuplicateEntityException("ex.duplicate", tag.getName() + ")");
         }
         findTagById(id);
-        tag.setId(id);
+        tag.setId(Long.valueOf(id));
         return tagMapper.convertToDto(tagDao.updateEntity(tag));
     }
 
     @Override
     @Transactional
-    public void deleteTag(long id) {
+    public void deleteTag(String id) {
         Tag tag = tagMapper.convertToEntity(findTagById(id));
-        tagDao.deleteGiftCertificateTagByTagId(id);
+        tagDao.deleteGiftCertificateTagByTagId(Long.parseLong(id));
         tagDao.deleteEntity(tag);
     }
 

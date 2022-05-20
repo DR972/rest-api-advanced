@@ -19,7 +19,7 @@ public interface GiftCertificateService {
      * @param id GiftCertificateDto id
      * @return GiftCertificateDto object
      */
-    GiftCertificateDto findCertificateById(long id);
+    GiftCertificateDto findCertificateById(String id);
 
     /**
      * The method finds list GiftCertificates.
@@ -46,12 +46,12 @@ public interface GiftCertificateService {
      * @param id             GiftCertificateDto id
      * @return GiftCertificateDto object
      */
-    GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, long id);
+    GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, String id);
 
     /**
      * The method performs the operation of deleting GiftCertificate.
      *
      * @param id GiftCertificateDto id
      */
-    void deleteCertificate(long id);
+    void deleteCertificate(String id);
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -67,8 +68,8 @@ public class TagController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TagDto getTagById(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id) {
-        TagDto tagDto = tagService.findTagById(Integer.parseInt(id));
+    public TagDto getTagById(@PathVariable @Positive(message = "ex.tagIdPositive") @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id) {
+        TagDto tagDto = tagService.findTagById(id);
         hateoasAdder.addLinks(tagDto);
         return tagDto;
     }
@@ -82,8 +83,10 @@ public class TagController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                              @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+    public ListEntitiesDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<TagDto> tags = tagService.findListTags(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksForListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
@@ -114,9 +117,9 @@ public class TagController {
      */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TagDto updateTag(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id,
-                            @Validated(TagDto.OnCreate.class) @RequestBody TagDto tag) {
-        TagDto tagDto = tagService.updateTag(tag, Long.parseLong(id));
+    public TagDto updateTag(@PathVariable @Positive(message = "ex.tagIdPositive") @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id,
+                            @Validated(TagDto.OnUpdate.class) @RequestBody TagDto tag) {
+        TagDto tagDto = tagService.updateTag(tag, id);
         hateoasAdder.addLinks(tagDto);
         return tagDto;
     }
@@ -128,8 +131,9 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteTag(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id) {
-        tagService.deleteTag(Long.parseLong(id));
+    public ResponseEntity<Void> deleteTag(@PathVariable @Positive(message = "ex.tagIdPositive")
+                                          @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id) {
+        tagService.deleteTag(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -144,8 +148,10 @@ public class TagController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+    public List<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+                                                                                   @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         List<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders((Integer.parseInt(pageNumber) - 1) * Integer.parseInt(rows), Integer.parseInt(rows));
         tags.forEach(hateoasAdder::addLinks);
         return tags;

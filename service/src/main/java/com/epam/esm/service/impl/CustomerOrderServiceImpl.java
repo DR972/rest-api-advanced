@@ -69,27 +69,26 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public CustomerOrderDto findCustomerOrderById(long id) {
-        return customerOrderMapper.convertToDto(customerOrderDao.findEntityById(id).orElseThrow(() ->
+    public CustomerOrderDto findCustomerOrderById(String id) {
+        return customerOrderMapper.convertToDto(customerOrderDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
     }
 
     @Override
     @Transactional
     public ListEntitiesDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows) {
-        long countRows = customerOrderDao.countNumberEntityRows();
         List<CustomerOrderDto> customerOrders = customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), countRows);
+        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
     }
 
     @Override
     @Transactional
-    public CustomerOrderDto createCustomerOrder(long customerId, CustomerOrderDto customerOrderDto) {
+    public CustomerOrderDto createCustomerOrder(String customerId, CustomerOrderDto customerOrderDto) {
         customerService.findCustomerById(customerId);
         customerOrderDto.setCustomer(customerId);
         customerOrderDto.setPurchaseTime(dateHandler.getCurrentDate());
-        List<GiftCertificateDto> certificateDtos = customerOrderDto.getGiftCertificates().stream().map(c -> certificateService.findCertificateById(c.getId()))
+        List<GiftCertificateDto> certificateDtos = customerOrderDto.getGiftCertificates().stream().map(c -> certificateService.findCertificateById(c.getCertificateId()))
                 .collect(Collectors.toList());
         BigDecimal amount = certificateDtos.stream().map(GiftCertificateDto::getPrice).reduce(BigDecimal::add).orElse(new BigDecimal(0));
         customerOrderDto.setGiftCertificates(certificateDtos);

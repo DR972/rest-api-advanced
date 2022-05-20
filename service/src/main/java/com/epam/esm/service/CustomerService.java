@@ -18,7 +18,7 @@ public interface CustomerService {
      * @param id CustomerDto id
      * @return CustomerDto object
      */
-    CustomerDto findCustomerById(long id);
+    CustomerDto findCustomerById(String id);
 
     /**
      * The method finds Customer by name.
@@ -48,19 +48,19 @@ public interface CustomerService {
     /**
      * The method finds Customer by Customer id and Order id.
      *
-     * @param customerId long customerId
-     * @param orderId    long orderId
+     * @param customerId Customer customerId
+     * @param orderId    Customer orderId
      * @return CustomerDto object
      */
-    CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(long customerId, long orderId);
+    CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(String customerId, String orderId);
 
     /**
      * The method finds list Customer orders by Customer id.
      *
-     * @param customerId long customerId
+     * @param customerId Customer customerId
      * @param pageNumber int pageNumber
      * @param rows       int rows
      * @return ListEntitiesDto<CustomerOrderDto>
      */
-    ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(long customerId, int pageNumber, int rows);
+    ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows);
 }

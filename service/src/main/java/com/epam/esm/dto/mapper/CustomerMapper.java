@@ -2,8 +2,8 @@ package com.epam.esm.dto.mapper;
 
 import com.epam.esm.dto.CustomerDto;
 import com.epam.esm.entity.Customer;
-import com.epam.esm.entity.Tag;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -22,6 +22,7 @@ public interface CustomerMapper {
      * @param customer Customer customer
      * @return converted dto
      */
+    @Mapping(source = "id", target = "customerId")
     CustomerDto convertToDto(Customer customer);
 
     /**
@@ -30,5 +31,6 @@ public interface CustomerMapper {
      * @param dto CustomerDto dto
      * @return converted entity
      */
+    @Mapping(source = "customerId", target = "id")
     Customer convertToEntity(CustomerDto dto);
 }

@@ -83,8 +83,7 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
     }
 
     @Override
-    public long countNumberEntityRows() {
-        return entityManager.unwrap(Session.class).createQuery("SELECT COUNT(e) FROM " + entityType.getSimpleName() + " e", Long.class)
-                .getSingleResult();
+    public long countNumberEntityRows(MultiValueMap<String, String> params) {
+        return entityManager.unwrap(Session.class).createQuery("from " + entityType.getSimpleName()).getResultList().size();
     }
 }

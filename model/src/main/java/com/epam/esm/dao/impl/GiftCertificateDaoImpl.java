@@ -42,6 +42,10 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> i
     @Override
     public List<GiftCertificate> findListEntities(MultiValueMap<String, String> requestParams, int pageNumber, int rows) {
         return queryBuilderForGiftCertificate.build(entityManager, requestParams).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+    }
 
+    @Override
+    public long countNumberEntityRows(MultiValueMap<String, String> params) {
+        return queryBuilderForGiftCertificate.build(entityManager, params).getResultList().size();
     }
 }

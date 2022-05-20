@@ -62,8 +62,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto findCustomerById(long id) {
-        return customerMapper.convertToDto(customerDao.findEntityById(id).orElseThrow(() ->
+    public CustomerDto findCustomerById(String id) {
+        return customerMapper.convertToDto(customerDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
     }
 
@@ -75,10 +75,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public ListEntitiesDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
-        long countRows = customerDao.countNumberEntityRows();
-        List<CustomerDto> tags = customerDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+        List<CustomerDto> customerDtos = customerDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
                 .stream().map(customerMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
+        return new ListEntitiesDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
     }
 
     @Override
@@ -92,18 +91,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(long customerId, long orderId) {
-        return customerOrderMapper.convertToDto(customerOrderDao.findCustomerOrder(customerId, orderId).orElseThrow(() ->
+    public CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(String customerId, String orderId) {
+        return customerOrderMapper.convertToDto(customerOrderDao.findCustomerOrder(Long.parseLong(customerId), Long.parseLong(orderId)).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (customerId = " + customerId + ", orderId = " + orderId + ")")));
     }
 
     @Override
     @Transactional
-    public ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(long customerId, int pageNumber, int rows) {
+    public ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows) {
         findCustomerById(customerId);
-        long countRows = customerOrderDao.countNumberEntityRows();
-        List<CustomerOrderDto> tags = customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+        List<CustomerOrderDto> customerOrders = customerOrderDao.findCustomerOrderList(Long.parseLong(customerId), (pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), countRows);
+        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRowsInListCustomerOrders(Long.parseLong(customerId)));
     }
 }

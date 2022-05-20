@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Positive;
 
 /**
  * Class {@code CustomerOrderController} is an endpoint of the API which allows you to perform operations on Customer Orders.
@@ -53,7 +54,6 @@ public class CustomerOrderController {
         this.hateoasAdder = hateoasAdder;
     }
 
-
     /**
      * Method for getting CustomerOrderDto by ID.
      *
@@ -62,12 +62,12 @@ public class CustomerOrderController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerOrderDto getCustomerOrderById(@PathVariable @Digits(integer = 9, fraction = 0, message = "ex.customerOrderIdPositive") String id) {
-        CustomerOrderDto customerOrderDto = customerOrderService.findCustomerOrderById(Long.parseLong(id));
+    public CustomerOrderDto getCustomerOrderById(@PathVariable @Positive(message = "ex.customerOrderIdPositive")
+                                                 @Digits(integer = 9, fraction = 0, message = "ex.customerOrderIdPositive") String id) {
+        CustomerOrderDto customerOrderDto = customerOrderService.findCustomerOrderById(id);
         hateoasAdder.addLinks(customerOrderDto);
         return customerOrderDto;
     }
-
 
     /**
      * Method for getting list of all CustomerOrderDto objects.
@@ -78,8 +78,10 @@ public class CustomerOrderController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+                                                                  @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                                  @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<CustomerOrderDto> orders = customerOrderService.findListCustomerOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksForListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;

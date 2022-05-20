@@ -70,7 +70,8 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
     /**
      * The method finds count number of rows objects T in the table 'T'.
      *
+     * @param params MultiValueMap<String, String> params
      * @return count number of rows objects
      */
-    long countNumberEntityRows();
+    long countNumberEntityRows(MultiValueMap<String, String> params);
 }

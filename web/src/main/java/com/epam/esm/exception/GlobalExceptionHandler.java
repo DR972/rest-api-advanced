@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,11 +15,16 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * The class {@code GlobalExceptionHandler} presents entity which will be returned from controller in case generating exceptions.
@@ -54,7 +58,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request, Locale locale) {
         saveLog(HttpMessageNotReadableException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.MESSAGE_NOT_READABLE_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notReadable", null, locale));
@@ -68,11 +72,16 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    protected ApiError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request, Locale locale) {
+    @ResponseStatus(BAD_REQUEST)
+    protected ApiError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request, Locale locale, HttpServletRequest req) {
         saveLog(HttpRequestMethodNotSupportedException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.METHOD_NOT_ALLOWED_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notSupported", null,
-                locale) + ex.getMethod() + ")");
+        if (ex.getMethod().equals("PATCH") && (req.getRequestURI().equals("/certificates") || req.getRequestURI().equals("/certificates/")
+                || req.getRequestURI().equals("/tags") || req.getRequestURI().equals("/tags/"))) {
+            return new ApiError(ExceptionCode.NOT_FOUND_PATH_VARIABLE_EXCEPTION, resourceBundleMessageSource
+                    .getMessage("ex.notSupported", null, locale) + ex.getMethod() + "). " + resourceBundleMessageSource.getMessage("ex.pathVariable", null, locale));
+        } else {
+            return new ApiError(ExceptionCode.METHOD_NOT_ALLOWED_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notSupported", null, locale) + ex.getMethod() + ")");
+        }
     }
 
     /**
@@ -83,12 +92,13 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request, Locale locale) {
+        System.out.println("handleHttpMethodArgumentNotValidException");
         saveLog(MethodArgumentNotValidException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale))
-                .collect(Collectors.joining("; ")));
+                .distinct().collect(Collectors.joining("; ")));
     }
 
     /**
@@ -99,7 +109,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(SortTypeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     protected ApiError handleSortTypeException(SortTypeException ex, WebRequest request, Locale locale) {
         saveLog(MethodArgumentNotValidException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.SORT_TYPE_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
@@ -114,7 +124,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpNoHandlerFoundException(NoHandlerFoundException ex, WebRequest request, Locale locale) {
         saveLog(NoHandlerFoundException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.NOT_FOUND_URL_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notURL", null,
@@ -129,7 +139,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request, Locale locale) {
         saveLog(MethodArgumentTypeMismatchException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.NOT_FOUND_METHOD_ARGUMENT_EXCEPTION, resourceBundleMessageSource.getMessage("ex.argumentMismatch", null,
@@ -144,7 +154,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     protected ApiError handleHttpDataAccessException(DataAccessException ex, WebRequest request, Locale locale) {
         saveLog(DataAccessException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.DATABASE_ERROR, resourceBundleMessageSource.getMessage("ex.database", null, locale));
@@ -158,7 +168,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(DuplicateEntityException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpDuplicateEntityException(DuplicateEntityException ex, WebRequest request, Locale locale) {
         saveLog(DuplicateEntityException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.DUPLICATE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
@@ -173,7 +183,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(NoSuchEntityException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpNoSuchEntityException(NoSuchEntityException ex, WebRequest request, Locale locale) {
         saveLog(NoSuchEntityException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.NO_SUCH_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
@@ -188,12 +198,13 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     protected ApiError handleConstraintViolationException(ConstraintViolationException ex, WebRequest request, Locale locale) {
+        System.out.println("handleConstraintViolationException");
         saveLog(NullPointerException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getConstraintViolations().stream()
                 .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale))
-                .collect(Collectors.joining("; ")));
+                .distinct().collect(Collectors.joining("; ")));
     }
 
     /**
@@ -204,7 +215,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     protected ApiError handleHttpNullPointerException(NullPointerException ex, WebRequest request, Locale locale) {
         saveLog(NullPointerException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.INTERNAL_SERVER_ERROR_EXCEPTION, resourceBundleMessageSource.getMessage("ex.error", null, locale));
@@ -218,7 +229,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     protected ApiError handleHttpException(Exception ex, WebRequest request, Locale locale) {
         saveLog(Exception.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.INTERNAL_SERVER_ERROR_EXCEPTION, resourceBundleMessageSource.getMessage("ex.error", null, locale));

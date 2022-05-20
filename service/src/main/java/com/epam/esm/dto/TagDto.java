@@ -8,7 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 /**
  * The class {@code TagDto} represents TagDto.
@@ -23,22 +23,30 @@ import javax.validation.constraints.Size;
 public class TagDto extends RepresentationModel<TagDto> {
     /**
      * The marker interface {@code OnCreate} helps in providing validation of {@link com.epam.esm.dto.TagDto} class
-     * fields when creating and updating a new TagDto object
+     * fields when creating a new TagDto object
      */
     public interface OnCreate {
     }
 
     /**
+     * The marker  interface {@code OnUpdate} helps in providing validation of {@link com.epam.esm.dto.TagDto} class
+     * fields when updating TagDto object
+     */
+    public interface OnUpdate {
+    }
+
+    /**
      * TagDto id.
      */
+    @Null(groups = {TagDto.OnCreate.class, TagDto.OnUpdate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.tagIdNull")
+    private String id;
 
-    @Null(groups = TagDto.OnCreate.class, message = "ex.tagIdNull")
-    private long id;
     /**
      * TagDto name.
      */
-    @Size(groups = {TagDto.OnCreate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, min = 2, max = 30, message = "ex.tagNameSize")
-    @NotNull(groups = TagDto.OnCreate.class, message = "ex.tagNameNotNull")
+    @Pattern(groups = {TagDto.OnCreate.class, TagDto.OnUpdate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class},
+            regexp = "^\\w[\\w+\\s?]+\\w${2,30}", message = "ex.tagName")
+    @NotNull(groups = {TagDto.OnCreate.class, TagDto.OnUpdate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.tagNameNotNull")
     private String name;
 
     /**

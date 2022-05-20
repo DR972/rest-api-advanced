@@ -79,8 +79,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto findCertificateById(long id) {
-        return certificateMapper.convertToDto(certificateDao.findEntityById(id).orElseThrow(() ->
+    public GiftCertificateDto findCertificateById(String id) {
+        return certificateMapper.convertToDto(certificateDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
                 new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
     }
 
@@ -89,11 +89,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (params.get(SORTING) != null) {
             validator.validateSortType(params.get(SORTING));
         }
-        long countRows = certificateDao.countNumberEntityRows();
         List<GiftCertificateDto> certificates = certificateDao.findListEntities(params, (pageNumber - 1) * rows, rows)
                 .stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(certificates, pageNumber, certificates.size(), countRows);
-//        return certificateDao.findListEntities(params, pageNumber, rows).stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
+        return new ListEntitiesDto<>(certificates, pageNumber, certificates.size(), certificateDao.countNumberEntityRows(params));
     }
 
     @Override
@@ -108,11 +106,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, long id) {
+    public GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, String id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateMapper.updateGiftCertificateFromDto(certificateDto, certificate);
         certificate.setLastUpdateDate(dateHandler.getCurrentDate());
-        certificate.setId(id);
+        certificate.setId(Long.valueOf(id));
         certificate.setTags(createListTags(certificateDto.getTags()));
         GiftCertificateDto updatedCertificate = certificateMapper.convertToDto(certificateDao.updateEntity(certificate));
         updatedCertificate.setTags(updatedCertificate.getTags().stream().map(t -> tagMapper.convertToDto(tagService.findTagByName(t.getName()))).collect(Collectors.toList()));
@@ -121,7 +119,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public void deleteCertificate(long id) {
+    public void deleteCertificate(String id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateDao.deleteEntity(certificate);
     }

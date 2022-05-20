@@ -17,7 +17,7 @@ public interface CustomerOrderService {
      * @param id customerOrderDto id
      * @return customerOrderDto object
      */
-    CustomerOrderDto findCustomerOrderById(long id);
+    CustomerOrderDto findCustomerOrderById(String id);
 
     /**
      * The method finds list customerOrders.
@@ -31,9 +31,9 @@ public interface CustomerOrderService {
     /**
      * The method performs the operation of saving CustomerOrder.
      *
-     * @param customerId       long customerId
+     * @param customerId       Customer customerId
      * @param customerOrderDto CustomerOrderDto
      * @return CustomerOrderDto object
      */
-    CustomerOrderDto createCustomerOrder(long customerId, CustomerOrderDto customerOrderDto);
+    CustomerOrderDto createCustomerOrder(String customerId, CustomerOrderDto customerOrderDto);
 }

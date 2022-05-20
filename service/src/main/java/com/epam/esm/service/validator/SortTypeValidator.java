@@ -2,9 +2,13 @@ package com.epam.esm.service.validator;
 
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.SortTypeException;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,10 +30,15 @@ public class SortTypeValidator {
      *
      * @param types List<String> types
      */
+    @SneakyThrows
     public void validateSortType(List<String> types) {
         List<String> fields = Arrays.stream(GiftCertificate.class.getDeclaredFields()).map(Field::getName)
                 .filter(f -> !f.equals(TAGS) && !f.equals(ORDERS)).collect(Collectors.toList());
-        List<String> badTypes = types.stream()
+        List<String> decodedTypes = new ArrayList<>();
+        for (String type : types) {
+            decodedTypes.add(URLEncoder.encode(type, StandardCharsets.UTF_8.name()));
+        }
+        List<String> badTypes = decodedTypes.stream()
                 .map(t -> {
                     if (t.startsWith("-")) return t.substring(1);
                     else return t;

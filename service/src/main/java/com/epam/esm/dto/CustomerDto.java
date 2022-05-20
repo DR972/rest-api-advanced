@@ -8,7 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,18 +27,20 @@ public class CustomerDto extends RepresentationModel<CustomerDto> {
      * long id.
      */
     @Null(message = "ex.customerIdNull")
-    private long id;
+    private String customerId;
+
     /**
      * String name.
      */
     @NotNull(message = "ex.customerNameNotNull")
-    @Size(min = 2, max = 30, message = "ex.customerNameSize")
+    @Pattern(regexp = "^\\w[\\w+\\s?]{1,3}\\w${2,30}", message = "ex.customerName")
     private String name;
+
     /**
      * List<CustomerOrderDto> customerOrders.
      */
+    @Null(message = "ex.customerOrdersNull")
     private List<CustomerOrderDto> customerOrders = new ArrayList<>();
-
 
     /**
      * The constructor creates a CustomerDto object

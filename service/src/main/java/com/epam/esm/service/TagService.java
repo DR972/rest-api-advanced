@@ -20,7 +20,7 @@ public interface TagService {
      * @param id TagDto id
      * @return TagDto object
      */
-    TagDto findTagById(long id);
+    TagDto findTagById(String id);
 
     /**
      * The method finds Tag by name.
@@ -54,14 +54,14 @@ public interface TagService {
      * @param id     TagDto id
      * @return TagDto object
      */
-    TagDto updateTag(TagDto tagDto, long id);
+    TagDto updateTag(TagDto tagDto, String id);
 
     /**
      * The method performs the operation of deleting Tag.
      *
      * @param id Tag id
      */
-    void deleteTag(long id);
+    void deleteTag(String id);
 
     /**
      * The method finds list the most widely used tags Of Customers with the highest cost of all orders.

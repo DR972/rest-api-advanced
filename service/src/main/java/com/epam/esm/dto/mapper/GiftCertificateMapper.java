@@ -4,6 +4,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
@@ -24,6 +25,7 @@ public interface GiftCertificateMapper {
      * @param giftCertificate GiftCertificate giftCertificate
      * @return converted dto
      */
+    @Mapping(source = "id", target = "certificateId")
     GiftCertificateDto convertToDto(GiftCertificate giftCertificate);
 
     /**
@@ -32,6 +34,7 @@ public interface GiftCertificateMapper {
      * @param dto GiftCertificateDto dto
      * @return converted entity
      */
+    @Mapping(source = "certificateId", target = "id")
     GiftCertificate convertToEntity(GiftCertificateDto dto);
 
     /**
