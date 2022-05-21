@@ -5,7 +5,6 @@ import com.epam.esm.entity.BaseEntity;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -60,8 +59,8 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> findListEntities(MultiValueMap<String, String> params, int pageNumber, int rows) {
-        return entityManager.unwrap(Session.class).createQuery("from " + entityType.getSimpleName())
+    public List<T> findListEntities(int pageNumber, int rows) {
+        return entityManager.unwrap(Session.class).createQuery("from " + entityType.getSimpleName() + " order by id")
                 .setFirstResult(pageNumber).setMaxResults(rows).getResultList();
     }
 
@@ -83,7 +82,7 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
     }
 
     @Override
-    public long countNumberEntityRows(MultiValueMap<String, String> params) {
+    public long countNumberEntityRows() {
         return entityManager.unwrap(Session.class).createQuery("from " + entityType.getSimpleName()).getResultList().size();
     }
 }

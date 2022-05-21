@@ -9,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +34,13 @@ public class CustomerDto extends RepresentationModel<CustomerDto> {
      * String name.
      */
     @NotNull(message = "ex.customerNameNotNull")
-    @Pattern(regexp = "^\\w[\\w+\\s?]{1,3}\\w${2,30}", message = "ex.customerName")
+    @Pattern(regexp = "^\\w[\\w+\\s?]+\\w${2,30}", message = "ex.customerName")
     private String name;
 
     /**
      * List<CustomerOrderDto> customerOrders.
      */
-    @Null(message = "ex.customerOrdersNull")
+    @Size(max = 0, message = "ex.customerOrdersNull")
     private List<CustomerOrderDto> customerOrders = new ArrayList<>();
 
     /**

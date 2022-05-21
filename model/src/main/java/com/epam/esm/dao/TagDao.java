@@ -25,9 +25,9 @@ public interface TagDao extends Dao<Tag, Long> {
     List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 
     /**
-     * The method performs operation of deleting on the object GiftCertificateTag in the table 'GiftCertificateTag'.
+     * The method removes tags that are not associated with certificates in the `Tag` table.
      *
-     * @param id long id
+     * @param tags List<Tag> tags
      */
-    void deleteGiftCertificateTagByTagId(long id);
+    void deleteTagNotAssociatedWithCertificates(List<Tag> tags);
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The class {@code TagDaoImpl} is implementation of interface {@link TagDao} and intended to work with {@link com.epam.esm.entity.Tag} table.
@@ -32,22 +33,22 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
 
     @Override
     public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
-        String query = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer in " +
-                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o on c.id = o.customer GROUP BY c.id " +
+        String query = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
+                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
                 "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
                 "GROUP BY t.id " +
-                "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer in " +
-                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o on c.id = o.customer GROUP BY c.id " +
+                "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
+                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
                 "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
                 "GROUP BY t.id))";
         return entityManager.unwrap(Session.class).createQuery(query, Tag.class).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
     }
 
     @Override
-    public void deleteGiftCertificateTagByTagId(long id) {
-        entityManager.unwrap(Session.class).createNativeQuery("DELETE FROM gift_certificate_tag WHERE tag_id = :id")
-                .setParameter("id", id).executeUpdate();
-        entityManager.flush();
-        entityManager.clear();
+    public void deleteTagNotAssociatedWithCertificates(List<Tag> tags) {
+        String tageName = tags.stream().map(Tag::getName).collect(Collectors.joining(",", "'", "'"));
+        String query = "DELETE FROM tag WHERE tag.name IN (SELECT tag.name FROM unnest(string_to_array(" + tageName + ", ',')) u " +
+                "LEFT JOIN tag ON tag.name=u LEFT JOIN gift_certificate_tag ON tag.id = tag_id WHERE tag_id is NULL)";
+        entityManager.unwrap(Session.class).createNativeQuery(query).executeUpdate();
     }
 }

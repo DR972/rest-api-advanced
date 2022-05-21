@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.TagMapper;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * GiftCertificateDao certificateDao.
      */
     private final GiftCertificateDao certificateDao;
+    /**
+     * TagDao tagDao.
+     */
+    private final TagDao tagDao;
     /**
      * DateHandler dateHandler.
      */
@@ -62,16 +68,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      *
      * @param validator         SortTypeValidator
      * @param certificateDao    GiftCertificateDao certificateDao
+     * @param tagDao            TagDao tagDao
      * @param dateHandler       DateHandler dateHandler
      * @param tagService        TagService tagService
      * @param certificateMapper GiftCertificateMapper certificateMapper
      * @param tagMapper         TagMapper tagMapper
      */
     @Autowired
-    public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, DateHandler dateHandler,
+    public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler,
                                       TagService tagService, GiftCertificateMapper certificateMapper, TagMapper tagMapper) {
         this.validator = validator;
         this.certificateDao = certificateDao;
+        this.tagDao = tagDao;
         this.dateHandler = dateHandler;
         this.tagService = tagService;
         this.certificateMapper = certificateMapper;
@@ -108,12 +116,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, String id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
+        List<Tag> tags = new ArrayList<>(certificate.getTags());
         certificateMapper.updateGiftCertificateFromDto(certificateDto, certificate);
+
         certificate.setLastUpdateDate(dateHandler.getCurrentDate());
         certificate.setId(Long.valueOf(id));
         certificate.setTags(createListTags(certificateDto.getTags()));
+
         GiftCertificateDto updatedCertificate = certificateMapper.convertToDto(certificateDao.updateEntity(certificate));
         updatedCertificate.setTags(updatedCertificate.getTags().stream().map(t -> tagMapper.convertToDto(tagService.findTagByName(t.getName()))).collect(Collectors.toList()));
+        tagDao.deleteTagNotAssociatedWithCertificates(tags);
+        System.out.println(tags);
         return updatedCertificate;
     }
 
@@ -122,6 +135,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void deleteCertificate(String id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
         certificateDao.deleteEntity(certificate);
+        tagDao.deleteTagNotAssociatedWithCertificates(certificate.getTags());
     }
 
     private List<Tag> createListTags(List<TagDto> tags) {

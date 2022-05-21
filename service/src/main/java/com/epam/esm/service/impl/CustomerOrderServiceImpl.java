@@ -13,7 +13,6 @@ import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -77,9 +76,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional
     public ListEntitiesDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows) {
-        List<CustomerOrderDto> customerOrders = customerOrderDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+        List<CustomerOrderDto> customerOrders = customerOrderDao.findListEntities((pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
+        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRows());
     }
 
     @Override

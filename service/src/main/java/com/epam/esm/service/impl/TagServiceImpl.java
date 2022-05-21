@@ -1,8 +1,10 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DeleteTagException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.TagMapper;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +33,11 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
 
     /**
+     * GiftCertificateDao certificateDao.
+     */
+    private final GiftCertificateDao certificateDao;
+
+    /**
      * TagDao tagDao.
      */
     private final TagMapper tagMapper;
@@ -37,12 +45,14 @@ public class TagServiceImpl implements TagService {
     /**
      * The constructor creates a TagServiceImpl object
      *
-     * @param tagDao    TagDao tagDao
-     * @param tagMapper TagMapper tagMapper
+     * @param tagDao         TagDao tagDao
+     * @param certificateDao GiftCertificateDao certificateDao
+     * @param tagMapper      TagMapper tagMapper
      */
     @Autowired
-    public TagServiceImpl(TagDao tagDao, TagMapper tagMapper) {
+    public TagServiceImpl(TagDao tagDao, GiftCertificateDao certificateDao, TagMapper tagMapper) {
         this.tagDao = tagDao;
+        this.certificateDao = certificateDao;
         this.tagMapper = tagMapper;
     }
 
@@ -60,9 +70,9 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows) {
-        List<TagDto> tags = tagDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+        List<TagDto> tags = tagDao.findListEntities((pageNumber - 1) * rows, rows)
                 .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
+        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRows());
     }
 
     @Override
@@ -91,8 +101,11 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public void deleteTag(String id) {
         Tag tag = tagMapper.convertToEntity(findTagById(id));
-        tagDao.deleteGiftCertificateTagByTagId(Long.parseLong(id));
-        tagDao.deleteEntity(tag);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("tag", tag.getName());
+        if (!certificateDao.findListEntities(params, 0, 1).isEmpty()) {
+            throw new DeleteTagException("ex.deleteTag", tag.getName() + ")");
+        } else tagDao.deleteEntity(tag);
     }
 
     @Override

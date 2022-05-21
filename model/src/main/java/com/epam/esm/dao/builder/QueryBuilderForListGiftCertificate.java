@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * The class {@code QueryBuilderForGiftCertificate} creates a query to get a list of GiftCertificate from the database.
+ * The class {@code QueryBuilderForListGiftCertificate} creates a query to get a list of GiftCertificate from the database.
  *
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
 @Component
-public class QueryBuilderForGiftCertificate {
+public class QueryBuilderForListGiftCertificate {
     private static final String NAME = "name";
     private static final String TAG = "tag";
     private static final String SORTING = "sorting";

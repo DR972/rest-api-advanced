@@ -111,9 +111,56 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SortTypeException.class)
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleSortTypeException(SortTypeException ex, WebRequest request, Locale locale) {
-        saveLog(MethodArgumentNotValidException.class, ex, request.getParameterMap());
+        saveLog(SortTypeException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.SORT_TYPE_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
                 locale) + ex.getParam());
+    }
+
+    /**
+     * The {@code handleHttpDuplicateEntityException} method returns a response if DuplicateEntityException is generated.
+     *
+     * @param ex      DuplicateEntityException exception
+     * @param request WebRequest request
+     * @return ApiError object
+     */
+    @ExceptionHandler(DuplicateEntityException.class)
+    @ResponseStatus(BAD_REQUEST)
+    protected ApiError handleHttpDuplicateEntityException(DuplicateEntityException ex, WebRequest request, Locale locale) {
+        saveLog(DuplicateEntityException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.DUPLICATE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
+                locale) + ex.getParam());
+    }
+
+    /**
+     * The {@code handleHttpDuplicateEntityException} method returns a response if DuplicateEntityException is generated.
+     *
+     * @param ex      DuplicateEntityException exception
+     * @param request WebRequest request
+     * @return ApiError object
+     */
+    @ExceptionHandler(DeleteTagException.class)
+    @ResponseStatus(BAD_REQUEST)
+    protected ApiError handleHttpDeleteTagException(DeleteTagException ex, WebRequest request, Locale locale) {
+        saveLog(DeleteTagException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.DELETE_TAG_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
+                locale) + ex.getParam());
+    }
+
+    /**
+     * The {@code handleConstraintViolationException} method returns a response if ConstraintViolationException is generated.
+     *
+     * @param ex      ConstraintViolationException exception
+     * @param request WebRequest request
+     * @return ApiError object
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(BAD_REQUEST)
+    protected ApiError handleConstraintViolationException(ConstraintViolationException ex, WebRequest request, Locale locale) {
+        System.out.println("handleConstraintViolationException");
+        saveLog(ConstraintViolationException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getConstraintViolations().stream()
+                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale))
+                .distinct().collect(Collectors.joining("; ")));
     }
 
     /**
@@ -147,35 +194,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * The {@code handleHttpDataAccessException} method returns a response if DataAccessException is generated.
-     *
-     * @param ex      DataAccessException exception
-     * @param request WebRequest request
-     * @return ApiError object
-     */
-    @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    protected ApiError handleHttpDataAccessException(DataAccessException ex, WebRequest request, Locale locale) {
-        saveLog(DataAccessException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.DATABASE_ERROR, resourceBundleMessageSource.getMessage("ex.database", null, locale));
-    }
-
-    /**
-     * The {@code handleHttpDuplicateEntityException} method returns a response if DuplicateEntityException is generated.
-     *
-     * @param ex      DuplicateEntityException exception
-     * @param request WebRequest request
-     * @return ApiError object
-     */
-    @ExceptionHandler(DuplicateEntityException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiError handleHttpDuplicateEntityException(DuplicateEntityException ex, WebRequest request, Locale locale) {
-        saveLog(DuplicateEntityException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.DUPLICATE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam());
-    }
-
-    /**
      * The {@code handleHttpNoSuchEntityException} method returns a response if NoSuchEntityException is generated.
      *
      * @param ex      NoSuchEntityException exception
@@ -191,20 +209,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * The {@code handleConstraintViolationException} method returns a response if ConstraintViolationException is generated.
+     * The {@code handleHttpDataAccessException} method returns a response if DataAccessException is generated.
      *
-     * @param ex      ConstraintViolationException exception
+     * @param ex      DataAccessException exception
      * @param request WebRequest request
      * @return ApiError object
      */
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiError handleConstraintViolationException(ConstraintViolationException ex, WebRequest request, Locale locale) {
-        System.out.println("handleConstraintViolationException");
-        saveLog(NullPointerException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getConstraintViolations().stream()
-                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale))
-                .distinct().collect(Collectors.joining("; ")));
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    protected ApiError handleHttpDataAccessException(DataAccessException ex, WebRequest request, Locale locale) {
+        saveLog(DataAccessException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.DATABASE_ERROR, resourceBundleMessageSource.getMessage("ex.database", null, locale));
     }
 
     /**

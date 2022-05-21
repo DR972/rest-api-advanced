@@ -14,7 +14,6 @@ import com.epam.esm.dto.CustomerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,9 +74,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public ListEntitiesDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
-        List<CustomerDto> customerDtos = customerDao.findListEntities(new LinkedMultiValueMap<>(), (pageNumber - 1) * rows, rows)
+        List<CustomerDto> customerDtos = customerDao.findListEntities((pageNumber - 1) * rows, rows)
                 .stream().map(customerMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows(new LinkedMultiValueMap<>()));
+        return new ListEntitiesDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows());
     }
 
     @Override
@@ -102,6 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
         findCustomerById(customerId);
         List<CustomerOrderDto> customerOrders = customerOrderDao.findCustomerOrderList(Long.parseLong(customerId), (pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRowsInListCustomerOrders(Long.parseLong(customerId)));
+        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao
+                .countNumberEntityRowsInListCustomerOrders(Long.parseLong(customerId)));
     }
 }
