@@ -18,7 +18,6 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -106,14 +105,19 @@ public class CustomerDaoImplTest {
 
     @Test
     void findListEntitiesShouldReturnResult() {
-        assertEquals(customerDao.findListEntities(new LinkedMultiValueMap<>(), 0,2),
+        assertEquals(customerDao.findListEntities(0, 2),
                 Arrays.asList(CUSTOMER_1, CUSTOMER_2));
-        assertEquals(customerDao.findListEntities(new LinkedMultiValueMap<>(), 2,2),
+        assertEquals(customerDao.findListEntities(2, 2),
                 Collections.singletonList(CUSTOMER_3));
     }
 
     @Test
     void createEntityShouldReturnResult() {
         assertEquals(customerDao.createEntity(NEW_CUSTOMER), NEW_CUSTOMER);
+    }
+
+    @Test
+    void countNumberEntityRowsShouldReturnResult() {
+        assertEquals(customerDao.countNumberEntityRows(), 3);
     }
 }

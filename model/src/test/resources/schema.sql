@@ -69,6 +69,9 @@ CREATE TABLE customer_order_gift_certificate(
     PRIMARY KEY (customer_order_id, gift_certificate_id)
 );
 
+-- --------------------------------------------------------------------------
+-- Inset into gift_certificate table
+-- --------------------------------------------------------------------------
 INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date)
 VALUES ('ATV riding', 'Description ATV riding', 100, 10, '2022-04-01T10:12:45.123', '2022-04-07T14:15:13.257');
 INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date)
@@ -84,6 +87,9 @@ VALUES ('Shopping at the supermarket', 'Shopping at Lidl supermarket chain', 80,
 INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date)
 VALUES ( 'Hot air balloon flight', 'An unforgettable hot air balloon flight', 150, 12, '2022-03-01T10:12:45.123', '2022-03-14T14:15:13.257');
 
+-- --------------------------------------------------------------------------
+-- Inset into tag table
+-- --------------------------------------------------------------------------
 INSERT INTO tag (name) VALUES ('rest');
 INSERT INTO tag (name) VALUES ('nature');
 INSERT INTO tag (name) VALUES ('shopping');
@@ -97,6 +103,9 @@ INSERT INTO tag (name) VALUES ('restaurant');
 INSERT INTO tag (name) VALUES ('flight');
 INSERT INTO tag (name) VALUES ('visit');
 
+-- --------------------------------------------------------------------------
+-- Inset into gift_certificate_tag table
+-- --------------------------------------------------------------------------
 INSERT INTO gift_certificate_tag VALUES (1, 1);
 INSERT INTO gift_certificate_tag VALUES (1, 2);
 INSERT INTO gift_certificate_tag VALUES (1, 4);
@@ -123,16 +132,25 @@ INSERT INTO gift_certificate_tag VALUES (7, 1);
 INSERT INTO gift_certificate_tag VALUES (7, 2);
 INSERT INTO gift_certificate_tag VALUES (7, 11);
 
+-- --------------------------------------------------------------------------
+-- Inset into customer table
+-- --------------------------------------------------------------------------
 INSERT INTO customer (name) VALUES ('user1');
 INSERT INTO customer (name) VALUES ('user2');
 INSERT INTO customer (name) VALUES ('user3');
 
+-- --------------------------------------------------------------------------
+-- Inset into customer_order table
+-- --------------------------------------------------------------------------
 INSERT INTO customer_order (customer_id, purchase_time, amount) VALUES (1, '2022-04-02T10:12', 150);
 INSERT INTO customer_order (customer_id, purchase_time, amount) VALUES (2, '2022-04-03T10:12', 180);
 INSERT INTO customer_order (customer_id, purchase_time, amount) VALUES (3, '2022-04-05T10:12', 125);
 INSERT INTO customer_order (customer_id, purchase_time, amount) VALUES (1, '2022-04-04T10:12', 110);
 INSERT INTO customer_order (customer_id, purchase_time, amount) VALUES (2, '2022-04-07T10:12', 50);
 
+-- --------------------------------------------------------------------------
+-- Inset into customer_order_gift_certificate table
+-- --------------------------------------------------------------------------
 INSERT INTO customer_order_gift_certificate VALUES (1, 7);
 
 INSERT INTO customer_order_gift_certificate VALUES (2, 1);

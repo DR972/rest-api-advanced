@@ -18,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
@@ -71,10 +70,8 @@ public class TagDaoImplTest {
 
     @Test
     void findListEntitiesShouldReturnResult() {
-        assertEquals(tagDao.findListEntities(new LinkedMultiValueMap<>(), 0,10),
-                Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5, TAG_6, TAG_7, TAG_8, TAG_9, TAG_10));
-
-        assertEquals(tagDao.findListEntities(new LinkedMultiValueMap<>(), 10,10), Arrays.asList(TAG_11, TAG_12));
+        assertEquals(tagDao.findListEntities(0, 10), Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5, TAG_6, TAG_7, TAG_8, TAG_9, TAG_10));
+        assertEquals(tagDao.findListEntities(10, 10), Arrays.asList(TAG_11, TAG_12));
     }
 
     @Test
@@ -89,6 +86,11 @@ public class TagDaoImplTest {
 
     @Test
     void findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrdersShouldReturnResult() {
-        assertEquals(tagDao.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0,5), Collections.singletonList(TAG_3));
+        assertEquals(tagDao.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5), Collections.singletonList(TAG_3));
+    }
+
+    @Test
+    void countNumberEntityRowsShouldReturnResult() {
+        assertEquals(tagDao.countNumberEntityRows(), 12);
     }
 }

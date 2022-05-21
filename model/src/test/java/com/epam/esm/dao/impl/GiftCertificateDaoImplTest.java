@@ -112,13 +112,10 @@ public class GiftCertificateDaoImplTest {
                 Arrays.asList(GIFT_CERTIFICATE_7, GIFT_CERTIFICATE_5, GIFT_CERTIFICATE_3, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_1));
 
         assertEquals(certificateDao.findListEntities(createListParameters(Arrays.asList(Collections.singletonList(VISIT), Collections.singletonList(VISIT),
-                        null, Collections.singletonList(LAST_UPDATE_DATE_DESC))), 0, 5), Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3));
+                null, Collections.singletonList(LAST_UPDATE_DATE_DESC))), 0, 5), Arrays.asList(GIFT_CERTIFICATE_4, GIFT_CERTIFICATE_3));
 
         assertEquals(certificateDao.findListEntities(createListParameters(Arrays.asList(null, null, Collections.singletonList(REST),
                 Collections.singletonList(NAME))), 0, 5), Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_7));
-
-        System.out.println(certificateDao.findListEntities(createListParameters(Arrays.asList(null, null, null,
-                Collections.singletonList(NAME))), 0, 5));
 
         assertEquals(certificateDao.findListEntities(createListParameters(Arrays.asList(null, null, Arrays.asList(REST, HORSE),
                 Collections.singletonList(NAME))), 0, 5), Collections.singletonList(GIFT_CERTIFICATE_2));
@@ -126,6 +123,36 @@ public class GiftCertificateDaoImplTest {
         assertEquals(certificateDao.findListEntities(createListParameters(Arrays.asList(Collections.singletonList(RIDING), Collections.singletonList(SCRIPT),
                 Collections.singletonList(HORSE), Collections.singletonList(NAME))), 0, 5), Collections.singletonList(GIFT_CERTIFICATE_2));
     }
+
+    @Test
+    void createEntityShouldReturnResult() {
+        assertEquals(certificateDao.createEntity(NEW_GIFT_CERTIFICATE), NEW_GIFT_CERTIFICATE);
+        assertEquals(certificateDao.createEntity(NEW_GIFT_CERTIFICATE_WITH_NEW_TAG), NEW_GIFT_CERTIFICATE_WITH_NEW_TAG);
+    }
+
+    @Test
+    void updateEntityShouldReturnResult() {
+        assertEquals(certificateDao.updateEntity(UPDATE_GIFT_CERTIFICATE_1), UPDATE_GIFT_CERTIFICATE_1);
+        assertEquals(certificateDao.updateEntity(UPDATE_GIFT_CERTIFICATE_2), UPDATE_GIFT_CERTIFICATE_2);
+    }
+
+    @Test
+    void countNumberEntityRowsShouldReturnResult() {
+        assertEquals(certificateDao.countNumberEntityRows(createListParameters(Arrays.asList(null, null, null, Collections.singletonList(LAST_UPDATE_DATE)))), 7);
+
+        assertEquals(certificateDao.countNumberEntityRows(createListParameters(Arrays.asList(Collections.singletonList(VISIT), Collections.singletonList(VISIT),
+                null, Collections.singletonList(LAST_UPDATE_DATE_DESC)))), 2);
+
+        assertEquals(certificateDao.countNumberEntityRows(createListParameters(Arrays.asList(null, null, Collections.singletonList(REST),
+                Collections.singletonList(NAME)))), 3);
+
+        assertEquals(certificateDao.countNumberEntityRows(createListParameters(Arrays.asList(null, null, Arrays.asList(REST, HORSE),
+                Collections.singletonList(NAME)))), 1);
+
+        assertEquals(certificateDao.countNumberEntityRows(createListParameters(Arrays.asList(Collections.singletonList(RIDING), Collections.singletonList(SCRIPT),
+                Collections.singletonList(HORSE), Collections.singletonList(NAME)))), 1);
+    }
+
 
     private MultiValueMap<String, String> createListParameters(List<List<String>> list) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -142,18 +169,5 @@ public class GiftCertificateDaoImplTest {
             params.put(SORTING, list.get(3));
         }
         return params;
-    }
-
-
-    @Test
-    void createEntityShouldReturnResult() {
-        assertEquals(certificateDao.createEntity(NEW_GIFT_CERTIFICATE), NEW_GIFT_CERTIFICATE);
-        assertEquals(certificateDao.createEntity(NEW_GIFT_CERTIFICATE_WITH_NEW_TAG), NEW_GIFT_CERTIFICATE_WITH_NEW_TAG);
-    }
-
-    @Test
-    void updateEntityShouldReturnResult() {
-        assertEquals(certificateDao.updateEntity(UPDATE_GIFT_CERTIFICATE_1), UPDATE_GIFT_CERTIFICATE_1);
-        assertEquals(certificateDao.updateEntity(UPDATE_GIFT_CERTIFICATE_2), UPDATE_GIFT_CERTIFICATE_2);
     }
 }
