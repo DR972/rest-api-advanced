@@ -22,7 +22,7 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
 
     @Override
     public void addLinks(TagDto tagDto) {
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tagDto.getId()))).withSelfRel());
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tagDto.getId()))).withRel("getTagById"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("5", "1")).withRel("getTagList"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tagDto)).withRel("createTag"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tagDto.getId()), tagDto)).withRel("updateTag"));
@@ -34,7 +34,7 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
     @Override
     public void addLinksForListEntity(ListEntitiesDto<TagDto> tags, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber), String.valueOf(rows))).withSelfRel());
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getListTags"));
 
         if (pageNumber < numberPages + 1) {
             tags.getEntities().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
@@ -45,14 +45,17 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
         }
         tags.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(String.valueOf(5), String.valueOf(1)))
                 .withRel("getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders"));
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("1", String.valueOf(rows))).withRel("getTagList page 1"));
-        if (pageNumber > 2 && pageNumber < numberPages + 1) {
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber - 1)));
+
+        if (numberPages > 1) {
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("1", String.valueOf(rows))).withRel("getTagList page 1"));
+            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+                tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber - 1)));
+            }
+            if (pageNumber < numberPages - 1) {
+                tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber + 1)));
+            }
+            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(numberPages), String.valueOf(rows)))
+                    .withRel("getTagList last page " + numberPages));
         }
-        if (pageNumber < numberPages - 1) {
-            tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getTagList page " + (pageNumber + 1)));
-        }
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(numberPages), String.valueOf(rows)))
-                .withRel("getTagList last page " + numberPages));
     }
 }

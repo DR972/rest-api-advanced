@@ -25,6 +25,13 @@ public interface TagDao extends Dao<Tag, Long> {
     List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 
     /**
+     * The method finds count number of rows in the list of the most popular tags.
+     *
+     * @return count number of rows objects
+     */
+    long countNumberEntityRowsInListOfMostPopularTags();
+
+    /**
      * The method removes tags that are not associated with certificates in the `Tag` table.
      *
      * @param tags List<Tag> tags

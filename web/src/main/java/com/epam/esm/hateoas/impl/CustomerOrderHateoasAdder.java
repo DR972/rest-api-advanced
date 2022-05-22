@@ -30,7 +30,7 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
     @Override
     public void addLinks(CustomerOrderDto customerOrderDto) {
         customerOrderDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderByCustomerIdAndOrderId(String.valueOf(customerOrderDto.getCustomer()),
-                String.valueOf(customerOrderDto.getOrderId()))).withSelfRel());
+                String.valueOf(customerOrderDto.getOrderId()))).withRel("getCustomerOrderByCustomerIdAndOrderId"));
         customerOrderDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerOrderDto.getCustomer()))).withRel("getCustomerById"));
         customerOrderDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList("5", "1")).withRel("getCustomerList"));
         customerOrderDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(new CustomerDto())).withRel("createCustomer"));
@@ -46,7 +46,7 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
     public void addLinksForListEntity(ListEntitiesDto<CustomerOrderDto> customerOrders, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) customerOrders.getTotalNumberObjects() / rows);
         customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                String.valueOf(pageNumber), String.valueOf(rows))).withSelfRel());
+                String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
 
         if (pageNumber < numberPages + 1) {
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerOrders.getEntities().get(0).getCustomer()))).withRel("getCustomerById"));
@@ -65,18 +65,20 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
                 });
             });
 
-            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                    "1", String.valueOf(rows))).withRel("getCustomerOrderList page 1"));
-            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+            if (numberPages > 1) {
                 customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                        String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber - 1)));
-            }
-            if (pageNumber < numberPages - 1) {
+                        "1", String.valueOf(rows))).withRel("getCustomerOrderList page 1"));
+                if (pageNumber > 2 && pageNumber < numberPages + 1) {
+                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
+                            String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber - 1)));
+                }
+                if (pageNumber < numberPages - 1) {
+                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
+                            String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber + 1)));
+                }
                 customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                        String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber + 1)));
+                        String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerOrderList last page " + numberPages));
             }
-            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                    String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerOrderList last page " + numberPages));
         }
     }
 }

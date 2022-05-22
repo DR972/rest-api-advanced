@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 /**
  * Class {@code TagController} is an endpoint of the API which allows you to perform CRUD operations on tags.
@@ -148,12 +147,12 @@ public class TagController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+    public ListEntitiesDto<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                                                                    @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                                                    @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                                    @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        List<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders((Integer.parseInt(pageNumber) - 1) * Integer.parseInt(rows), Integer.parseInt(rows));
-        tags.forEach(hateoasAdder::addLinks);
+        ListEntitiesDto<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        hateoasAdder.addLinksForListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
 }

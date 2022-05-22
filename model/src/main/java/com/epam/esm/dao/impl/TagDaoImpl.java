@@ -18,6 +18,15 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
+    private static final String QUERY_MOST_POPULAR_TAGS = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
+            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
+            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
+            "GROUP BY t.id " +
+            "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
+            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
+            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
+            "GROUP BY t.id))";
+
     /**
      * EntityManager entityManager.
      */
@@ -31,17 +40,15 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
         super(Tag.class);
     }
 
+
     @Override
     public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
-        String query = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
-                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
-                "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
-                "GROUP BY t.id " +
-                "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
-                "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
-                "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
-                "GROUP BY t.id))";
-        return entityManager.unwrap(Session.class).createQuery(query, Tag.class).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+    }
+
+    @Override
+    public long countNumberEntityRowsInListOfMostPopularTags() {
+        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).getResultList().size();
     }
 
     @Override

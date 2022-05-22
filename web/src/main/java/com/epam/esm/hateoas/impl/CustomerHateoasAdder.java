@@ -29,7 +29,7 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
 
     @Override
     public void addLinks(CustomerDto customerDto) {
-        customerDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerDto.getCustomerId()))).withSelfRel());
+        customerDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerDto.getCustomerId()))).withRel("getCustomerById"));
         customerDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList("5", "1")).withRel("getCustomerList"));
         customerDto.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(customerDto)).withRel("createCustomer"));
 
@@ -52,7 +52,7 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
     @Override
     public void addLinksForListEntity(ListEntitiesDto<CustomerDto> customers, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) customers.getTotalNumberObjects() / rows);
-        customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withSelfRel());
+        customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
 
         if (pageNumber < numberPages + 1) {
             customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customers.getEntities().get(0).getCustomerId()))).withRel("getCustomerById"));
@@ -73,15 +73,17 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
             });
         }
 
-        customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList("1", String.valueOf(rows))).withRel("getCustomerList page 1"));
-        if (pageNumber > 2 && pageNumber < numberPages + 1) {
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber - 1), String.valueOf(rows)))
-                    .withRel("getCustomerList page " + (pageNumber - 1)));
+        if (numberPages > 1) {
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList("1", String.valueOf(rows))).withRel("getCustomerList page 1"));
+            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+                customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber - 1), String.valueOf(rows)))
+                        .withRel("getCustomerList page " + (pageNumber - 1)));
+            }
+            if (pageNumber < numberPages - 1) {
+                customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber + 1), String.valueOf(rows)))
+                        .withRel("getCustomerList page " + (pageNumber + 1)));
+            }
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(numberPages), String.valueOf(rows))).withRel("getCustomerList last page " + numberPages));
         }
-        if (pageNumber < numberPages - 1) {
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber + 1), String.valueOf(rows)))
-                    .withRel("getCustomerList page " + (pageNumber + 1)));
-        }
-        customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(numberPages), String.valueOf(rows))).withRel("getCustomerList last page " + numberPages));
     }
 }

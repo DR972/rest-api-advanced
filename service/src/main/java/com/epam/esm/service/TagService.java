@@ -68,7 +68,7 @@ public interface TagService {
      *
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return List<TagDto>
+     * @return ListEntitiesDto<TagDto>
      */
-    List<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
+    ListEntitiesDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 }

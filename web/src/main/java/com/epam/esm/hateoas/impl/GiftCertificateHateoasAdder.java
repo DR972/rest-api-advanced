@@ -45,7 +45,7 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
 
     @Override
     public void addLinks(GiftCertificateDto certificateDto) {
-        certificateDto.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificateDto.getCertificateId()))).withSelfRel());
+        certificateDto.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificateDto.getCertificateId()))).withRel("getGiftCertificateById"));
         certificateDto.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, "5", "1")).withRel("getGiftCertificateList"));
         certificateDto.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).createCertificate(certificateDto)).withRel("createGiftCertificate"));
         certificateDto.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).updateCertificate(String.valueOf(certificateDto.getCertificateId()), certificateDto)).withRel("updateGiftCertificate"));
@@ -57,7 +57,7 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
     @Override
     public void addLinksForListEntity(ListEntitiesDto<GiftCertificateDto> certificates, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) certificates.getTotalNumberObjects() / rows);
-        certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber), String.valueOf(rows))).withSelfRel());
+        certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber), String.valueOf(rows))).withRel("getGiftCertificateList"));
 
         if (pageNumber < numberPages + 1) {
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificates.getEntities().get(0).getCertificateId())))
@@ -73,17 +73,19 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
             });
         }
 
-        certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, "1", String.valueOf(rows)))
-                .withRel("getGiftCertificateList page 1"));
-        if (pageNumber > 2 && pageNumber < numberPages + 1) {
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber - 1), String.valueOf(rows)))
-                    .withRel("getGiftCertificateList page " + (pageNumber - 1)));
+        if (numberPages > 1) {
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, "1", String.valueOf(rows)))
+                    .withRel("getGiftCertificateList page 1"));
+            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+                certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber - 1), String.valueOf(rows)))
+                        .withRel("getGiftCertificateList page " + (pageNumber - 1)));
+            }
+            if (pageNumber < numberPages - 1) {
+                certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber + 1), String.valueOf(rows)))
+                        .withRel("getGiftCertificateList page " + (pageNumber + 1)));
+            }
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(numberPages), String.valueOf(rows)))
+                    .withRel("getGiftCertificateList last page " + numberPages));
         }
-        if (pageNumber < numberPages - 1) {
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber + 1), String.valueOf(rows)))
-                    .withRel("getGiftCertificateList page " + (pageNumber + 1)));
-        }
-        certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(numberPages), String.valueOf(rows)))
-                .withRel("getGiftCertificateList last page " + numberPages));
     }
 }
