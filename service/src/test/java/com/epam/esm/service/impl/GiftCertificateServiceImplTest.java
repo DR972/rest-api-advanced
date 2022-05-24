@@ -122,13 +122,13 @@ class GiftCertificateServiceImplTest {
             "new description", new BigDecimal("10"), 10, LocalDateTime.parse("2022-05-01T00:00:00.001"),
             LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("rest"), new TagDto("nature"), new TagDto("new")));
 
-    private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_9 = new GiftCertificateDto("5", null,
+    private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_9 = new GiftCertificateDto(null,
             "Description shopping at the tool store", null, 10, null,
             null, Arrays.asList(new TagDto("shopping"), new TagDto("tool"), new TagDto("new")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_5_NEW = new GiftCertificateDto("5", "Shopping at the tool store",
             "Description shopping at the tool store", new BigDecimal("30"), 10, LocalDateTime.parse("2022-03-25T10:12:45.123"),
-            LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool"), new TagDto("new")));
+            LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool"), new TagDto("15", "new")));
 
     @Mock
     private GiftCertificateDao certificateDao = mock(GiftCertificateDao.class);
@@ -202,7 +202,7 @@ class GiftCertificateServiceImplTest {
         IntStream.range(0, certificates.size()).forEach(i -> when(certificateMapper.convertToDto(certificates.get(i))).thenReturn(certificateDtos.get(i)));
         when(certificateDao.countNumberEntityRows(params)).thenReturn(5L);
         when(certificateDao.findListEntities(params, 0, 5)).thenReturn(certificates);
-        assertEquals( new ListEntitiesDto<>(certificateDtos, 1, certificates.size(), 5),
+        assertEquals(new ListEntitiesDto<>(certificateDtos, 1, certificates.size(), 5),
                 certificateServiceImpl.findListCertificates(params, 1, 5));
     }
 
@@ -232,8 +232,6 @@ class GiftCertificateServiceImplTest {
 
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_5_NEW)).thenReturn(GIFT_CERTIFICATE_DTO_5_NEW);
         when(certificateDao.updateEntity(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_5_NEW);
-        certificateServiceImpl.updateCertificate(GIFT_CERTIFICATE_DTO_9, "5");
-        verify(certificateDao, times(1)).updateEntity(GIFT_CERTIFICATE_5);
         assertEquals(GIFT_CERTIFICATE_DTO_5_NEW, certificateServiceImpl.updateCertificate(GIFT_CERTIFICATE_DTO_9, "5"));
     }
 

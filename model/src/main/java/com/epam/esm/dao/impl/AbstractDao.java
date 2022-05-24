@@ -59,9 +59,9 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> findListEntities(int pageNumber, int rows) {
+    public List<T> findListEntities(int offset, int limit) {
         return entityManager.unwrap(Session.class).createQuery("from " + entityType.getSimpleName() + " order by id")
-                .setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+                .setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override

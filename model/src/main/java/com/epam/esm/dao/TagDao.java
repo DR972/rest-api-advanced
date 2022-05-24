@@ -18,11 +18,11 @@ public interface TagDao extends Dao<Tag, Long> {
     /**
      * The method finds list the most widely used tags Of Customers with the highest cost of all orders in the table `Tag`.
      *
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
+     * @param offset int offset
+     * @param limit  int limit
      * @return list of Tag objects
      */
-    List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
+    List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int offset, int limit);
 
     /**
      * The method finds count number of rows in the list of the most popular tags.

@@ -3,7 +3,6 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dto.*;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
-import com.epam.esm.entity.Customer;
 import com.epam.esm.entity.CustomerOrder;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
@@ -51,7 +50,7 @@ public class CustomerOrderServiceTest {
     private static final CustomerOrder CUSTOMER_ORDER_1 = new CustomerOrder(1L, LocalDateTime.parse("2022-05-01T00:00:00.001"), new ArrayList<>(), new BigDecimal("80"));
     private static final CustomerOrder CUSTOMER_ORDER_2 = new CustomerOrder(2L, LocalDateTime.parse("2022-05-01T00:00:00.001"), new ArrayList<>(), new BigDecimal("180"));
     private static final CustomerOrder CUSTOMER_ORDER_3 = new CustomerOrder(3L, LocalDateTime.parse("2022-05-01T00:00:00.001"), new ArrayList<>(), new BigDecimal("100"));
-    private static final CustomerOrder NEW_CUSTOMER_ORDER = new CustomerOrder(0, new Customer(), LocalDateTime.parse("2022-05-01T00:00:00.001"),
+    private static final CustomerOrder NEW_CUSTOMER_ORDER = new CustomerOrder(0, 1L, LocalDateTime.parse("2022-05-01T00:00:00.001"),
             Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2), new BigDecimal("180"));
 
     private static final CustomerOrderDto CUSTOMER_ORDER_DTO_1 = new CustomerOrderDto("1", "1", LocalDateTime.parse("2022-05-01T00:00:00.001"), new ArrayList<>(), new BigDecimal("80"));

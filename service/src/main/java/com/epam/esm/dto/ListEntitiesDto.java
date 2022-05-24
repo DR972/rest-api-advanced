@@ -22,7 +22,7 @@ public class ListEntitiesDto<T> extends RepresentationModel<ListEntitiesDto<T>> 
     /**
      * List<T> entities
      */
-    private List<T> entities;
+    private List<T> resources;
     /**
      * int pageNumber
      */

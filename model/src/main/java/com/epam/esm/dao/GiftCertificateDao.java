@@ -17,12 +17,12 @@ public interface GiftCertificateDao extends Dao<GiftCertificate, Long> {
     /**
      * The method finds list GiftCertificate objects in the table `GiftCertificate`.
      *
-     * @param params     MultiValueMap<String, String> params
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
+     * @param params MultiValueMap<String, String> params
+     * @param offset int offset
+     * @param limit  int limit
      * @return list of GiftCertificate objects
      */
-    List<GiftCertificate> findListEntities(MultiValueMap<String, String> params, int pageNumber, int rows);
+    List<GiftCertificate> findListEntities(MultiValueMap<String, String> params, int offset, int limit);
 
     /**
      * The method finds count number of rows objects GiftCertificate in the table 'GiftCertificate'.

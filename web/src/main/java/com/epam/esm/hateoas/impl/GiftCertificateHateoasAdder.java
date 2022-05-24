@@ -60,14 +60,14 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
         certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber), String.valueOf(rows))).withRel("getGiftCertificateList"));
 
         if (pageNumber < numberPages + 1) {
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificates.getEntities().get(0).getCertificateId())))
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificates.getResources().get(0).getCertificateId())))
                     .withRel("getGiftCertificateById"));
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).createCertificate(certificates.getEntities().get(0))).withRel("createGiftCertificate"));
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).updateCertificate(String.valueOf(certificates.getEntities().get(0).getCertificateId()), certificates.getEntities().get(0)))
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).createCertificate(certificates.getResources().get(0))).withRel("createGiftCertificate"));
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).updateCertificate(String.valueOf(certificates.getResources().get(0).getCertificateId()), certificates.getResources().get(0)))
                     .withRel("updateGiftCertificate"));
-            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).deleteCertificate(String.valueOf(certificates.getEntities().get(0).getCertificateId())))
+            certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).deleteCertificate(String.valueOf(certificates.getResources().get(0).getCertificateId())))
                     .withRel("deleteGiftCertificate"));
-            certificates.getEntities().forEach(c -> {
+            certificates.getResources().forEach(c -> {
                 c.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(c.getCertificateId()))).withRel("getGiftCertificateById"));
                 c.getTags().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
             });
@@ -78,11 +78,11 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
                     .withRel("getGiftCertificateList page 1"));
             if (pageNumber > 2 && pageNumber < numberPages + 1) {
                 certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber - 1), String.valueOf(rows)))
-                        .withRel("getGiftCertificateList page " + (pageNumber - 1)));
+                        .withRel("getGiftCertificateList previous page " + (pageNumber - 1)));
             }
             if (pageNumber < numberPages - 1) {
                 certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber + 1), String.valueOf(rows)))
-                        .withRel("getGiftCertificateList page " + (pageNumber + 1)));
+                        .withRel("getGiftCertificateList next page " + (pageNumber + 1)));
             }
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(numberPages), String.valueOf(rows)))
                     .withRel("getGiftCertificateList last page " + numberPages));

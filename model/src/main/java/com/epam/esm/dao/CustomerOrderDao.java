@@ -18,11 +18,11 @@ public interface CustomerOrderDao extends Dao<CustomerOrder, Long> {
      * The method finds list CustomerOrder objects in the table `CustomerOrder`.
      *
      * @param customerId long customer Id
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
+     * @param offset     int offset
+     * @param limit      int limit
      * @return list of CustomerOrder objects
      */
-    List<CustomerOrder> findCustomerOrderList(long customerId, int pageNumber, int rows);
+    List<CustomerOrder> findCustomerOrderList(long customerId, int offset, int limit);
 
     /**
      * The method finds count number of rows Customer Orders objects.

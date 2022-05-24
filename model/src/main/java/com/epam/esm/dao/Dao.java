@@ -36,11 +36,11 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
     /**
      * The method finds list T objects in the table `T`.
      *
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
+     * @param offset int offset
+     * @param limit  int limit
      * @return list of T objects
      */
-    List<T> findListEntities(int pageNumber, int rows);
+    List<T> findListEntities(int offset, int limit);
 
     /**
      * The method performs the operation of saving the object T in the table 'T'.

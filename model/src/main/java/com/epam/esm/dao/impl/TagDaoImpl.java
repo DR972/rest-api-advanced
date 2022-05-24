@@ -42,8 +42,8 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
 
 
     @Override
-    public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
-        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+    public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int offset, int limit) {
+        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
