@@ -45,19 +45,19 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
     @Override
     public void addLinksForListEntity(ListEntitiesDto<CustomerOrderDto> customerOrders, int rows, int pageNumber) {
         int numberPages = (int) Math.ceil((float) customerOrders.getTotalNumberObjects() / rows);
-        customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
+        customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getResources().get(0).getCustomer(),
                 String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
 
         if (pageNumber < numberPages + 1) {
-            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerOrders.getEntities().get(0).getCustomer()))).withRel("getCustomerById"));
+            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerOrders.getResources().get(0).getCustomer()))).withRel("getCustomerById"));
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(new CustomerDto())).withRel("createCustomer"));
-            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderByCustomerIdAndOrderId(String.valueOf(customerOrders.getEntities().get(0).getCustomer()),
-                    customerOrders.getEntities().get(0).getOrderId())).withRel("getCustomerOrderByCustomerIdAndOrderId"));
-            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomerOrder(String.valueOf(customerOrders.getEntities().get(0).getCustomer()), new CustomerOrderDto()))
+            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderByCustomerIdAndOrderId(String.valueOf(customerOrders.getResources().get(0).getCustomer()),
+                    customerOrders.getResources().get(0).getOrderId())).withRel("getCustomerOrderByCustomerIdAndOrderId"));
+            customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomerOrder(String.valueOf(customerOrders.getResources().get(0).getCustomer()), new CustomerOrderDto()))
                     .withRel("createCustomerOrder"));
 
-            customerOrders.getEntities().forEach(o -> {
+            customerOrders.getResources().forEach(o -> {
                 o.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderById(String.valueOf(o.getOrderId()))).withRel("getCustomerOrderById"));
                 o.getGiftCertificates().forEach(c -> {
                     c.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(c.getCertificateId()))).withRel("getCertificateById"));
@@ -66,17 +66,17 @@ public class CustomerOrderHateoasAdder implements HateoasAdder<CustomerOrderDto>
             });
 
             if (numberPages > 1) {
-                customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
+                customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getResources().get(0).getCustomer(),
                         "1", String.valueOf(rows))).withRel("getCustomerOrderList page 1"));
                 if (pageNumber > 2 && pageNumber < numberPages + 1) {
-                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                            String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber - 1)));
+                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getResources().get(0).getCustomer(),
+                            String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getCustomerOrderList previous page " + (pageNumber - 1)));
                 }
                 if (pageNumber < numberPages - 1) {
-                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
-                            String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getCustomerOrderList page " + (pageNumber + 1)));
+                    customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getResources().get(0).getCustomer(),
+                            String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getCustomerOrderList next page " + (pageNumber + 1)));
                 }
-                customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getEntities().get(0).getCustomer(),
+                customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(customerOrders.getResources().get(0).getCustomer(),
                         String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerOrderList last page " + numberPages));
             }
         }

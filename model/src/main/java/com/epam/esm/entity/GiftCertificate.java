@@ -6,7 +6,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -158,8 +165,7 @@ public class GiftCertificate extends BaseEntity<Long> {
         if (!price.equals(giftCertificate.price)) return false;
         if (!duration.equals(giftCertificate.duration)) return false;
         if (!createDate.equals(giftCertificate.createDate)) return false;
-        if (!lastUpdateDate.equals(giftCertificate.lastUpdateDate)) return false;
-        return (!tags.equals(giftCertificate.tags));
+        return lastUpdateDate.equals(giftCertificate.lastUpdateDate);
     }
 
     @Override

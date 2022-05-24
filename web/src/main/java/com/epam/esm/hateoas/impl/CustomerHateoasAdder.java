@@ -55,13 +55,13 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
         customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
 
         if (pageNumber < numberPages + 1) {
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customers.getEntities().get(0).getCustomerId()))).withRel("getCustomerById"));
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(customers.getEntities().get(0))).withRel("createCustomer"));
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderByCustomerIdAndOrderId(String.valueOf(customers.getEntities().get(0).getCustomerId()),
-                    String.valueOf(customers.getEntities().get(0).getCustomerOrders().get(0).getOrderId()))).withRel("getCustomerOrderByCustomerIdAndOrderId"));
-            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomerOrder(String.valueOf(customers.getEntities().get(0).getCustomerId()), new CustomerOrderDto()))
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customers.getResources().get(0).getCustomerId()))).withRel("getCustomerById"));
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(customers.getResources().get(0))).withRel("createCustomer"));
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderByCustomerIdAndOrderId(String.valueOf(customers.getResources().get(0).getCustomerId()),
+                    String.valueOf(customers.getResources().get(0).getCustomerOrders().get(0).getOrderId()))).withRel("getCustomerOrderByCustomerIdAndOrderId"));
+            customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomerOrder(String.valueOf(customers.getResources().get(0).getCustomerId()), new CustomerOrderDto()))
                     .withRel("createCustomerOrder"));
-            customers.getEntities().forEach(c -> {
+            customers.getResources().forEach(c -> {
                 c.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(c.getCustomerId()))).withRel("getCustomerById"));
                 c.getCustomerOrders().forEach(o -> {
                     o.add(linkTo(methodOn(CUSTOMER_ORDER_CONTROLLER).getCustomerOrderById(String.valueOf(o.getOrderId()))).withRel("getCustomerOrderById"));
@@ -77,11 +77,11 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
             customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList("1", String.valueOf(rows))).withRel("getCustomerList page 1"));
             if (pageNumber > 2 && pageNumber < numberPages + 1) {
                 customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber - 1), String.valueOf(rows)))
-                        .withRel("getCustomerList page " + (pageNumber - 1)));
+                        .withRel("getCustomerList previous page " + (pageNumber - 1)));
             }
             if (pageNumber < numberPages - 1) {
                 customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber + 1), String.valueOf(rows)))
-                        .withRel("getCustomerList page " + (pageNumber + 1)));
+                        .withRel("getCustomerList next page " + (pageNumber + 1)));
             }
             customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(numberPages), String.valueOf(rows))).withRel("getCustomerList last page " + numberPages));
         }

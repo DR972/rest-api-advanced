@@ -41,6 +41,7 @@ public class CustomerDto extends RepresentationModel<CustomerDto> {
      * List<CustomerOrderDto> customerOrders.
      */
     @Size(max = 0, message = "ex.customerOrdersNull")
+//    @Null(message = "ex.customerOrdersNull")
     private List<CustomerOrderDto> customerOrders = new ArrayList<>();
 
     /**

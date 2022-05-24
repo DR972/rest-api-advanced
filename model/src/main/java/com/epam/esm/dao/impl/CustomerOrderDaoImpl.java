@@ -35,10 +35,10 @@ public class CustomerOrderDaoImpl extends AbstractDao<CustomerOrder, Long> imple
     }
 
     @Override
-    public List<CustomerOrder> findCustomerOrderList(long customerId, int pageNumber, int rows) {
+    public List<CustomerOrder> findCustomerOrderList(long customerId, int offset, int limit) {
         return entityManager.unwrap(Session.class).createQuery("SELECT e FROM CustomerOrder e WHERE e.customer.id = :customerId", CustomerOrder.class)
                 .setParameter("customerId", customerId)
-                .setFirstResult(pageNumber).setMaxResults(rows).getResultList();
+                .setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override

@@ -31,10 +31,11 @@ public class Customer extends BaseEntity<Long> {
      * String name.
      */
     private String name;
+
     /**
      * List<CustomerOrder> customerOrder.
      */
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customerId")
     private List<CustomerOrder> customerOrders = new ArrayList<>();
 
     /**

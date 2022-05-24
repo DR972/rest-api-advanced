@@ -1,6 +1,7 @@
 package com.epam.esm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -35,11 +36,18 @@ import java.util.StringJoiner;
 @Audited
 public class CustomerOrder extends BaseEntity<Long> {
     /**
-     * customer.
+     * Customer customer
      */
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Customer customer;
+
+    /**
+     * Long customerId
+     */
+    @Column(name = "customer_id", insertable = false, updatable = false)
+    private Long customerId;
 
     /**
      * LocalDateTime purchaseTime.
@@ -68,14 +76,14 @@ public class CustomerOrder extends BaseEntity<Long> {
      * The constructor creates a CustomerOrder object
      *
      * @param id               long id
-     * @param customer         Customer
+     * @param customerId       long customerId
      * @param purchaseTime     LocalDateTime purchaseTime
      * @param giftCertificates ArrayList<GiftCertificate> giftCertificates
      * @param amount           BigDecimal amount
      */
-    public CustomerOrder(long id, Customer customer, LocalDateTime purchaseTime, List<GiftCertificate> giftCertificates, BigDecimal amount) {
+    public CustomerOrder(long id, Long customerId, LocalDateTime purchaseTime, List<GiftCertificate> giftCertificates, BigDecimal amount) {
         super(id);
-        this.customer = customer;
+        this.customerId = customerId;
         this.purchaseTime = purchaseTime;
         this.giftCertificates = giftCertificates;
         this.amount = amount;
@@ -109,11 +117,8 @@ public class CustomerOrder extends BaseEntity<Long> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CustomerOrder)) return false;
-
         CustomerOrder customerOrder = (CustomerOrder) o;
-
         if (!purchaseTime.equals(customerOrder.purchaseTime)) return false;
-        if (!giftCertificates.equals(customerOrder.giftCertificates)) return false;
         return amount.equals(customerOrder.amount);
     }
 
@@ -125,7 +130,7 @@ public class CustomerOrder extends BaseEntity<Long> {
     @Override
     public String toString() {
         return new StringJoiner(", ", CustomerOrder.class.getSimpleName() + "[", "]")
-                .add("customer=" + customer)
+                .add("customerId=" + customerId)
                 .add("purchaseTime=" + purchaseTime)
                 .add("giftCertificates=" + giftCertificates)
                 .add("amount=" + amount)
