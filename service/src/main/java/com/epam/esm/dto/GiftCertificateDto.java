@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
      * GiftCertificateDto name.
      */
     @NotNull(groups = GiftCertificateDto.OnCreate.class, message = "ex.certificateNameNotNull")
-    @Pattern(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, regexp = "^\\w[\\w+\\s?]+\\w${2,30}", message = "ex.certificateName")
+    @Pattern(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, regexp = "^[A-Za-z]+[\\w+\\s?]+\\w${2,30}", message = "ex.certificateName")
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.certificateNameNull")
     private String name;
 
@@ -65,7 +64,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
      * GiftCertificateDto description.
      */
     @NotNull(groups = GiftCertificateDto.OnCreate.class, message = "ex.descriptionNotNull")
-    @Pattern(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, regexp = "^\\w[\\w+\\s?]+\\w${2,200}", message = "ex.description")
+    @Pattern(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, regexp = "^[A-Za-z]+[\\w+\\s?]+\\w${2,200}", message = "ex.description")
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.descriptionNull")
     private String description;
 
@@ -76,7 +75,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     @Positive(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.pricePositive")
     @Digits(integer = 6, fraction = 2, groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.pricePositive")
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.priceNull")
-    private BigDecimal price;
+    private String price;
 
     /**
      * GiftCertificateDto duration.
@@ -85,7 +84,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     @Positive(groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.durationPositive")
     @Digits(integer = 3, fraction = 0, groups = {GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.durationPositive")
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.durationNull")
-    private Integer duration;
+    private String duration;
 
     /**
      * GiftCertificateDto createDate.
@@ -118,7 +117,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
      * @param duration    int duration
      * @param tags        List<Tag> tags
      */
-    public GiftCertificateDto(String name, String description, BigDecimal price, Integer duration, List<TagDto> tags) {
+    public GiftCertificateDto(String name, String description, String price, String duration, List<TagDto> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -137,7 +136,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
      * @param lastUpdateDate LocalDateTime lastUpdateDate
      * @param tags           List<Tag> tags
      */
-    public GiftCertificateDto(String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<TagDto> tags) {
+    public GiftCertificateDto(String name, String description, String price, String duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<TagDto> tags) {
         this.name = name;
         this.description = description;
         this.price = price;

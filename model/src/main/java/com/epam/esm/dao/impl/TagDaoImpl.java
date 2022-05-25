@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
-    private static final String QUERY_MOST_POPULAR_TAGS = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
-            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
-            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
+    private static final String QUERY_MOST_POPULAR_TAGS = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customerId IN " +
+            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id " +
+            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id))) " +
             "GROUP BY t.id " +
-            "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customer IN " +
-            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id " +
-            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customer GROUP BY c.id))) " +
+            "HAVING (count(t.id) >= ALL (SELECT count(t.id) FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customerId IN " +
+            "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id " +
+            "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id))) " +
             "GROUP BY t.id))";
 
     /**

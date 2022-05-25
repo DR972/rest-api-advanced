@@ -45,7 +45,7 @@ public class TagDto extends RepresentationModel<TagDto> {
      * TagDto name.
      */
     @Pattern(groups = {TagDto.OnCreate.class, TagDto.OnUpdate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class},
-            regexp = "^\\w[\\w+\\s?]+\\w${2,30}", message = "ex.tagName")
+            regexp = "^[A-Za-z]+[\\w+\\s?]+\\w${2,30}", message = "ex.tagName")
     @NotNull(groups = {TagDto.OnCreate.class, TagDto.OnUpdate.class, GiftCertificateDto.OnCreate.class, GiftCertificateDto.OnUpdate.class}, message = "ex.tagNameNotNull")
     private String name;
 

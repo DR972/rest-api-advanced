@@ -1,7 +1,6 @@
 package com.epam.esm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,14 +33,6 @@ import java.util.StringJoiner;
 @Table(name = "customer_order")
 @Audited
 public class CustomerOrder extends BaseEntity<Long> {
-    /**
-     * Customer customer
-     */
-    @JoinColumn(name = "customer_id")
-    @ManyToOne(targetEntity = Customer.class, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Customer customer;
-
     /**
      * Long customerId
      */

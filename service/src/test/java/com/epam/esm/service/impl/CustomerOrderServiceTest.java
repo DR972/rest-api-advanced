@@ -1,7 +1,11 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CustomerOrderDao;
-import com.epam.esm.dto.*;
+import com.epam.esm.dto.CustomerDto;
+import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.CustomerOrder;
 import com.epam.esm.entity.GiftCertificate;
@@ -25,8 +29,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerOrderServiceTest {
@@ -39,11 +45,11 @@ public class CustomerOrderServiceTest {
             LocalDateTime.parse("2022-04-05T14:15:13.257"), Arrays.asList(new Tag(1, "rest"), new Tag(2, "nature"), new Tag(5, "horse")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_1 = new GiftCertificateDto("1", "ATV riding",
-            "Description ATV riding", new BigDecimal("100"), 10, LocalDateTime.parse("2022-04-01T10:12:45.123"),
+            "Description ATV riding", "100", "10", LocalDateTime.parse("2022-04-01T10:12:45.123"),
             LocalDateTime.parse("2022-04-07T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("4", "atv")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_2 = new GiftCertificateDto("2", "Horse riding",
-            "Horse riding description", new BigDecimal("80"), 8, LocalDateTime.parse("2022-04-02T10:12:45.123"),
+            "Horse riding description", "80", "8", LocalDateTime.parse("2022-04-02T10:12:45.123"),
             LocalDateTime.parse("2022-04-05T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("5", "horse")));
 
 

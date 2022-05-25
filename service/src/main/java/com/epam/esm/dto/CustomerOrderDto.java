@@ -32,16 +32,16 @@ public class CustomerOrderDto extends RepresentationModel<CustomerOrderDto> {
     }
 
     /**
-     * long id.
+     * String orderId.
      */
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerOrderIdNull")
     private String orderId;
 
     /**
-     * long customer id.
+     * String customerId.
      */
     @Null(groups = CustomerOrderDto.OnCreate.class, message = "ex.customerIdNull")
-    private String customer;
+    private String customerId;
 
     /**
      * LocalDateTime purchaseTime.
