@@ -28,7 +28,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -46,27 +45,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CertificateControllerTest {
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_1 = new GiftCertificateDto("1", "ATV riding",
-            "Description ATV riding", new BigDecimal("100"), 10, LocalDateTime.parse("2022-04-01T10:12:45.123"),
+            "Description ATV riding", "100", "10", LocalDateTime.parse("2022-04-01T10:12:45.123"),
             LocalDateTime.parse("2022-04-07T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("4", "atv")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_2 = new GiftCertificateDto("2", "Horse riding",
-            "Horse riding description", new BigDecimal("80"), 8, LocalDateTime.parse("2022-04-02T10:12:45.123"),
+            "Horse riding description", "80", "8", LocalDateTime.parse("2022-04-02T10:12:45.123"),
             LocalDateTime.parse("2022-04-05T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("5", "horse")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_3 = new GiftCertificateDto("3", "Visiting a restaurant",
-            "Visiting the Plaza restaurant", new BigDecimal("50"), 7, LocalDateTime.parse("2022-04-02T10:12:45.123"),
+            "Visiting the Plaza restaurant", "50", "7", LocalDateTime.parse("2022-04-02T10:12:45.123"),
             LocalDateTime.parse("2022-04-02T14:15:13.257"), Arrays.asList(new TagDto("8", "food"), new TagDto("10", "restaurant"), new TagDto("12", "visit")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_4 = new GiftCertificateDto("4", "Visit to the drama theater",
-            "Description visit to the drama theater", new BigDecimal("45"), 2, LocalDateTime.parse("2022-03-30T10:12:45.123"),
+            "Description visit to the drama theater", "45", "2", LocalDateTime.parse("2022-03-30T10:12:45.123"),
             LocalDateTime.parse("2022-04-08T14:15:13.257"), Arrays.asList(new TagDto("6", "theater"), new TagDto("12", "visit")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_5 = new GiftCertificateDto("5", "Shopping at the tool store",
-            "Description shopping at the tool store", new BigDecimal("30"), 10, LocalDateTime.parse("2022-03-25T10:12:45.123"),
+            "Description shopping at the tool store", "30", "10", LocalDateTime.parse("2022-03-25T10:12:45.123"),
             LocalDateTime.parse("2022-04-01T14:15:13.257"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_3_NEW = new GiftCertificateDto("Visiting a restaurant",
-            "Visiting the Plaza restaurant", new BigDecimal("50"), 7, Arrays.asList(new TagDto("food"), new TagDto("restaurant"), new TagDto("visit")));
+            "Visiting the Plaza restaurant", "50", "7", Arrays.asList(new TagDto("food"), new TagDto("restaurant"), new TagDto("visit")));
 
 
     @Autowired
@@ -128,9 +127,9 @@ public class CertificateControllerTest {
                 .thenReturn(new ListEntitiesDto<>(certificates, 2, 3, 3000));
 
         mockMvc.perform(get("/certificates")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("pageNumber", "2")
-                .param("rows", "3"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("pageNumber", "2")
+                        .param("rows", "3"))
                 .andExpect(jsonPath("$.resources", hasSize(3)))
 
                 .andExpect(jsonPath("$.resources[0].certificateId", is(certificates.get(0).getCertificateId())))
@@ -175,7 +174,7 @@ public class CertificateControllerTest {
                 .andExpect(jsonPath("$.numberObjects", is(3)))
                 .andExpect(jsonPath("$.totalNumberObjects", is(3000)));
 
-        verify(certificateService, times(1)).findListCertificates(params,2, 3);
+        verify(certificateService, times(1)).findListCertificates(params, 2, 3);
     }
 
     @Test

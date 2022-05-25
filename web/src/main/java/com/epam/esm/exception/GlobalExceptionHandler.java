@@ -75,8 +75,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request, Locale locale, HttpServletRequest req) {
         saveLog(HttpRequestMethodNotSupportedException.class, ex, request.getParameterMap());
-        if (ex.getMethod().equals("PATCH") && (req.getRequestURI().equals("/certificates") || req.getRequestURI().equals("/certificates/")
-                || req.getRequestURI().equals("/tags") || req.getRequestURI().equals("/tags/"))) {
+        if ((ex.getMethod().equals("PATCH") || ex.getMethod().equals("DELETE")) && (req.getRequestURI().equals("/certificates")
+                || req.getRequestURI().equals("/certificates/") || req.getRequestURI().equals("/tags") || req.getRequestURI().equals("/tags/"))) {
             return new ApiError(ExceptionCode.NOT_FOUND_PATH_VARIABLE_EXCEPTION, resourceBundleMessageSource
                     .getMessage("ex.notSupported", null, locale) + ex.getMethod() + "). " + resourceBundleMessageSource.getMessage("ex.pathVariable", null, locale));
         } else {
@@ -94,10 +94,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request, Locale locale) {
-        System.out.println("handleHttpMethodArgumentNotValidException");
         saveLog(MethodArgumentNotValidException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale))
+                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale) + fieldError.getRejectedValue() + "')")
                 .distinct().collect(Collectors.joining("; ")));
     }
 
@@ -113,7 +112,7 @@ public class GlobalExceptionHandler {
     protected ApiError handleSortTypeException(SortTypeException ex, WebRequest request, Locale locale) {
         saveLog(SortTypeException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.SORT_TYPE_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam());
+                locale) + ex.getParam() + "')");
     }
 
     /**
@@ -156,10 +155,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleConstraintViolationException(ConstraintViolationException ex, WebRequest request, Locale locale) {
-        System.out.println("handleConstraintViolationException");
         saveLog(ConstraintViolationException.class, ex, request.getParameterMap());
+        ex.getConstraintViolations().forEach(e -> System.out.println(e.getInvalidValue()));
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getConstraintViolations().stream()
-                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale))
+                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale) + fieldError.getInvalidValue() + "')")
                 .distinct().collect(Collectors.joining("; ")));
     }
 

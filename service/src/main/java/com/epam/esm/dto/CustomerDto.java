@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerDto extends RepresentationModel<CustomerDto> {
     /**
-     * long id.
+     * String customerId.
      */
     @Null(message = "ex.customerIdNull")
     private String customerId;
@@ -34,22 +34,12 @@ public class CustomerDto extends RepresentationModel<CustomerDto> {
      * String name.
      */
     @NotNull(message = "ex.customerNameNotNull")
-    @Pattern(regexp = "^\\w[\\w+\\s?]+\\w${2,30}", message = "ex.customerName")
+    @Pattern(regexp = "^[A-Za-z]+[\\w+\\s?]+\\w${2,30}", message = "ex.customerName")
     private String name;
 
     /**
      * List<CustomerOrderDto> customerOrders.
      */
     @Size(max = 0, message = "ex.customerOrdersNull")
-//    @Null(message = "ex.customerOrdersNull")
     private List<CustomerOrderDto> customerOrders = new ArrayList<>();
-
-    /**
-     * The constructor creates a CustomerDto object
-     *
-     * @param name String name
-     */
-    public CustomerDto(String name) {
-        this.name = name;
-    }
 }

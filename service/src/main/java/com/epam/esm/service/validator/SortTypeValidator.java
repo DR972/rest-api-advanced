@@ -46,7 +46,7 @@ public class SortTypeValidator {
                 .filter(t -> !fields.contains(t) && !t.equals(ID))
                 .collect(Collectors.toList());
         if (!badTypes.isEmpty()) {
-            throw new SortTypeException("ex.sortType", badTypes.stream().collect(Collectors.joining(",", "(", ")")));
+            throw new SortTypeException("ex.sortType", String.join("', '", badTypes));
         }
     }
 }

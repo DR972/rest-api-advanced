@@ -91,43 +91,43 @@ class GiftCertificateServiceImplTest {
 
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_1 = new GiftCertificateDto("1", "ATV riding",
-            "Description ATV riding", new BigDecimal("100"), 10, LocalDateTime.parse("2022-04-01T10:12:45.123"),
+            "Description ATV riding", "100", "10", LocalDateTime.parse("2022-04-01T10:12:45.123"),
             LocalDateTime.parse("2022-04-07T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("4", "atv")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_2 = new GiftCertificateDto("2", "Horse riding",
-            "Horse riding description", new BigDecimal("80"), 8, LocalDateTime.parse("2022-04-02T10:12:45.123"),
+            "Horse riding description", "80", "8", LocalDateTime.parse("2022-04-02T10:12:45.123"),
             LocalDateTime.parse("2022-04-05T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("5", "horse")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_3 = new GiftCertificateDto("3", "Visiting a restaurant",
-            "Visiting the Plaza restaurant", new BigDecimal("50"), 7, LocalDateTime.parse("2022-04-02T10:12:45.123"),
+            "Visiting the Plaza restaurant", "50", "7", LocalDateTime.parse("2022-04-02T10:12:45.123"),
             LocalDateTime.parse("2022-04-02T14:15:13.257"), Arrays.asList(new TagDto("8", "food"), new TagDto("10", "restaurant"), new TagDto("12", "visit")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_4 = new GiftCertificateDto("4", "Visit to the drama theater",
-            "Description visit to the drama theater", new BigDecimal("45"), 2, LocalDateTime.parse("2022-03-30T10:12:45.123"),
+            "Description visit to the drama theater", "45", "2", LocalDateTime.parse("2022-03-30T10:12:45.123"),
             LocalDateTime.parse("2022-04-08T14:15:13.257"), Arrays.asList(new TagDto("6", "theater"), new TagDto("12", "visit")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_5 = new GiftCertificateDto("5", "Shopping at the tool store",
-            "Description shopping at the tool store", new BigDecimal("30"), 10, LocalDateTime.parse("2022-03-25T10:12:45.123"),
+            "Description shopping at the tool store", "30", "10", LocalDateTime.parse("2022-03-25T10:12:45.123"),
             LocalDateTime.parse("2022-04-01T14:15:13.257"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_6 = new GiftCertificateDto("6", "Shopping at the supermarket",
-            "Shopping at Lidl supermarket chain", new BigDecimal("80"), 12, LocalDateTime.parse("2022-04-01T10:12:45.123"),
+            "Shopping at Lidl supermarket chain", "80", "12", LocalDateTime.parse("2022-04-01T10:12:45.123"),
             LocalDateTime.parse("2022-04-14T14:15:13.257"), Arrays.asList(new TagDto("6", "shopping"), new TagDto("8", "food"), new TagDto("9", "supermarket")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_7 = new GiftCertificateDto("7", "Hot air balloon flight",
-            "An unforgettable hot air balloon flight", new BigDecimal("150"), 12, LocalDateTime.parse("2022-03-01T10:12:45.123"),
+            "An unforgettable hot air balloon flight", "150", "12", LocalDateTime.parse("2022-03-01T10:12:45.123"),
             LocalDateTime.parse("2022-03-14T14:15:13.257"), Arrays.asList(new TagDto("1", "rest"), new TagDto("2", "nature"), new TagDto("11", "flight")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_8 = new GiftCertificateDto("new GiftCertificate",
-            "new description", new BigDecimal("10"), 10, LocalDateTime.parse("2022-05-01T00:00:00.001"),
+            "new description", "10", "10", LocalDateTime.parse("2022-05-01T00:00:00.001"),
             LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("rest"), new TagDto("nature"), new TagDto("new")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_9 = new GiftCertificateDto(null,
-            "Description shopping at the tool store", null, 10, null,
+            "Description shopping at the tool store", null, "10", null,
             null, Arrays.asList(new TagDto("shopping"), new TagDto("tool"), new TagDto("new")));
 
     private static final GiftCertificateDto GIFT_CERTIFICATE_DTO_5_NEW = new GiftCertificateDto("5", "Shopping at the tool store",
-            "Description shopping at the tool store", new BigDecimal("30"), 10, LocalDateTime.parse("2022-03-25T10:12:45.123"),
+            "Description shopping at the tool store", "30", "10", LocalDateTime.parse("2022-03-25T10:12:45.123"),
             LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool"), new TagDto("15", "new")));
 
     @Mock
