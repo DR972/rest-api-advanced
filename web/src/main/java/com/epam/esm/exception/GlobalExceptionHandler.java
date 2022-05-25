@@ -22,9 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * The class {@code GlobalExceptionHandler} presents entity which will be returned from controller in case generating exceptions.
@@ -138,7 +136,7 @@ public class GlobalExceptionHandler {
      * @return ApiError object
      */
     @ExceptionHandler(DeleteTagException.class)
-    @ResponseStatus(BAD_REQUEST)
+    @ResponseStatus(FAILED_DEPENDENCY)
     protected ApiError handleHttpDeleteTagException(DeleteTagException ex, WebRequest request, Locale locale) {
         saveLog(DeleteTagException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.DELETE_TAG_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,

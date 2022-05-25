@@ -26,6 +26,7 @@ public interface GiftCertificateMapper {
      * @return converted dto
      */
     @Mapping(source = "id", target = "certificateId")
+    @Mapping(source = "price", target = "price", numberFormat = "#.00")
     GiftCertificateDto convertToDto(GiftCertificate giftCertificate);
 
     /**
@@ -35,6 +36,7 @@ public interface GiftCertificateMapper {
      * @return converted entity
      */
     @Mapping(source = "certificateId", target = "id")
+    @Mapping(source = "price", target = "price", numberFormat = "#.00")
     GiftCertificate convertToEntity(GiftCertificateDto dto);
 
     /**
