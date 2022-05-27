@@ -4,7 +4,7 @@ import com.epam.esm.dao.CustomerDao;
 import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dto.CustomerDto;
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.CustomerMapper;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.Customer;
@@ -100,7 +100,7 @@ public class CustomerServiceTest {
         when(customerDao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_1, CUSTOMER_2, CUSTOMER_3));
         customerService.findListCustomers(1, 5);
         verify(customerDao, times(1)).findListEntities(0, 5);
-        assertEquals(new ListEntitiesDto<>(Arrays.asList(CUSTOMER_DTO_1, CUSTOMER_DTO_2, CUSTOMER_DTO_3), 1, 3, 5),
+        assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_DTO_1, CUSTOMER_DTO_2, CUSTOMER_DTO_3), 1, 3, 5),
                 customerService.findListCustomers(1, 5));
     }
 
@@ -149,7 +149,7 @@ public class CustomerServiceTest {
         when(customerOrderDao.findCustomerOrderList(3, 0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_3, CUSTOMER_ORDER_7));
         customerService.findListCustomerOrdersByCustomerId("3", 1, 5);
         verify(customerOrderDao, times(1)).findCustomerOrderList(3, 0, 5);
-        assertEquals(new ListEntitiesDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_3, CUSTOMER_ORDER_DTO_7), 1, 2, 2),
+        assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_3, CUSTOMER_ORDER_DTO_7), 1, 2, 2),
                 customerService.findListCustomerOrdersByCustomerId("3", 1, 5));
     }
 

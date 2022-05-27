@@ -18,10 +18,10 @@ public interface TagMapper {
     /**
      * The method for converting dto to entity.
      *
-     * @param tag Tag tag
+     * @param entity Tag entity
      * @return converted dto
      */
-    TagDto convertToDto(Tag tag);
+    TagDto convertToDto(Tag entity);
 
     /**
      * The method for converting entity to dto.

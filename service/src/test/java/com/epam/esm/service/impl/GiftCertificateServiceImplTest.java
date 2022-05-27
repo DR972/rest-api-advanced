@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
@@ -202,7 +202,7 @@ class GiftCertificateServiceImplTest {
         IntStream.range(0, certificates.size()).forEach(i -> when(certificateMapper.convertToDto(certificates.get(i))).thenReturn(certificateDtos.get(i)));
         when(certificateDao.countNumberEntityRows(params)).thenReturn(5L);
         when(certificateDao.findListEntities(params, 0, 5)).thenReturn(certificates);
-        assertEquals(new ListEntitiesDto<>(certificateDtos, 1, certificates.size(), 5),
+        assertEquals(new ResourceDto<>(certificateDtos, 1, certificates.size(), 5),
                 certificateServiceImpl.findListCertificates(params, 1, 5));
     }
 

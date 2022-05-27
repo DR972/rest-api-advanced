@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.CustomerDao;
 import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.CustomerMapper;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.Customer;
@@ -73,10 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public ListEntitiesDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
+    public ResourceDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
         List<CustomerDto> customerDtos = customerDao.findListEntities((pageNumber - 1) * rows, rows)
                 .stream().map(customerMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows());
+        return new ResourceDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows());
     }
 
     @Override
@@ -97,11 +97,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows) {
+    public ResourceDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows) {
         findCustomerById(customerId);
         List<CustomerOrderDto> customerOrders = customerOrderDao.findCustomerOrderList(Long.parseLong(customerId), (pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao
+        return new ResourceDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao
                 .countNumberEntityRowsInListCustomerOrders(Long.parseLong(customerId)));
     }
 }

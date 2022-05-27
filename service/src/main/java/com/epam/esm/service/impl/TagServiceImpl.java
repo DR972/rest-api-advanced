@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DeleteTagException;
 import com.epam.esm.service.TagService;
@@ -69,10 +69,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows) {
+    public ResourceDto<TagDto> findListTags(int pageNumber, int rows) {
         List<TagDto> tags = tagDao.findListEntities((pageNumber - 1) * rows, rows)
                 .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRows());
+        return new ResourceDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRows());
     }
 
     @Override
@@ -109,9 +109,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public ListEntitiesDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
+    public ResourceDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
         List<TagDto> tags = tagDao.findMostPopularTag((pageNumber - 1) * rows, rows)
                 .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRowsInListOfMostPopularTags());
+        return new ResourceDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRowsInListOfMostPopularTags());
     }
 }

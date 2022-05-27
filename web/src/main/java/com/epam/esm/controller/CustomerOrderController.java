@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.dto.CustomerOrderDto;
@@ -75,15 +75,15 @@ public class CustomerOrderController {
      *
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return ListEntitiesDto<CustomerOrderDto>
+     * @return ResourceDto<CustomerOrderDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+    public ResourceDto<CustomerOrderDto> getCustomerOrderList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ListEntitiesDto<CustomerOrderDto> orders = customerOrderService.findListCustomerOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<CustomerOrderDto> orders = customerOrderService.findListCustomerOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;
     }

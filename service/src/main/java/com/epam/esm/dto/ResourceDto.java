@@ -9,7 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.util.List;
 
 /**
- * The class {@code ListEntitiesDto} represents ListEntitiesDto<T>.
+ * The class {@code ResourceDto} represents ResourceDto<T>.
  *
  * @author Dzmitry Rozmysl
  * @version 1.0
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListEntitiesDto<T> extends RepresentationModel<ListEntitiesDto<T>> {
+public class ResourceDto<T> extends RepresentationModel<ResourceDto<T>> {
     /**
      * List<T> entities
      */

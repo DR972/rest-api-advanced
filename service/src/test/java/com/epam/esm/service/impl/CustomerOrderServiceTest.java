@@ -1,11 +1,8 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CustomerOrderDao;
-import com.epam.esm.dto.CustomerDto;
-import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.ListEntitiesDto;
-import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.*;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.CustomerOrder;
 import com.epam.esm.entity.GiftCertificate;
@@ -105,7 +102,7 @@ public class CustomerOrderServiceTest {
         when(customerOrderDao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_1, CUSTOMER_ORDER_2, CUSTOMER_ORDER_3));
         customerOrderService.findListCustomerOrders(1, 5);
         verify(customerOrderDao, times(1)).findListEntities(0, 5);
-        assertEquals(new ListEntitiesDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), 1, 3, 5),
+        assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), 1, 3, 5),
                 customerOrderService.findListCustomerOrders(1, 5));
     }
 

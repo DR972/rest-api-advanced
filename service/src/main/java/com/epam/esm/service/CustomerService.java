@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.CustomerDto;
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.entity.Customer;
 
 /**
@@ -35,7 +35,7 @@ public interface CustomerService {
      * @param rows       int rows
      * @return list of CustomerDto objects
      */
-    ListEntitiesDto<CustomerDto> findListCustomers(int pageNumber, int rows);
+    ResourceDto<CustomerDto> findListCustomers(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving Customer.
@@ -60,7 +60,7 @@ public interface CustomerService {
      * @param customerId Customer customerId
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return ListEntitiesDto<CustomerOrderDto>
+     * @return ResourceDto<CustomerOrderDto>
      */
-    ListEntitiesDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows);
+    ResourceDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows);
 }

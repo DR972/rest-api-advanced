@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
@@ -20,7 +21,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.esm.dto.ListEntitiesDto;
 import com.epam.esm.dto.TagDto;
 import lombok.SneakyThrows;
 import org.mockito.InjectMocks;
@@ -124,7 +124,7 @@ public class CertificateControllerTest {
         params.add("rows", "3");
         List<GiftCertificateDto> certificates = Arrays.asList(GIFT_CERTIFICATE_DTO_3, GIFT_CERTIFICATE_DTO_4, GIFT_CERTIFICATE_DTO_5);
         when(certificateService.findListCertificates(params, 2, 3))
-                .thenReturn(new ListEntitiesDto<>(certificates, 2, 3, 3000));
+                .thenReturn(new ResourceDto<>(certificates, 2, 3, 3000));
 
         mockMvc.perform(get("/certificates")
                         .contentType(MediaType.APPLICATION_JSON)

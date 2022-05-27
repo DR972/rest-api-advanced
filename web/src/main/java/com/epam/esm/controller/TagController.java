@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.TagService;
@@ -78,15 +78,15 @@ public class TagController {
      *
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return ListEntitiesDto<TagDto>
+     * @return ResourceDto<TagDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+    public ResourceDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                               @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                          @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                               @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ListEntitiesDto<TagDto> tags = tagService.findListTags(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<TagDto> tags = tagService.findListTags(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
@@ -147,11 +147,11 @@ public class TagController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+    public ResourceDto<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                                                                               @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                                                          @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                                               @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ListEntitiesDto<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }

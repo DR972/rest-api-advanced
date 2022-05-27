@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.service.CustomerService;
@@ -93,15 +93,15 @@ public class CustomerController {
      *
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return ListEntitiesDto<CustomerDto>
+     * @return ResourceDto<CustomerDto>
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+    public ResourceDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                                         @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                        @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                    @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                         @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ListEntitiesDto<CustomerDto> customers = customerService.findListCustomers(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<CustomerDto> customers = customerService.findListCustomers(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         customerHateoasAdder.addLinksToListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return customers;
     }
@@ -145,17 +145,17 @@ public class CustomerController {
      * @param customerId CustomerDto customerId
      * @param rows       number of lines per page (5 by default)
      * @param pageNumber page number(default 0)
-     * @return ListEntitiesDto<CustomerOrderDto>
+     * @return ResourceDto<CustomerOrderDto>
      */
     @GetMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.OK)
-    public ListEntitiesDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive")
+    public ResourceDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive")
                                                                   @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
-                                                                  @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+                                                              @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ListEntitiesDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, Integer.parseInt(pageNumber), Integer.parseInt(rows));
         orderHateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber), Integer.parseInt(customerId));
         return orders;
     }

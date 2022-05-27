@@ -19,11 +19,11 @@ public interface CustomerMapper {
     /**
      * The method for converting dto to entity.
      *
-     * @param customer Customer customer
+     * @param entity Customer entity
      * @return converted dto
      */
     @Mapping(source = "id", target = "customerId")
-    CustomerDto convertToDto(Customer customer);
+    CustomerDto convertToDto(Customer entity);
 
     /**
      * The method for converting entity to dto.

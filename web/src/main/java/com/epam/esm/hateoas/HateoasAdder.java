@@ -1,6 +1,6 @@
 package com.epam.esm.hateoas;
 
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
@@ -25,5 +25,5 @@ public interface HateoasAdder<T extends RepresentationModel<T>> {
      * @param entities List<T> entities
      * @param params   int[] params
      */
-    void addLinksToListEntity(ListEntitiesDto<T> entities, int... params);
+    void addLinksToListEntity(ResourceDto<T> entities, int... params);
 }

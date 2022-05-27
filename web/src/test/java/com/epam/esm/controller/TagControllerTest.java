@@ -18,7 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.SneakyThrows;
@@ -85,7 +85,7 @@ public class TagControllerTest {
     @SneakyThrows
     @Test
     void givenParamsList_whenGetListTags_thenReturnStatus200andListTags() {
-        when(tagService.findListTags(1, 3)).thenReturn(new ListEntitiesDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 3));
+        when(tagService.findListTags(1, 3)).thenReturn(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 3));
 
         mockMvc.perform(get("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -201,7 +201,7 @@ public class TagControllerTest {
     @Test
     void givenParamsList_whenGetListMostPopularTags_thenReturnStatus200andListTags() {
         when(tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 3))
-                .thenReturn(new ListEntitiesDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2));
+                .thenReturn(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2));
 
         mockMvc.perform(get("/tags/popular")
                         .contentType(MediaType.APPLICATION_JSON)

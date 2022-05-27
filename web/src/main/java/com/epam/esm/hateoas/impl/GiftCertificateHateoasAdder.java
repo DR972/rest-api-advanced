@@ -3,7 +3,7 @@ package com.epam.esm.hateoas.impl;
 import com.epam.esm.controller.CertificateController;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -55,7 +55,7 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
     }
 
     @Override
-    public void addLinksToListEntity(ListEntitiesDto<GiftCertificateDto> certificates, int... params) {
+    public void addLinksToListEntity(ResourceDto<GiftCertificateDto> certificates, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) certificates.getTotalNumberObjects() / rows);

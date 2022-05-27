@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
@@ -85,13 +85,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public ListEntitiesDto<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows) {
+    public ResourceDto<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows) {
         if (params.get(SORTING) != null) {
             validator.validateSortType(params.get(SORTING));
         }
         List<GiftCertificateDto> certificates = certificateDao.findListEntities(params, (pageNumber - 1) * rows, rows)
                 .stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
-        return new ListEntitiesDto<>(certificates, pageNumber, certificates.size(), certificateDao.countNumberEntityRows(params));
+        return new ResourceDto<>(certificates, pageNumber, certificates.size(), certificateDao.countNumberEntityRows(params));
     }
 
     @Override

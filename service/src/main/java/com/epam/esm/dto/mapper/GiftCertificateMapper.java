@@ -22,12 +22,12 @@ public interface GiftCertificateMapper {
     /**
      * The method for converting dto to entity.
      *
-     * @param giftCertificate GiftCertificate giftCertificate
+     * @param entity GiftCertificate entity
      * @return converted dto
      */
     @Mapping(source = "id", target = "certificateId")
     @Mapping(source = "price", target = "price", numberFormat = "#.00")
-    GiftCertificateDto convertToDto(GiftCertificate giftCertificate);
+    GiftCertificateDto convertToDto(GiftCertificate entity);
 
     /**
      * The method for converting entity to dto.

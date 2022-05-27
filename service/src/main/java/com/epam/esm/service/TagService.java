@@ -1,10 +1,8 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.dto.TagDto;
-
-import java.util.List;
 
 /**
  * The interface {@code TagService} describes abstract behavior for working with {@link com.epam.esm.service.impl.TagServiceImpl} objects.
@@ -35,9 +33,9 @@ public interface TagService {
      *
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return ListEntitiesDto<TagDto>
+     * @return ResourceDto<TagDto>
      */
-    ListEntitiesDto<TagDto> findListTags(int pageNumber, int rows);
+    ResourceDto<TagDto> findListTags(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving Tag.
@@ -68,7 +66,7 @@ public interface TagService {
      *
      * @param pageNumber int pageNumber
      * @param rows       int rows
-     * @return ListEntitiesDto<TagDto>
+     * @return ResourceDto<TagDto>
      */
-    ListEntitiesDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
+    ResourceDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
 }

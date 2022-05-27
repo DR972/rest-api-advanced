@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.dto.TagDto;
@@ -80,7 +80,7 @@ public class TagServiceImplTest {
         when(tagDao.findListEntities(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2, TAG_3));
         tagService.findListTags(1, 5);
         verify(tagDao, times(1)).findListEntities(0, 5);
-        assertEquals(new ListEntitiesDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 5),
+        assertEquals(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 5),
                 tagService.findListTags(1, 5));
     }
 
@@ -156,7 +156,7 @@ public class TagServiceImplTest {
         when(tagDao.findMostPopularTag(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2));
         tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 5);
         verify(tagDao, times(1)).findMostPopularTag(0, 5);
-        assertEquals(new ListEntitiesDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2),
+        assertEquals(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2),
                 tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 5));
     }
 }

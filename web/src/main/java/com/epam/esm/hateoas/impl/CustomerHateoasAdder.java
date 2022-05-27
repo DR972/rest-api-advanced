@@ -6,7 +6,7 @@ import com.epam.esm.controller.CustomerOrderController;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.CustomerDto;
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +50,7 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
     }
 
     @Override
-    public void addLinksToListEntity(ListEntitiesDto<CustomerDto> customers, int... params) {
+    public void addLinksToListEntity(ResourceDto<CustomerDto> customers, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) customers.getTotalNumberObjects() / rows);

@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas.impl;
 
 import com.epam.esm.controller.TagController;
-import com.epam.esm.dto.ListEntitiesDto;
+import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.hateoas.HateoasAdder;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
     }
 
     @Override
-    public void addLinksToListEntity(ListEntitiesDto<TagDto> tags, int... params) {
+    public void addLinksToListEntity(ResourceDto<TagDto> tags, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
