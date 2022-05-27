@@ -1,8 +1,10 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.builder.QueryBuilderForListGiftCertificate;
+import com.epam.esm.dao.builder.GiftCertificateQueryBuilder;
+import com.epam.esm.dao.builder.GiftCertificateQueryBuilderImpl;
 import com.epam.esm.entity.GiftCertificate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.MultiValueMap;
 
@@ -25,27 +27,28 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> i
     @PersistenceContext
     protected EntityManager entityManager;
     /**
-     * queryBuilderForListGiftCertificate QueryBuilderForListGiftCertificate.
+     * giftCertificateQueryBuilder giftCertificateQueryBuilderImpl.
      */
-    private final QueryBuilderForListGiftCertificate queryBuilderForListGiftCertificate;
+    private final GiftCertificateQueryBuilder giftCertificateQueryBuilderImpl;
 
     /**
      * The constructor creates an GiftCertificateDaoImpl object
      *
-     * @param queryBuilderForListGiftCertificate QueryBuilderForListGiftCertificate
+     * @param giftCertificateQueryBuilderImpl GiftCertificateQueryBuilderImpl
      */
-    protected GiftCertificateDaoImpl(QueryBuilderForListGiftCertificate queryBuilderForListGiftCertificate) {
+    @Autowired
+    protected GiftCertificateDaoImpl(GiftCertificateQueryBuilderImpl giftCertificateQueryBuilderImpl) {
         super(GiftCertificate.class);
-        this.queryBuilderForListGiftCertificate = queryBuilderForListGiftCertificate;
+        this.giftCertificateQueryBuilderImpl = giftCertificateQueryBuilderImpl;
     }
 
     @Override
     public List<GiftCertificate> findListEntities(MultiValueMap<String, String> requestParams, int offset, int limit) {
-        return queryBuilderForListGiftCertificate.build(entityManager, requestParams).setFirstResult(offset).setMaxResults(limit).getResultList();
+        return giftCertificateQueryBuilderImpl.build(entityManager, requestParams).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
     public long countNumberEntityRows(MultiValueMap<String, String> params) {
-        return queryBuilderForListGiftCertificate.build(entityManager, params).getResultList().size();
+        return giftCertificateQueryBuilderImpl.build(entityManager, params).getResultList().size();
     }
 }
