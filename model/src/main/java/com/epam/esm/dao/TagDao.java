@@ -22,7 +22,7 @@ public interface TagDao extends Dao<Tag, Long> {
      * @param limit  int limit
      * @return list of Tag objects
      */
-    List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int offset, int limit);
+    List<Tag> findMostPopularTag(int offset, int limit);
 
     /**
      * The method finds count number of rows in the list of the most popular tags.

@@ -55,7 +55,7 @@ public class GiftCertificateQueryBuilderImpl implements GiftCertificateQueryBuil
      * @return a sort string
      */
     private String buildOrder(List<String> orders) {
-        return orders != null ? " ORDER BY " + orders.stream().map(o -> o.startsWith("-") ? "g." + o.substring(1) + " desc " : "g." + o).collect(Collectors.joining(",")) : "";
+        return orders != null ? (" ORDER BY " + orders.stream().map(o -> o.startsWith("-") ? "g." + o.substring(1) + " desc " : "g." + o).collect(Collectors.joining(","))) : "";
     }
 
     /**
@@ -118,7 +118,7 @@ public class GiftCertificateQueryBuilderImpl implements GiftCertificateQueryBuil
      * @return String query
      */
     private String createQuery(List<List<String>> allQueryParams, List<String> orders) {
-        return !allQueryParams.get(0).isEmpty() ? QUERY_PART_1 + allQueryParams.get(0).stream().collect(Collectors.joining(" AND ", " WHERE ", " ")) +
-                "GROUP BY g.id" + allQueryParams.get(2).get(0) + buildOrder(orders) : QUERY_PART_1 + "GROUP BY g.id" + buildOrder(orders);
+        return !allQueryParams.get(0).isEmpty() ? (QUERY_PART_1 + allQueryParams.get(0).stream().collect(Collectors.joining(" AND ", " WHERE ", " ")) +
+                "GROUP BY g.id" + allQueryParams.get(2).get(0) + buildOrder(orders)) : QUERY_PART_1 + "GROUP BY g.id" + buildOrder(orders);
     }
 }

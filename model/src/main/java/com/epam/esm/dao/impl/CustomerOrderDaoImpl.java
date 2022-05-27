@@ -5,23 +5,15 @@ import com.epam.esm.entity.CustomerOrder;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class CustomerOrderDaoImpl extends AbstractDao<CustomerOrder, Long> implements CustomerOrderDao {
     /**
-     * EntityManager entityManager.
-     */
-    @PersistenceContext
-    protected EntityManager entityManager;
-
-    /**
      * The constructor creates an CustomerOrderDaoImpl object
      */
-    protected CustomerOrderDaoImpl() {
+    public CustomerOrderDaoImpl() {
         super(CustomerOrder.class);
     }
 

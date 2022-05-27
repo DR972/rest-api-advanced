@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.MultiValueMap;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -22,11 +20,6 @@ import java.util.List;
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> implements GiftCertificateDao {
     /**
-     * EntityManager entityManager.
-     */
-    @PersistenceContext
-    protected EntityManager entityManager;
-    /**
      * giftCertificateQueryBuilder giftCertificateQueryBuilderImpl.
      */
     private final GiftCertificateQueryBuilder giftCertificateQueryBuilderImpl;
@@ -37,7 +30,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate, Long> i
      * @param giftCertificateQueryBuilderImpl GiftCertificateQueryBuilderImpl
      */
     @Autowired
-    protected GiftCertificateDaoImpl(GiftCertificateQueryBuilderImpl giftCertificateQueryBuilderImpl) {
+    public GiftCertificateDaoImpl(GiftCertificateQueryBuilderImpl giftCertificateQueryBuilderImpl) {
         super(GiftCertificate.class);
         this.giftCertificateQueryBuilderImpl = giftCertificateQueryBuilderImpl;
     }

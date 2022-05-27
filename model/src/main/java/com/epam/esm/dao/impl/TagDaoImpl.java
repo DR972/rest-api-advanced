@@ -5,8 +5,6 @@ import com.epam.esm.entity.Tag;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
-    private static final String QUERY_MOST_POPULAR_TAGS = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customerId IN " +
+    private static final String QUERY_FOR_MOST_POPULAR_TAGS = "SELECT t FROM CustomerOrder o LEFT JOIN o.giftCertificates g LEFT JOIN g.tags t WHERE o.customerId IN " +
             "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id " +
             "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id))) " +
             "GROUP BY t.id " +
@@ -26,12 +24,6 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
             "(SELECT c.id FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id " +
             "HAVING (SUM (o.amount) >= ALL (SELECT SUM (o.amount) FROM Customer c LEFT JOIN CustomerOrder o ON c.id = o.customerId GROUP BY c.id))) " +
             "GROUP BY t.id))";
-
-    /**
-     * EntityManager entityManager.
-     */
-    @PersistenceContext
-    protected EntityManager entityManager;
 
     /**
      * The constructor creates an TagDaoImpl object
@@ -42,13 +34,13 @@ public class TagDaoImpl extends AbstractDao<Tag, Long> implements TagDao {
 
 
     @Override
-    public List<Tag> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int offset, int limit) {
-        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).setFirstResult(offset).setMaxResults(limit).getResultList();
+    public List<Tag> findMostPopularTag(int offset, int limit) {
+        return entityManager.unwrap(Session.class).createQuery(QUERY_FOR_MOST_POPULAR_TAGS, Tag.class).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
     public long countNumberEntityRowsInListOfMostPopularTags() {
-        return entityManager.unwrap(Session.class).createQuery(QUERY_MOST_POPULAR_TAGS, Tag.class).getResultList().size();
+        return entityManager.unwrap(Session.class).createQuery(QUERY_FOR_MOST_POPULAR_TAGS, Tag.class).getResultList().size();
     }
 
     @Override

@@ -110,7 +110,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public ListEntitiesDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows) {
-        List<TagDto> tags = tagDao.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders((pageNumber - 1) * rows, rows)
+        List<TagDto> tags = tagDao.findMostPopularTag((pageNumber - 1) * rows, rows)
                 .stream().map(tagMapper::convertToDto).collect(Collectors.toList());
         return new ListEntitiesDto<>(tags, pageNumber, tags.size(), tagDao.countNumberEntityRowsInListOfMostPopularTags());
     }

@@ -86,7 +86,7 @@ public class TagDaoImplTest {
 
     @Test
     void findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrdersShouldReturnResult() {
-        assertEquals(tagDao.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(0, 5), Collections.singletonList(TAG_3));
+        assertEquals(tagDao.findMostPopularTag(0, 5), Collections.singletonList(TAG_3));
     }
 
     @Test

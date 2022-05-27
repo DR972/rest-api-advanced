@@ -10,7 +10,7 @@ public class CustomerDaoImpl extends AbstractDao<Customer, Long> implements Cust
     /**
      * The constructor creates an CustomerDaoImpl object
      */
-    protected CustomerDaoImpl() {
+    public CustomerDaoImpl() {
         super(Customer.class);
     }
 }

@@ -45,25 +45,25 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
     /**
      * The method performs the operation of saving the object T in the table 'T'.
      *
-     * @param t T t
+     * @param entity T entity
      * @return T object from the table 'T'
      */
-    T createEntity(T t);
+    T createEntity(T entity);
 
     /**
      * The method performs operation of updating on the object T in the table 'T'.
      *
-     * @param t T t
+     * @param entity T entity
      * @return T object from the table 'T'
      */
-    T updateEntity(T t);
+    T updateEntity(T entity);
 
     /**
      * The method performs operation of deleting on the object T in the table 'T'.
      *
-     * @param t T t
+     * @param entity T entity
      */
-    void deleteEntity(T t);
+    void deleteEntity(T entity);
 
     /**
      * The method finds count number of rows objects T in the table 'T'.
