@@ -155,22 +155,45 @@ public class GiftCertificate extends BaseEntity<Long> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GiftCertificate)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GiftCertificate)) {
+            return false;
+        }
 
         GiftCertificate giftCertificate = (GiftCertificate) o;
 
-        if (!name.equals(giftCertificate.name)) return false;
-        if (!description.equals(giftCertificate.description)) return false;
-        if (!price.equals(giftCertificate.price)) return false;
-        if (!duration.equals(giftCertificate.duration)) return false;
-        if (!createDate.equals(giftCertificate.createDate)) return false;
+        if (!name.equals(giftCertificate.name)) {
+            return false;
+        }
+        if (!description.equals(giftCertificate.description)) {
+            return false;
+        }
+        if (!price.equals(giftCertificate.price)) {
+            return false;
+        }
+        if (!duration.equals(giftCertificate.duration)) {
+            return false;
+        }
+        if (!createDate.equals(giftCertificate.createDate)) {
+            return false;
+        }
         return lastUpdateDate.equals(giftCertificate.lastUpdateDate);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getPrice() != null ? getPrice().hashCode() : 0);
+        result = 31 * result + (getDuration() != null ? getDuration().hashCode() : 0);
+        result = 31 * result + (getCreateDate() != null ? getCreateDate().hashCode() : 0);
+        result = 31 * result + (getLastUpdateDate() != null ? getLastUpdateDate().hashCode() : 0);
+        result = 31 * result + (getTags() != null ? getTags().hashCode() : 0);
+        result = 31 * result + (getCustomerOrders() != null ? getCustomerOrders().hashCode() : 0);
+        return result;
     }
 
     @Override

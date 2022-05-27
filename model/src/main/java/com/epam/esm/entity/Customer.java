@@ -62,15 +62,22 @@ public class Customer extends BaseEntity<Long> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Customer)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Customer)) {
+            return false;
+        }
         Customer customer = (Customer) o;
         return name.equals(customer.name);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getCustomerOrders() != null ? getCustomerOrders().hashCode() : 0);
+        return result;
     }
 
     @Override

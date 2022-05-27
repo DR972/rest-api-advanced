@@ -68,15 +68,22 @@ public class Tag extends BaseEntity<Long> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tag)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Tag)) {
+            return false;
+        }
         Tag tag = (Tag) o;
         return name.equals(tag.name);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getGiftCertificates() != null ? getGiftCertificates().hashCode() : 0);
+        return result;
     }
 
     @Override

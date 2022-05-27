@@ -105,16 +105,27 @@ public class CustomerOrder extends BaseEntity<Long> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CustomerOrder)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CustomerOrder)) {
+            return false;
+        }
         CustomerOrder customerOrder = (CustomerOrder) o;
-        if (!purchaseTime.equals(customerOrder.purchaseTime)) return false;
+        if (!purchaseTime.equals(customerOrder.purchaseTime)) {
+            return false;
+        }
         return amount.equals(customerOrder.amount);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (getCustomerId() != null ? getCustomerId().hashCode() : 0);
+        result = 31 * result + (getPurchaseTime() != null ? getPurchaseTime().hashCode() : 0);
+        result = 31 * result + (getGiftCertificates() != null ? getGiftCertificates().hashCode() : 0);
+        result = 31 * result + (getAmount() != null ? getAmount().hashCode() : 0);
+        return result;
     }
 
     @Override
