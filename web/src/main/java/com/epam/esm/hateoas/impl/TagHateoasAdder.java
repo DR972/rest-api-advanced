@@ -32,7 +32,9 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
     }
 
     @Override
-    public void addLinksForListEntity(ListEntitiesDto<TagDto> tags, int rows, int pageNumber) {
+    public void addLinksToListEntity(ListEntitiesDto<TagDto> tags, int... params) {
+        int rows = params[0];
+        int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
         tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getListTags"));
 

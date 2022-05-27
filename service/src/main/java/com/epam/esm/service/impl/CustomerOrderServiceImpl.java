@@ -88,8 +88,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         customerOrderDto.setCustomerId(customerId);
         customerOrderDto.setPurchaseTime(dateHandler.getCurrentDate());
         List<GiftCertificateDto> certificateDtos = customerOrderDto.getGiftCertificates().stream().map(c -> certificateService.findCertificateById(c.getCertificateId()))
-                .collect(Collectors.toList());
-        BigDecimal amount = certificateDtos.stream().map(c -> new BigDecimal(c.getPrice())).reduce(BigDecimal::add).orElse(new BigDecimal(0));
+                .distinct().collect(Collectors.toList());
+        BigDecimal amount = certificateDtos.stream().map(c -> new BigDecimal(c.getPrice().replace(',', '.'))).reduce(BigDecimal::add).orElse(new BigDecimal(0));
         customerOrderDto.setGiftCertificates(certificateDtos);
         customerOrderDto.setAmount(amount);
         return customerOrderMapper.convertToDto(customerOrderDao.createEntity(customerOrderMapper.convertToEntity(customerOrderDto)));

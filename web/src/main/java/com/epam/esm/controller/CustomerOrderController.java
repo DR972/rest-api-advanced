@@ -5,6 +5,7 @@ import com.epam.esm.hateoas.HateoasAdder;
 import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.dto.CustomerOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class CustomerOrderController {
      * @param hateoasAdder         HateoasAdder<CustomerOrderDto> hateoasAdder
      */
     @Autowired
-    public CustomerOrderController(CustomerOrderService customerOrderService, HateoasAdder<CustomerOrderDto> hateoasAdder) {
+    public CustomerOrderController(CustomerOrderService customerOrderService, @Qualifier("customerOrderHateoasAdder") HateoasAdder<CustomerOrderDto> hateoasAdder) {
         this.customerOrderService = customerOrderService;
         this.hateoasAdder = hateoasAdder;
     }
@@ -83,7 +84,7 @@ public class CustomerOrderController {
                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<CustomerOrderDto> orders = customerOrderService.findListCustomerOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksForListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;
     }
 }

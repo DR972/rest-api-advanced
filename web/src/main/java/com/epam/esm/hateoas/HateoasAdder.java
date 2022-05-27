@@ -22,9 +22,8 @@ public interface HateoasAdder<T extends RepresentationModel<T>> {
     /**
      * Method for adding links for list entity objects.
      *
-     * @param entities   List<T> entities
-     * @param rows       number of lines per page
-     * @param pageNumber page number
+     * @param entities List<T> entities
+     * @param params   int[] params
      */
-    void addLinksForListEntity(ListEntitiesDto<T> entities, int rows, int pageNumber);
+    void addLinksToListEntity(ListEntitiesDto<T> entities, int... params);
 }

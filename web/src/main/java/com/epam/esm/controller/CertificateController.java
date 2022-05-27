@@ -91,7 +91,7 @@ public class CertificateController {
                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<GiftCertificateDto> certificates = certificateService.findListCertificates(allRequestParams, Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksForListEntity(certificates, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToListEntity(certificates, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return certificates;
     }
 

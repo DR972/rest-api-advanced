@@ -50,7 +50,9 @@ public class CustomerHateoasAdder implements HateoasAdder<CustomerDto> {
     }
 
     @Override
-    public void addLinksForListEntity(ListEntitiesDto<CustomerDto> customers, int rows, int pageNumber) {
+    public void addLinksToListEntity(ListEntitiesDto<CustomerDto> customers, int... params) {
+        int rows = params[0];
+        int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) customers.getTotalNumberObjects() / rows);
         customers.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
 

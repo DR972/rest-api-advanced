@@ -87,7 +87,7 @@ public class TagController {
                                               @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                               @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<TagDto> tags = tagService.findListTags(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksForListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
 
@@ -148,11 +148,11 @@ public class TagController {
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
     public ListEntitiesDto<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                                                                   @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+                                                                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                                                              @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksForListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
 }

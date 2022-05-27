@@ -7,6 +7,7 @@ import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.service.CustomerService;
 import com.epam.esm.dto.CustomerDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +66,7 @@ public class CustomerController {
      */
     @Autowired
     public CustomerController(CustomerService customerService, CustomerOrderService customerOrderService, HateoasAdder<CustomerDto> customerHateoasAdder,
-                              HateoasAdder<CustomerOrderDto> orderHateoasAdder) {
+                              @Qualifier("customerOrderHateoasAdderToCustomer") HateoasAdder<CustomerOrderDto> orderHateoasAdder) {
         this.customerService = customerService;
         this.customerOrderService = customerOrderService;
         this.customerHateoasAdder = customerHateoasAdder;
@@ -101,7 +102,7 @@ public class CustomerController {
                                                         @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                         @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<CustomerDto> customers = customerService.findListCustomers(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        customerHateoasAdder.addLinksForListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        customerHateoasAdder.addLinksToListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return customers;
     }
 
@@ -155,7 +156,7 @@ public class CustomerController {
                                                                   @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ListEntitiesDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        orderHateoasAdder.addLinksForListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        orderHateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber), Integer.parseInt(customerId));
         return orders;
     }
 

@@ -55,7 +55,9 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
     }
 
     @Override
-    public void addLinksForListEntity(ListEntitiesDto<GiftCertificateDto> certificates, int rows, int pageNumber) {
+    public void addLinksToListEntity(ListEntitiesDto<GiftCertificateDto> certificates, int... params) {
+        int rows = params[0];
+        int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) certificates.getTotalNumberObjects() / rows);
         certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber), String.valueOf(rows))).withRel("getGiftCertificateList"));
 
