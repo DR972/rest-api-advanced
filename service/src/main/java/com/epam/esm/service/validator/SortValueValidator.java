@@ -33,20 +33,20 @@ public class SortValueValidator {
     @SneakyThrows
     public void validateSortType(List<String> types) {
         List<String> fields = Arrays.stream(GiftCertificate.class.getDeclaredFields()).map(Field::getName)
-                .filter(f -> !f.equals(TAGS) && !f.equals(ORDERS)).collect(Collectors.toList());
+                .filter(field -> (!field.equals(TAGS)) && (!field.equals(ORDERS))).collect(Collectors.toList());
         List<String> decodedTypes = new ArrayList<>();
         for (String type : types) {
             decodedTypes.add(URLEncoder.encode(type, StandardCharsets.UTF_8.name()));
         }
-        List<String> badTypes = decodedTypes.stream()
-                .map(t -> {
-                    if (t.startsWith("-")) return t.substring(1);
-                    else return t;
+        List<String> illegalTypes = decodedTypes.stream()
+                .map(type -> {
+                    if (type.startsWith("-")) return type.substring(1);
+                    else return type;
                 })
-                .filter(t -> !fields.contains(t) && !t.equals(ID))
+                .filter(type -> (!fields.contains(type)) && (!type.equals(ID)))
                 .collect(Collectors.toList());
-        if (!badTypes.isEmpty()) {
-            throw new SortValueException("ex.sortType", String.join(", ", badTypes));
+        if (!illegalTypes.isEmpty()) {
+            throw new SortValueException("ex.sortType", String.join(", ", illegalTypes));
         }
     }
 }

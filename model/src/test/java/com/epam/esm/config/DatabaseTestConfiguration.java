@@ -30,7 +30,7 @@ public class DatabaseTestConfiguration {
     /**
      * This method creates a component that will be used as a data source.
      *
-     * @return the ComboPooledDataSource
+     * @return the dataSource
      */
     @SneakyThrows
     @Bean
