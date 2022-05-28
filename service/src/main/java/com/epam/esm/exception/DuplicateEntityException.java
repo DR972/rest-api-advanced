@@ -1,6 +1,5 @@
 package com.epam.esm.exception;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -11,12 +10,7 @@ import lombok.EqualsAndHashCode;
  * @see RuntimeException
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
-public class DuplicateEntityException extends RuntimeException {
-    /**
-     * parameters that caused the DuplicateEntityException exception.
-     */
-    private String param;
+public class DuplicateEntityException extends EntityException {
 
     /**
      * The constructor creates a DuplicateEntityException object
@@ -25,7 +19,6 @@ public class DuplicateEntityException extends RuntimeException {
      * @param param   String param
      */
     public DuplicateEntityException(String message, String param) {
-        super(message);
-        this.param = param;
+        super(message, param);
     }
 }

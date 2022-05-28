@@ -63,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto findCustomerById(String id) {
         return customerMapper.convertToDto(customerDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
+                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = customerMapper.convertToEntity(customerDto);
         if (findCustomerByName(customer.getName()).getName() != null) {
-            throw new DuplicateEntityException("ex.duplicate", customer.getName() + ")");
+            throw new DuplicateEntityException("ex.duplicate", customer.getName());
         }
         return customerMapper.convertToDto(customerDao.createEntity(customer));
     }
@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerOrderDto findCustomerOrderByCustomerIdAndOrderId(String customerId, String orderId) {
         return customerOrderMapper.convertToDto(customerOrderDao.findCustomerOrder(Long.parseLong(customerId), Long.parseLong(orderId)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", " (customerId = " + customerId + ", orderId = " + orderId + ")")));
+                new NoSuchEntityException("ex.noSuchEntity", "customerId = " + customerId + ", orderId = " + orderId)));
     }
 
     @Override

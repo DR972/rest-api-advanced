@@ -1,6 +1,5 @@
 package com.epam.esm.exception;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -11,12 +10,7 @@ import lombok.EqualsAndHashCode;
  * @see RuntimeException
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
-public class DeleteTagException extends RuntimeException {
-    /**
-     * parameters that caused the DeleteTagException exception.
-     */
-    private String param;
+public class DeleteTagException extends EntityException {
 
     /**
      * The constructor creates a DeleteTagException object
@@ -25,8 +19,7 @@ public class DeleteTagException extends RuntimeException {
      * @param param   String param
      */
     public DeleteTagException(String message, String param) {
-        super(message);
-        this.param = param;
+        super(message, param);
     }
 }
 

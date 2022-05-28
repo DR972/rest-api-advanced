@@ -11,7 +11,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.validator.SortTypeValidator;
+import com.epam.esm.service.validator.SortValueValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -135,7 +135,7 @@ class GiftCertificateServiceImplTest {
     @Mock
     private TagService tagService = mock(TagService.class);
     @Mock
-    private SortTypeValidator validator = mock(SortTypeValidator.class);
+    private SortValueValidator validator = mock(SortValueValidator.class);
     @Mock
     private DateHandler dateHandler = mock(DateHandler.class);
     @Mock

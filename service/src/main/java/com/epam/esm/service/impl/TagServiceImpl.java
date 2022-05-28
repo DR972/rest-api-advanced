@@ -59,7 +59,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto findTagById(String id) {
         return tagMapper.convertToDto(tagDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
+                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
     public TagDto createTag(TagDto tagDto) {
         Tag tag = tagMapper.convertToEntity(tagDto);
         if (findTagByName(tag.getName()).getName() != null) {
-            throw new DuplicateEntityException("ex.duplicate", tag.getName() + ")");
+            throw new DuplicateEntityException("ex.duplicate", tag.getName());
         }
         return tagMapper.convertToDto(tagDao.createEntity(tag));
     }
@@ -90,7 +90,7 @@ public class TagServiceImpl implements TagService {
     public TagDto updateTag(TagDto tagDto, String id) {
         Tag tag = tagMapper.convertToEntity(tagDto);
         if (findTagByName(tag.getName()).getName() != null) {
-            throw new DuplicateEntityException("ex.duplicate", tag.getName() + ")");
+            throw new DuplicateEntityException("ex.duplicate", tag.getName());
         }
         findTagById(id);
         tag.setId(Long.valueOf(id));
@@ -104,7 +104,7 @@ public class TagServiceImpl implements TagService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("tag", tag.getName());
         if (!certificateDao.findListEntities(params, 0, 1).isEmpty()) {
-            throw new DeleteTagException("ex.deleteTag", tag.getName() + ")");
+            throw new DeleteTagException("ex.deleteTag", tag.getName());
         } else tagDao.deleteEntity(tag);
     }
 

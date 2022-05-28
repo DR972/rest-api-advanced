@@ -70,7 +70,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     public CustomerOrderDto findCustomerOrderById(String id) {
         return customerOrderMapper.convertToDto(customerOrderDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
+                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
     }
 
     @Override

@@ -22,7 +22,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FAILED_DEPENDENCY;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * The class {@code GlobalExceptionHandler} presents entity which will be returned from controller in case generating exceptions.
@@ -76,9 +79,9 @@ public class GlobalExceptionHandler {
         if ((ex.getMethod().equals("PATCH") || ex.getMethod().equals("DELETE")) && (req.getRequestURI().equals("/certificates")
                 || req.getRequestURI().equals("/certificates/") || req.getRequestURI().equals("/tags") || req.getRequestURI().equals("/tags/"))) {
             return new ApiError(ExceptionCode.NOT_FOUND_PATH_VARIABLE_EXCEPTION, resourceBundleMessageSource
-                    .getMessage("ex.notSupported", null, locale) + ex.getMethod() + "). " + resourceBundleMessageSource.getMessage("ex.pathVariable", null, locale));
+                    .getMessage("ex.notSupported", new String[]{ex.getMethod()}, locale) + ". " + resourceBundleMessageSource.getMessage("ex.pathVariable", null, locale));
         } else {
-            return new ApiError(ExceptionCode.METHOD_NOT_ALLOWED_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notSupported", null, locale) + ex.getMethod() + ")");
+            return new ApiError(ExceptionCode.METHOD_NOT_ALLOWED_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notSupported", new String[]{ex.getMethod()}, locale));
         }
     }
 
@@ -94,23 +97,23 @@ public class GlobalExceptionHandler {
     protected ApiError handleHttpMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request, Locale locale) {
         saveLog(MethodArgumentNotValidException.class, ex, request.getParameterMap());
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale) + fieldError.getRejectedValue() + "')")
-                .distinct().collect(Collectors.joining("; ")));
+                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()),
+                        new String[]{String.valueOf(fieldError.getRejectedValue())}, locale)).distinct().collect(Collectors.joining("; ")));
     }
 
     /**
-     * The {@code handleSortTypeException} method returns a response if SortTypeException is generated.
+     * The {@code handleSortTypeException} method returns a response if SortValueException is generated.
      *
-     * @param ex      SortTypeException exception
+     * @param ex      SortValueException exception
      * @param request WebRequest request
      * @return ApiError object
      */
-    @ExceptionHandler(SortTypeException.class)
+    @ExceptionHandler(SortValueException.class)
     @ResponseStatus(BAD_REQUEST)
-    protected ApiError handleSortTypeException(SortTypeException ex, WebRequest request, Locale locale) {
-        saveLog(SortTypeException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.SORT_TYPE_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam() + "')");
+    protected ApiError handleSortValueException(SortValueException ex, WebRequest request, Locale locale) {
+        saveLog(SortValueException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.SORT_TYPE_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
+                new String[]{ex.getParameters()}, locale));
     }
 
     /**
@@ -124,8 +127,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleHttpDuplicateEntityException(DuplicateEntityException ex, WebRequest request, Locale locale) {
         saveLog(DuplicateEntityException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.DUPLICATE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam());
+        return new ApiError(ExceptionCode.DUPLICATE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
+                new String[]{ex.getParameters()}, locale));
     }
 
     /**
@@ -139,8 +142,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(FAILED_DEPENDENCY)
     protected ApiError handleHttpDeleteTagException(DeleteTagException ex, WebRequest request, Locale locale) {
         saveLog(DeleteTagException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.DELETE_TAG_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam());
+        return new ApiError(ExceptionCode.DELETE_TAG_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
+                new String[]{ex.getParameters()}, locale));
     }
 
     /**
@@ -154,10 +157,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     protected ApiError handleConstraintViolationException(ConstraintViolationException ex, WebRequest request, Locale locale) {
         saveLog(ConstraintViolationException.class, ex, request.getParameterMap());
-        ex.getConstraintViolations().forEach(e -> System.out.println(e.getInvalidValue()));
         return new ApiError(ExceptionCode.ARGUMENT_NOT_VALID, ex.getConstraintViolations().stream()
-                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()), null, locale) + fieldError.getInvalidValue() + "')")
-                .distinct().collect(Collectors.joining("; ")));
+                .map(fieldError -> resourceBundleMessageSource.getMessage(Objects.requireNonNull(fieldError.getMessage()),
+                        new String[]{String.valueOf(fieldError.getInvalidValue())}, locale)).distinct().collect(Collectors.joining("; ")));
     }
 
     /**
@@ -171,8 +173,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpNoHandlerFoundException(NoHandlerFoundException ex, WebRequest request, Locale locale) {
         saveLog(NoHandlerFoundException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.NOT_FOUND_URL_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notURL", null,
-                locale) + ex.getRequestURL() + ")");
+        return new ApiError(ExceptionCode.NOT_FOUND_URL_EXCEPTION, resourceBundleMessageSource.getMessage("ex.notURL",
+                new String[]{ex.getRequestURL()}, locale));
     }
 
     /**
@@ -186,8 +188,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request, Locale locale) {
         saveLog(MethodArgumentTypeMismatchException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.NOT_FOUND_METHOD_ARGUMENT_EXCEPTION, resourceBundleMessageSource.getMessage("ex.argumentMismatch", null,
-                locale) + ex.getParameter().getParameterName() + ")");
+        return new ApiError(ExceptionCode.NOT_FOUND_METHOD_ARGUMENT_EXCEPTION, resourceBundleMessageSource.getMessage("ex.argumentMismatch",
+                new String[]{ex.getParameter().getParameterName()}, locale));
     }
 
     /**
@@ -201,8 +203,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     protected ApiError handleHttpNoSuchEntityException(NoSuchEntityException ex, WebRequest request, Locale locale) {
         saveLog(NoSuchEntityException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.NO_SUCH_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(), null,
-                locale) + ex.getParam());
+        return new ApiError(ExceptionCode.NO_SUCH_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
+                new String[]{ex.getParameters()}, locale));
     }
 
     /**

@@ -12,7 +12,7 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.service.validator.SortTypeValidator;
+import com.epam.esm.service.validator.SortValueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private static final String SORTING = "sorting";
     /**
-     * SortTypeValidator validator.
+     * SortValueValidator validator.
      */
-    private final SortTypeValidator validator;
+    private final SortValueValidator validator;
     /**
      * GiftCertificateDao certificateDao.
      */
@@ -60,7 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * The constructor creates a GiftCertificateServiceImpl object
      *
-     * @param validator         SortTypeValidator
+     * @param validator         SortValueValidator
      * @param certificateDao    GiftCertificateDao certificateDao
      * @param tagDao            TagDao tagDao
      * @param dateHandler       DateHandler dateHandler
@@ -68,7 +68,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @param certificateMapper GiftCertificateMapper certificateMapper
      */
     @Autowired
-    public GiftCertificateServiceImpl(SortTypeValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler,
+    public GiftCertificateServiceImpl(SortValueValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler,
                                       TagService tagService, GiftCertificateMapper certificateMapper) {
         this.validator = validator;
         this.certificateDao = certificateDao;
@@ -81,7 +81,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto findCertificateById(String id) {
         return certificateMapper.convertToDto(certificateDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", " (id = " + id + ")")));
+                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
     }
 
     @Override
