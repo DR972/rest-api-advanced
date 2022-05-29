@@ -1,8 +1,12 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CustomerOrderDao;
-import com.epam.esm.dto.*;
+import com.epam.esm.dto.CustomerDto;
+import com.epam.esm.dto.CustomerOrderDto;
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.ResourceDto;
+import com.epam.esm.dto.ResourceDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
 import com.epam.esm.entity.CustomerOrder;
 import com.epam.esm.entity.GiftCertificate;
@@ -81,15 +85,15 @@ public class CustomerOrderServiceTest {
     void findCustomerOrderByIdShouldReturnResult() {
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_2)).thenReturn(CUSTOMER_ORDER_DTO_2);
         when(customerOrderDao.findEntityById(2L)).thenReturn(Optional.of(CUSTOMER_ORDER_2));
-        customerOrderService.findCustomerOrderById("2");
+        customerOrderService.findEntityById("2");
         verify(customerOrderDao, times(1)).findEntityById(2L);
-        assertEquals(CUSTOMER_ORDER_DTO_2, customerOrderService.findCustomerOrderById("2"));
+        assertEquals(CUSTOMER_ORDER_DTO_2, customerOrderService.findEntityById("2"));
     }
 
     @Test
     void findCustomerOrderByIddShouldThrowException() {
         when(customerOrderDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> customerOrderService.findCustomerOrderById("2"));
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> customerOrderService.findEntityById("2"));
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -100,17 +104,17 @@ public class CustomerOrderServiceTest {
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_3)).thenReturn(CUSTOMER_ORDER_DTO_3);
         when(customerOrderDao.countNumberEntityRows()).thenReturn(5L);
         when(customerOrderDao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_1, CUSTOMER_ORDER_2, CUSTOMER_ORDER_3));
-        customerOrderService.findListCustomerOrders(1, 5);
+        customerOrderService.findListEntities(1, 5);
         verify(customerOrderDao, times(1)).findListEntities(0, 5);
         assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), 1, 3, 5),
-                customerOrderService.findListCustomerOrders(1, 5));
+                customerOrderService.findListEntities(1, 5));
     }
 
     @Test
     void createCustomerOrderShouldReturnResult() {
-        when(customerService.findCustomerById("2")).thenReturn(CUSTOMER_DTO_2);
-        when(certificateService.findCertificateById("1")).thenReturn(GIFT_CERTIFICATE_DTO_1);
-        when(certificateService.findCertificateById("2")).thenReturn(GIFT_CERTIFICATE_DTO_2);
+        when(customerService.findEntityById("2")).thenReturn(CUSTOMER_DTO_2);
+        when(certificateService.findEntityById("1")).thenReturn(GIFT_CERTIFICATE_DTO_1);
+        when(certificateService.findEntityById("2")).thenReturn(GIFT_CERTIFICATE_DTO_2);
 
         when(customerOrderMapper.convertToEntity(NEW_DTO_CUSTOMER_ORDER)).thenReturn(NEW_CUSTOMER_ORDER);
         when(customerOrderMapper.convertToDto(NEW_CUSTOMER_ORDER)).thenReturn(NEW_DTO_CUSTOMER_ORDER);

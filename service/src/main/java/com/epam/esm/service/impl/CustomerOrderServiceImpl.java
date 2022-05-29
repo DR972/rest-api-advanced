@@ -1,16 +1,14 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.CustomerOrderDao;
+import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.ResourceDto;
-import com.epam.esm.dto.mapper.CustomerOrderMapper;
-import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.dto.mapper.EntityMapper;
+import com.epam.esm.entity.CustomerOrder;
 import com.epam.esm.service.CustomerOrderService;
 import com.epam.esm.dto.CustomerOrderDto;
 import com.epam.esm.service.CustomerService;
 import com.epam.esm.service.DateHandler;
 import com.epam.esm.service.GiftCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +24,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 @Service
-public class CustomerOrderServiceImpl implements CustomerOrderService {
-    /**
-     * CustomerOrderDao customerOrderDao.
-     */
-    private final CustomerOrderDao customerOrderDao;
-    /**
-     * CustomerOrderMapper customerOrderMapper.
-     */
-    private final CustomerOrderMapper customerOrderMapper;
+public class CustomerOrderServiceImpl extends AbstractService<CustomerOrder, Long, CustomerOrderDto> implements CustomerOrderService {
     /**
      * DateHandler dateHandler.
      */
@@ -49,49 +39,33 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private final CustomerService customerService;
 
     /**
-     * The constructor creates a CustomerOrderServiceImpl object
+     * The constructor creates a TagServiceImpl object
      *
-     * @param customerOrderDao    CustomerOrderDao customerOrderDao
-     * @param customerOrderMapper CustomerOrderMapper customerOrderMapper
-     * @param dateHandler         DateHandler dateHandler
-     * @param certificateService  GiftCertificateService certificateService
-     * @param customerService     CustomerService customerService
+     * @param dao                AbstractDao<T, ID> dao
+     * @param entityMapper       EntityMapper<T, D> entityMapper
+     * @param dateHandler        DateHandler dateHandler
+     * @param certificateService GiftCertificateService certificateService
+     * @param customerService    CustomerService customerService
      */
-    @Autowired
-    public CustomerOrderServiceImpl(CustomerOrderDao customerOrderDao, CustomerOrderMapper customerOrderMapper, DateHandler dateHandler,
-                                    GiftCertificateService certificateService, CustomerService customerService) {
-        this.customerOrderDao = customerOrderDao;
-        this.customerOrderMapper = customerOrderMapper;
+    public CustomerOrderServiceImpl(AbstractDao<CustomerOrder, Long> dao, EntityMapper<CustomerOrder, CustomerOrderDto> entityMapper,
+                                    DateHandler dateHandler, GiftCertificateService certificateService, CustomerService customerService) {
+        super(dao, entityMapper);
         this.dateHandler = dateHandler;
         this.certificateService = certificateService;
         this.customerService = customerService;
     }
 
     @Override
-    public CustomerOrderDto findCustomerOrderById(String id) {
-        return customerOrderMapper.convertToDto(customerOrderDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
-    }
-
-    @Override
-    @Transactional
-    public ResourceDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows) {
-        List<CustomerOrderDto> customerOrders = customerOrderDao.findListEntities((pageNumber - 1) * rows, rows)
-                .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
-        return new ResourceDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao.countNumberEntityRows());
-    }
-
-    @Override
     @Transactional
     public CustomerOrderDto createCustomerOrder(String customerId, CustomerOrderDto customerOrderDto) {
-        customerService.findCustomerById(customerId);
+        customerService.findEntityById(customerId);
         customerOrderDto.setCustomerId(customerId);
         customerOrderDto.setPurchaseTime(dateHandler.getCurrentDate());
-        List<GiftCertificateDto> certificateDtos = customerOrderDto.getGiftCertificates().stream().map(c -> certificateService.findCertificateById(c.getCertificateId()))
+        List<GiftCertificateDto> certificateDtos = customerOrderDto.getGiftCertificates().stream().map(c -> certificateService.findEntityById(c.getCertificateId()))
                 .distinct().collect(Collectors.toList());
         BigDecimal amount = certificateDtos.stream().map(c -> new BigDecimal(c.getPrice().replace(',', '.'))).reduce(BigDecimal::add).orElse(new BigDecimal(0));
         customerOrderDto.setGiftCertificates(certificateDtos);
         customerOrderDto.setAmount(amount);
-        return customerOrderMapper.convertToDto(customerOrderDao.createEntity(customerOrderMapper.convertToEntity(customerOrderDto)));
+        return entityMapper.convertToDto(dao.createEntity(entityMapper.convertToEntity(customerOrderDto)));
     }
 }

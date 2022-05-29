@@ -71,15 +71,15 @@ public class CustomerServiceTest {
     void findCustomerByIdShouldReturnResult() {
         when(customerMapper.convertToDto(CUSTOMER_2)).thenReturn(CUSTOMER_DTO_2);
         when(customerDao.findEntityById(2L)).thenReturn(Optional.of(CUSTOMER_2));
-        customerService.findCustomerById("2");
+        customerService.findEntityById("2");
         verify(customerDao, times(1)).findEntityById(2L);
-        assertEquals(CUSTOMER_DTO_2, customerService.findCustomerById("2"));
+        assertEquals(CUSTOMER_DTO_2, customerService.findEntityById("2"));
     }
 
     @Test
     void findCustomerByIdShouldThrowException() {
         when(customerDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> customerService.findCustomerById("2"));
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> customerService.findEntityById("2"));
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -98,10 +98,10 @@ public class CustomerServiceTest {
         when(customerMapper.convertToDto(CUSTOMER_3)).thenReturn(CUSTOMER_DTO_3);
         when(customerDao.countNumberEntityRows()).thenReturn(5L);
         when(customerDao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_1, CUSTOMER_2, CUSTOMER_3));
-        customerService.findListCustomers(1, 5);
+        customerService.findListEntities(1, 5);
         verify(customerDao, times(1)).findListEntities(0, 5);
         assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_DTO_1, CUSTOMER_DTO_2, CUSTOMER_DTO_3), 1, 3, 5),
-                customerService.findListCustomers(1, 5));
+                customerService.findListEntities(1, 5));
     }
 
     @Test

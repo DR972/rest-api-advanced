@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.CustomerOrderDto;
-import com.epam.esm.dto.ResourceDto;
+import com.epam.esm.entity.CustomerOrder;
 
 /**
  * The interface {@code CustomerOrderService} describes abstract behavior for working with
@@ -10,23 +10,7 @@ import com.epam.esm.dto.ResourceDto;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-public interface CustomerOrderService {
-    /**
-     * The method finds customerOrder.
-     *
-     * @param id customerOrderDto id
-     * @return customerOrderDto object
-     */
-    CustomerOrderDto findCustomerOrderById(String id);
-
-    /**
-     * The method finds list customerOrders.
-     *
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
-     * @return ResourceDto<CustomerOrderDto>
-     */
-    ResourceDto<CustomerOrderDto> findListCustomerOrders(int pageNumber, int rows);
+public interface CustomerOrderService extends BaseService<CustomerOrder, Long, CustomerOrderDto> {
 
     /**
      * The method performs the operation of saving CustomerOrder.

@@ -12,7 +12,6 @@ import java.util.List;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-@Repository
 public interface TagDao extends Dao<Tag, Long> {
 
     /**

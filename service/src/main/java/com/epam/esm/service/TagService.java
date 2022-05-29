@@ -10,15 +10,7 @@ import com.epam.esm.dto.TagDto;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-public interface TagService {
-
-    /**
-     * The method finds Tag by id.
-     *
-     * @param id TagDto id
-     * @return TagDto object
-     */
-    TagDto findTagById(String id);
+public interface TagService extends BaseService<Tag, Long, TagDto> {
 
     /**
      * The method finds Tag by name.
@@ -27,15 +19,6 @@ public interface TagService {
      * @return Tag object
      */
     Tag findTagByName(String name);
-
-    /**
-     * The method finds list Tags.
-     *
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
-     * @return ResourceDto<TagDto>
-     */
-    ResourceDto<TagDto> findListTags(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving Tag.
@@ -68,5 +51,5 @@ public interface TagService {
      * @param rows       int rows
      * @return ResourceDto<TagDto>
      */
-    ResourceDto<TagDto> findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(int pageNumber, int rows);
+    ResourceDto<TagDto> findMostPopularTag(int pageNumber, int rows);
 }

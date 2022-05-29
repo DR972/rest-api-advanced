@@ -19,7 +19,6 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-
 public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T, ID> {
     /**
      * EntityManager entityManager.

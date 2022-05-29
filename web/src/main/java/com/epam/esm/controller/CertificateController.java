@@ -70,7 +70,7 @@ public class CertificateController {
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto getCertificateById(@PathVariable @Positive(message = "ex.giftCertificateIdPositive")
                                                  @Digits(integer = 9, fraction = 0, message = "ex.giftCertificateIdPositive") String id) {
-        GiftCertificateDto certificateDto = certificateService.findCertificateById(id);
+        GiftCertificateDto certificateDto = certificateService.findEntityById(id);
         hateoasAdder.addLinks(certificateDto);
         return certificateDto;
     }

@@ -11,14 +11,7 @@ import com.epam.esm.entity.Customer;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-public interface CustomerService {
-    /**
-     * The method finds Customer by id.
-     *
-     * @param id CustomerDto id
-     * @return CustomerDto object
-     */
-    CustomerDto findCustomerById(String id);
+public interface CustomerService extends BaseService<Customer, Long, CustomerDto> {
 
     /**
      * The method finds Customer by name.
@@ -27,15 +20,6 @@ public interface CustomerService {
      * @return Customer object
      */
     Customer findCustomerByName(String name);
-
-    /**
-     * The method finds list Customers.
-     *
-     * @param pageNumber int pageNumber
-     * @param rows       int rows
-     * @return list of CustomerDto objects
-     */
-    ResourceDto<CustomerDto> findListCustomers(int pageNumber, int rows);
 
     /**
      * The method performs the operation of saving Customer.

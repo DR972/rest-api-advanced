@@ -14,7 +14,6 @@ import java.util.Optional;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-@Repository
 public interface Dao<T extends BaseEntity<ID>, ID> {
 
     /**

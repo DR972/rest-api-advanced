@@ -83,7 +83,7 @@ public class CertificateControllerTest {
     @SneakyThrows
     @Test
     public void givenId_whenGetExistingCertificate_thenReturnStatus200andTag() {
-        when(certificateService.findCertificateById("1")).thenReturn(GIFT_CERTIFICATE_DTO_1);
+        when(certificateService.findEntityById("1")).thenReturn(GIFT_CERTIFICATE_DTO_1);
         mockMvc.perform(get("/certificates/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.certificateId").value(GIFT_CERTIFICATE_DTO_1.getCertificateId()))
@@ -99,15 +99,15 @@ public class CertificateControllerTest {
                 .andExpect(jsonPath("$.tags[1].name").value((GIFT_CERTIFICATE_DTO_1.getTags().get(1).getName())))
                 .andExpect(jsonPath("$.tags[2].id").value((GIFT_CERTIFICATE_DTO_1.getTags().get(2).getId())))
                 .andExpect(jsonPath("$.tags[2].name").value((GIFT_CERTIFICATE_DTO_1.getTags().get(2).getName())));
-        verify(certificateService, times(1)).findCertificateById("1");
+        verify(certificateService, times(1)).findEntityById("1");
     }
 
     @Test
     public void givenId_whenGetNotExistingCertificate_thenReturnStatus404anExceptionThrown() throws Exception {
-        when(certificateService.findCertificateById("1000000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000000)"));
+        when(certificateService.findEntityById("1000000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000000)"));
         mockMvc.perform(get("/certificates/1000000"))
                 .andExpect(status().isNotFound());
-        verify(certificateService, times(1)).findCertificateById("1000000");
+        verify(certificateService, times(1)).findEntityById("1000000");
     }
 
     @Test
@@ -278,7 +278,7 @@ public class CertificateControllerTest {
 
     @Test
     public void givenId_whenDeleteNotExistingCertificate_thenReturnStatus404anExceptionThrown() throws Exception {
-        when(certificateService.findCertificateById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
+        when(certificateService.findEntityById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
         mockMvc.perform(get("/certificates/1000"))
                 .andExpect(status().isNotFound());
     }

@@ -59,21 +59,21 @@ public class TagControllerTest {
     @SneakyThrows
     @Test
     public void givenId_whenGetExistingTag_thenReturnStatus200andTag() {
-        when(tagService.findTagById("1")).thenReturn(TAG_DTO_1);
+        when(tagService.findEntityById("1")).thenReturn(TAG_DTO_1);
 
         mockMvc.perform(get("/tags/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.name").value("rest"));
-        verify(tagService, times(1)).findTagById("1");
+        verify(tagService, times(1)).findEntityById("1");
     }
 
     @Test
     public void givenId_whenGetNotExistingTag_thenReturnStatus404anExceptionThrown() throws Exception {
-        when(tagService.findTagById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
+        when(tagService.findEntityById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
         mockMvc.perform(get("/tags/1000"))
                 .andExpect(status().isNotFound());
-        verify(tagService, times(1)).findTagById("1000");
+        verify(tagService, times(1)).findEntityById("1000");
     }
 
     @Test
@@ -85,7 +85,7 @@ public class TagControllerTest {
     @SneakyThrows
     @Test
     void givenParamsList_whenGetListTags_thenReturnStatus200andListTags() {
-        when(tagService.findListTags(1, 3)).thenReturn(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 3));
+        when(tagService.findListEntities(1, 3)).thenReturn(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 3));
 
         mockMvc.perform(get("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ public class TagControllerTest {
                 .andExpect(jsonPath("$.numberObjects", is(3)))
                 .andExpect(jsonPath("$.totalNumberObjects", is(3)));
 
-        verify(tagService, times(1)).findListTags(1, 3);
+        verify(tagService, times(1)).findListEntities(1, 3);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class TagControllerTest {
 
     @Test
     public void givenTagAndId_whenUpdateTag_whenDuplicateName_thenReturnStatus400anExceptionThrown() throws Exception {
-        when(tagService.updateTag(TAG_DTO_2_NEW,"1")).thenThrow(new DuplicateEntityException("ex.duplicate", "nature )"));
+        when(tagService.updateTag(TAG_DTO_2_NEW, "1")).thenThrow(new DuplicateEntityException("ex.duplicate", "nature )"));
         mockMvc.perform(patch("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(TAG_DTO_2_NEW)))
@@ -192,7 +192,7 @@ public class TagControllerTest {
 
     @Test
     public void givenId_whenDeleteNotExistingTag_thenReturnStatus404anExceptionThrown() throws Exception {
-        when(tagService.findTagById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
+        when(tagService.findEntityById("1000")).thenThrow(new NoSuchEntityException("ex.noSuchEntity", " (id = 1000)"));
         mockMvc.perform(get("/tags/1000"))
                 .andExpect(status().isNotFound());
     }
@@ -200,7 +200,7 @@ public class TagControllerTest {
     @SneakyThrows
     @Test
     void givenParamsList_whenGetListMostPopularTags_thenReturnStatus200andListTags() {
-        when(tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 3))
+        when(tagService.findMostPopularTag(1, 3))
                 .thenReturn(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2));
 
         mockMvc.perform(get("/tags/popular")
@@ -216,7 +216,7 @@ public class TagControllerTest {
                 .andExpect(jsonPath("$.pageNumber", is(1)))
                 .andExpect(jsonPath("$.numberObjects", is(2)))
                 .andExpect(jsonPath("$.totalNumberObjects", is(2)));
-        verify(tagService, times(1)).findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 3);
+        verify(tagService, times(1)).findMostPopularTag(1, 3);
     }
 
     @Test

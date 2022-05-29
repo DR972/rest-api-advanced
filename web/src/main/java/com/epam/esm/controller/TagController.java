@@ -68,7 +68,7 @@ public class TagController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TagDto getTagById(@PathVariable @Positive(message = "ex.tagIdPositive") @Digits(integer = 9, fraction = 0, message = "ex.tagIdPositive") String id) {
-        TagDto tagDto = tagService.findTagById(id);
+        TagDto tagDto = tagService.findEntityById(id);
         hateoasAdder.addLinks(tagDto);
         return tagDto;
     }
@@ -86,7 +86,7 @@ public class TagController {
                                               @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                           @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                               @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ResourceDto<TagDto> tags = tagService.findListTags(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<TagDto> tags = tagService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
@@ -151,7 +151,7 @@ public class TagController {
                                                                                               @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                                                           @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                                               @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ResourceDto<TagDto> tags = tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<TagDto> tags = tagService.findMostPopularTag(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }

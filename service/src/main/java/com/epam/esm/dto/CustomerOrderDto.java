@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerOrderDto extends RepresentationModel<CustomerOrderDto> {
+public class CustomerOrderDto extends RepresentationModel<CustomerOrderDto> implements BaseEntityDto {
     /**
      * The marker  interface {@code OnCreate} helps in providing validation of {@link com.epam.esm.dto.CustomerOrderDto} class
      * fields when creating a new CustomerOrderDto object

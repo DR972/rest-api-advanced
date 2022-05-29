@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerDto extends RepresentationModel<CustomerDto> {
+public class CustomerDto extends RepresentationModel<CustomerDto> implements BaseEntityDto {
     /**
      * String customerId.
      */

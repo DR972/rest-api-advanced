@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagDto extends RepresentationModel<TagDto> {
+public class TagDto extends RepresentationModel<TagDto> implements BaseEntityDto {
     /**
      * The marker interface {@code OnCreate} helps in providing validation of {@link com.epam.esm.dto.TagDto} class
      * fields when creating a new TagDto object

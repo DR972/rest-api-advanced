@@ -65,7 +65,7 @@ public class CustomerOrderController {
     @ResponseStatus(HttpStatus.OK)
     public CustomerOrderDto getCustomerOrderById(@PathVariable @Positive(message = "ex.customerOrderIdPositive")
                                                  @Digits(integer = 9, fraction = 0, message = "ex.customerOrderIdPositive") String id) {
-        CustomerOrderDto customerOrderDto = customerOrderService.findCustomerOrderById(id);
+        CustomerOrderDto customerOrderDto = customerOrderService.findEntityById(id);
         hateoasAdder.addLinks(customerOrderDto);
         return customerOrderDto;
     }
@@ -83,7 +83,7 @@ public class CustomerOrderController {
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                               @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                                   @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ResourceDto<CustomerOrderDto> orders = customerOrderService.findListCustomerOrders(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<CustomerOrderDto> orders = customerOrderService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         hateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;
     }

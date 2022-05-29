@@ -83,7 +83,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public CustomerDto getCustomerById(@PathVariable @Positive(message = "ex.customerIdPositive")
                                        @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String id) {
-        CustomerDto customerDto = customerService.findCustomerById(id);
+        CustomerDto customerDto = customerService.findEntityById(id);
         customerHateoasAdder.addLinks(customerDto);
         return customerDto;
     }
@@ -101,7 +101,7 @@ public class CustomerController {
                                                         @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                     @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
                                                         @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
-        ResourceDto<CustomerDto> customers = customerService.findListCustomers(Integer.parseInt(pageNumber), Integer.parseInt(rows));
+        ResourceDto<CustomerDto> customers = customerService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
         customerHateoasAdder.addLinksToListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return customers;
     }

@@ -51,15 +51,15 @@ public class TagServiceImplTest {
     void findTagByIdShouldReturnResult() {
         when(tagMapper.convertToDto(TAG_2)).thenReturn(TAG_DTO_2);
         when(tagDao.findEntityById(2L)).thenReturn(Optional.of(TAG_2));
-        tagService.findTagById("2");
+        tagService.findEntityById("2");
         verify(tagDao, times(1)).findEntityById(2L);
-        assertEquals(TAG_DTO_2, tagService.findTagById("2"));
+        assertEquals(TAG_DTO_2, tagService.findEntityById("2"));
     }
 
     @Test
     void findTagByIdShouldThrowException() {
         when(tagDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> tagService.findTagById("2"));
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> tagService.findEntityById("2"));
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -78,10 +78,10 @@ public class TagServiceImplTest {
         when(tagMapper.convertToDto(TAG_3)).thenReturn(TAG_DTO_3);
         when(tagDao.countNumberEntityRows()).thenReturn(5L);
         when(tagDao.findListEntities(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2, TAG_3));
-        tagService.findListTags(1, 5);
+        tagService.findListEntities(1, 5);
         verify(tagDao, times(1)).findListEntities(0, 5);
         assertEquals(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2, TAG_DTO_3), 1, 3, 5),
-                tagService.findListTags(1, 5));
+                tagService.findListEntities(1, 5));
     }
 
     @Test
@@ -154,9 +154,9 @@ public class TagServiceImplTest {
         when(tagMapper.convertToDto(TAG_2)).thenReturn(TAG_DTO_2);
         when(tagDao.countNumberEntityRowsInListOfMostPopularTags()).thenReturn(2L);
         when(tagDao.findMostPopularTag(0, 5)).thenReturn(Arrays.asList(TAG_1, TAG_2));
-        tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 5);
+        tagService.findMostPopularTag(1, 5);
         verify(tagDao, times(1)).findMostPopularTag(0, 5);
         assertEquals(new ResourceDto<>(Arrays.asList(TAG_DTO_1, TAG_DTO_2), 1, 2, 2),
-                tagService.findMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(1, 5));
+                tagService.findMostPopularTag(1, 5));
     }
 }

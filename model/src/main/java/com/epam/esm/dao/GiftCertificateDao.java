@@ -12,8 +12,8 @@ import java.util.List;
  * @author Dzmitry Rozmysl
  * @version 1.0
  */
-
 public interface GiftCertificateDao extends Dao<GiftCertificate, Long> {
+
     /**
      * The method finds list GiftCertificate objects in the table `GiftCertificate`.
      *

@@ -1,17 +1,16 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.CustomerDao;
 import com.epam.esm.dao.CustomerOrderDao;
+import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.CustomerOrderDto;
 import com.epam.esm.dto.ResourceDto;
-import com.epam.esm.dto.mapper.CustomerMapper;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
+import com.epam.esm.dto.mapper.EntityMapper;
 import com.epam.esm.entity.Customer;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.CustomerService;
 import com.epam.esm.dto.CustomerDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +25,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 @Service
-public class CustomerServiceImpl implements CustomerService {
-    /**
-     * CustomerMapper customerMapper.
-     */
-    private final CustomerMapper customerMapper;
-    /**
-     * CustomerDao customerDao.
-     */
-    private final CustomerDao customerDao;
+public class CustomerServiceImpl extends AbstractService<Customer, Long, CustomerDto> implements CustomerService {
     /**
      * CustomerOrderMapper customerOrderMapper.
      */
@@ -44,49 +35,35 @@ public class CustomerServiceImpl implements CustomerService {
      */
     private final CustomerOrderDao customerOrderDao;
 
+
     /**
      * The constructor creates a CustomerServiceImpl object
      *
-     * @param customerMapper      CustomerMapper customerMapper
-     * @param customerDao         CustomerDao customerDao
+     * @param dao                 AbstractDao<Tag, Long> dao
+     * @param entityMapper        EntityMapper<Tag, TagDto> entityMapper
      * @param customerOrderMapper CustomerOrderMapper customerOrderMapper
      * @param customerOrderDao    CustomerOrderDao customerOrderDao
      */
-    @Autowired
-    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerDao customerDao, CustomerOrderMapper customerOrderMapper, CustomerOrderDao customerOrderDao) {
-        this.customerMapper = customerMapper;
-        this.customerDao = customerDao;
+    public CustomerServiceImpl(AbstractDao<Customer, Long> dao, EntityMapper<Customer, CustomerDto> entityMapper,
+                               CustomerOrderMapper customerOrderMapper, CustomerOrderDao customerOrderDao) {
+        super(dao, entityMapper);
         this.customerOrderMapper = customerOrderMapper;
         this.customerOrderDao = customerOrderDao;
     }
 
     @Override
-    public CustomerDto findCustomerById(String id) {
-        return customerMapper.convertToDto(customerDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
-    }
-
-    @Override
     public Customer findCustomerByName(String name) {
-        return customerDao.findEntityByName(name).orElse(new Customer());
-    }
-
-    @Override
-    @Transactional
-    public ResourceDto<CustomerDto> findListCustomers(int pageNumber, int rows) {
-        List<CustomerDto> customerDtos = customerDao.findListEntities((pageNumber - 1) * rows, rows)
-                .stream().map(customerMapper::convertToDto).collect(Collectors.toList());
-        return new ResourceDto<>(customerDtos, pageNumber, customerDtos.size(), customerDao.countNumberEntityRows());
+        return dao.findEntityByName(name).orElse(new Customer());
     }
 
     @Override
     @Transactional
     public CustomerDto createCustomer(CustomerDto customerDto) {
-        Customer customer = customerMapper.convertToEntity(customerDto);
+        Customer customer = entityMapper.convertToEntity(customerDto);
         if (findCustomerByName(customer.getName()).getName() != null) {
             throw new DuplicateEntityException("ex.duplicate", customer.getName());
         }
-        return customerMapper.convertToDto(customerDao.createEntity(customer));
+        return entityMapper.convertToDto(dao.createEntity(customer));
     }
 
     @Override
@@ -98,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public ResourceDto<CustomerOrderDto> findListCustomerOrdersByCustomerId(String customerId, int pageNumber, int rows) {
-        findCustomerById(customerId);
+        findEntityById(customerId);
         List<CustomerOrderDto> customerOrders = customerOrderDao.findCustomerOrderList(Long.parseLong(customerId), (pageNumber - 1) * rows, rows)
                 .stream().map(customerOrderMapper::convertToDto).collect(Collectors.toList());
         return new ResourceDto<>(customerOrders, pageNumber, customerOrders.size(), customerOrderDao

@@ -16,7 +16,7 @@ import org.mapstruct.factory.Mappers;
  * @version 1.0
  */
 @Mapper(componentModel = "spring")
-public interface GiftCertificateMapper {
+public interface GiftCertificateMapper extends EntityMapper<GiftCertificate, GiftCertificateDto> {
     GiftCertificateMapper INSTANCE = Mappers.getMapper(GiftCertificateMapper.class);
 
     /**

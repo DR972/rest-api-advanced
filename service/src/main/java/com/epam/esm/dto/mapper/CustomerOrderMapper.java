@@ -13,7 +13,7 @@ import org.mapstruct.factory.Mappers;
  * @version 1.0
  */
 @Mapper(componentModel = "spring", uses = {GiftCertificateMapper.class, CustomerOrderMapper.class})
-public interface CustomerOrderMapper {
+public interface CustomerOrderMapper extends EntityMapper<CustomerOrder, CustomerOrderDto> {
     CustomerOrderMapper INSTANCE = Mappers.getMapper(CustomerOrderMapper.class);
 
     /**

@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
  * @version 1.0
  */
 @Mapper(componentModel = "spring")
-public interface TagMapper {
+public interface TagMapper extends EntityMapper<Tag, TagDto> {
     TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
     /**

@@ -149,15 +149,15 @@ class GiftCertificateServiceImplTest {
     void findCertificateByIdShouldReturnResult() {
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_2)).thenReturn(GIFT_CERTIFICATE_DTO_2);
         when(certificateDao.findEntityById(2L)).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
-        certificateServiceImpl.findCertificateById("2");
+        certificateServiceImpl.findEntityById("2");
         verify(certificateDao, times(1)).findEntityById(2L);
-        assertEquals(GIFT_CERTIFICATE_DTO_2, certificateServiceImpl.findCertificateById("2"));
+        assertEquals(GIFT_CERTIFICATE_DTO_2, certificateServiceImpl.findEntityById("2"));
     }
 
     @Test
     void findCertificateByIdShouldThrowException() {
         when(certificateDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateServiceImpl.findCertificateById("2"));
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateServiceImpl.findEntityById("2"));
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 

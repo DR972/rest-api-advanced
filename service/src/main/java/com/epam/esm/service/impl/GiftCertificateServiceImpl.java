@@ -2,16 +2,17 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.mapper.EntityMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.DateHandler;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.TagService;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
-import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.service.TagService;
 import com.epam.esm.service.validator.SortValueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 @Service
-public class GiftCertificateServiceImpl implements GiftCertificateService {
+public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate, Long, GiftCertificateDto> implements GiftCertificateService {
+
     private static final String SORTING = "sorting";
     /**
      * SortValueValidator validator.
@@ -60,6 +62,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * The constructor creates a GiftCertificateServiceImpl object
      *
+     * @param dao               AbstractDao<Tag, Long> dao
+     * @param entityMapper      EntityMapper<Tag, TagDto> entityMapper
      * @param validator         SortValueValidator
      * @param certificateDao    GiftCertificateDao certificateDao
      * @param tagDao            TagDao tagDao
@@ -68,8 +72,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @param certificateMapper GiftCertificateMapper certificateMapper
      */
     @Autowired
-    public GiftCertificateServiceImpl(SortValueValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler,
-                                      TagService tagService, GiftCertificateMapper certificateMapper) {
+    public GiftCertificateServiceImpl(AbstractDao<GiftCertificate, Long> dao, EntityMapper<GiftCertificate, GiftCertificateDto> entityMapper,
+                                      SortValueValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler, TagService tagService,
+                                      GiftCertificateMapper certificateMapper) {
+        super(dao, entityMapper);
         this.validator = validator;
         this.certificateDao = certificateDao;
         this.tagDao = tagDao;
@@ -79,18 +85,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto findCertificateById(String id) {
-        return certificateMapper.convertToDto(certificateDao.findEntityById(Long.parseLong(id)).orElseThrow(() ->
-                new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
-    }
-
-    @Override
     public ResourceDto<GiftCertificateDto> findListCertificates(MultiValueMap<String, String> params, int pageNumber, int rows) {
         if (params.get(SORTING) != null) {
             validator.validateSortType(params.get(SORTING));
         }
         List<GiftCertificateDto> certificates = certificateDao.findListEntities(params, (pageNumber - 1) * rows, rows)
-                .stream().map(certificateMapper::convertToDto).collect(Collectors.toList());
+                .stream().map(entityMapper::convertToDto).collect(Collectors.toList());
         return new ResourceDto<>(certificates, pageNumber, certificates.size(), certificateDao.countNumberEntityRows(params));
     }
 
@@ -99,15 +99,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto createCertificate(GiftCertificateDto certificateDto) {
         certificateDto.setCreateDate(dateHandler.getCurrentDate());
         certificateDto.setLastUpdateDate(dateHandler.getCurrentDate());
-        GiftCertificate certificate = certificateMapper.convertToEntity(certificateDto);
+        GiftCertificate certificate = entityMapper.convertToEntity(certificateDto);
         certificate.setTags(createListTags(certificateDto.getTags()));
-        return certificateMapper.convertToDto(certificateDao.createEntity(certificate));
+        return entityMapper.convertToDto(dao.createEntity(certificate));
     }
 
     @Override
     @Transactional
     public GiftCertificateDto updateCertificate(GiftCertificateDto certificateDto, String id) {
-        GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
+        GiftCertificate certificate = entityMapper.convertToEntity(findEntityById(id));
         List<Tag> tags = new ArrayList<>(certificate.getTags());
         certificateMapper.updateGiftCertificateFromDto(certificateDto, certificate);
 
@@ -115,7 +115,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         certificate.setId(Long.valueOf(id));
         certificate.setTags(createListTags(certificateDto.getTags()));
 
-        GiftCertificateDto updatedCertificate = certificateMapper.convertToDto(certificateDao.updateEntity(certificate));
+        GiftCertificateDto updatedCertificate = entityMapper.convertToDto(dao.updateEntity(certificate));
         tagDao.deleteTagNotAssociatedWithCertificates(tags);
         return updatedCertificate;
     }
@@ -123,18 +123,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void deleteCertificate(String id) {
-        GiftCertificate certificate = certificateMapper.convertToEntity(findCertificateById(id));
+        GiftCertificate certificate = certificateMapper.convertToEntity(findEntityById(id));
         certificateDao.deleteEntity(certificate);
         tagDao.deleteTagNotAssociatedWithCertificates(certificate.getTags());
     }
 
     private List<Tag> createListTags(List<TagDto> tags) {
-        return tags.stream().map(t -> {
-            if (tagService.findTagByName(t.getName()).getName() == null) {
-                return tagDao.createEntity(new Tag(t.getName()));
-            } else {
-                return tagService.findTagByName(t.getName());
-            }
-        }).collect(Collectors.toList());
+        return tags.stream().map(t -> tagService.findTagByName(t.getName()).getName() == null ? (tagDao.createEntity(new Tag(t.getName())))
+                : (tagService.findTagByName(t.getName()))).collect(Collectors.toList());
     }
 }

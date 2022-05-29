@@ -27,7 +27,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> {
+public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> implements BaseEntityDto {
 
     /**
      * The marker  interface {@code OnCreate} helps in providing validation of {@link com.epam.esm.dto.GiftCertificateDto} class
