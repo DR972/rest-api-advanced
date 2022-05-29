@@ -98,11 +98,11 @@ public class CustomerController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResourceDto<CustomerDto> getCustomerList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                                        @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                    @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                     @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                                        @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+                                                    @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ResourceDto<CustomerDto> customers = customerService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        customerHateoasAdder.addLinksToListEntity(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        customerHateoasAdder.addLinksToEntitiesList(customers, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return customers;
     }
 
@@ -150,13 +150,13 @@ public class CustomerController {
     @GetMapping("{customerId}/orders")
     @ResponseStatus(HttpStatus.OK)
     public ResourceDto<CustomerOrderDto> getCustomerOrderList(@PathVariable @Positive(message = "ex.customerIdPositive")
-                                                                  @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
+                                                              @Digits(integer = 9, fraction = 0, message = "ex.customerIdPositive") String customerId,
                                                               @RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                                                  @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                               @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                                                  @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+                                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ResourceDto<CustomerOrderDto> orders = customerService.findListCustomerOrdersByCustomerId(customerId, Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        orderHateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber), Integer.parseInt(customerId));
+        orderHateoasAdder.addLinksToEntitiesList(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber), Integer.parseInt(customerId));
         return orders;
     }
 

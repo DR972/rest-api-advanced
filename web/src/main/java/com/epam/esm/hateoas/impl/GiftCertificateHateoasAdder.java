@@ -35,12 +35,12 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
         allRequestParams.add(SORTING, "id");
         allRequestParams.add(SORTING, "price");
         allRequestParams.add(SORTING, "lastUpdateDate");
-        allRequestParams.add(TAG, "nature");
-        allRequestParams.add(TAG, "horse");
-        allRequestParams.add(NAME, "riding");
-        allRequestParams.add(NAME, "ATV");
-        allRequestParams.add(DESCRIPTION, "riding");
-        allRequestParams.add(DESCRIPTION, "ATV");
+        allRequestParams.add(TAG, "lobortis est");
+        allRequestParams.add(TAG, "mus vivamus");
+        allRequestParams.add(NAME, "suspend");
+        allRequestParams.add(NAME, "ultric");
+        allRequestParams.add(DESCRIPTION, "vulput");
+        allRequestParams.add(DESCRIPTION, "primis");
     }
 
     @Override
@@ -55,13 +55,18 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
     }
 
     @Override
-    public void addLinksToListEntity(ResourceDto<GiftCertificateDto> certificates, int... params) {
+    public void addLinksToEntitiesList(ResourceDto<GiftCertificateDto> certificates, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) certificates.getTotalNumberObjects() / rows);
         certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber), String.valueOf(rows))).withRel("getGiftCertificateList"));
 
-        if (pageNumber < numberPages + 1) {
+        addSimpleResourceLinks(certificates, pageNumber, numberPages);
+        addLinksToResourcesListPages(certificates, pageNumber, rows, numberPages);
+    }
+
+    private void addSimpleResourceLinks(ResourceDto<GiftCertificateDto> certificates, int pageNumber, int numberPages) {
+        if (pageNumber < (numberPages + 1)) {
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(certificates.getResources().get(0).getCertificateId())))
                     .withRel("getGiftCertificateById"));
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).createCertificate(certificates.getResources().get(0))).withRel("createGiftCertificate"));
@@ -69,20 +74,23 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
                     .withRel("updateGiftCertificate"));
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).deleteCertificate(String.valueOf(certificates.getResources().get(0).getCertificateId())))
                     .withRel("deleteGiftCertificate"));
+
             certificates.getResources().forEach(c -> {
                 c.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateById(String.valueOf(c.getCertificateId()))).withRel("getGiftCertificateById"));
                 c.getTags().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
             });
         }
+    }
 
+    private void addLinksToResourcesListPages(ResourceDto<GiftCertificateDto> certificates, int pageNumber, int rows, int numberPages) {
         if (numberPages > 1) {
             certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, "1", String.valueOf(rows)))
                     .withRel("getGiftCertificateList page 1"));
-            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+            if (pageNumber > 2 && pageNumber < (numberPages + 1)) {
                 certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber - 1), String.valueOf(rows)))
                         .withRel("getGiftCertificateList previous page " + (pageNumber - 1)));
             }
-            if (pageNumber < numberPages - 1) {
+            if (pageNumber < (numberPages - 1)) {
                 certificates.add(linkTo(methodOn(CERTIFICATE_CONTROLLER).getCertificateList(allRequestParams, String.valueOf(pageNumber + 1), String.valueOf(rows)))
                         .withRel("getGiftCertificateList next page " + (pageNumber + 1)));
             }

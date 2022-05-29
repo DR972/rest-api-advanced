@@ -80,11 +80,11 @@ public class CustomerOrderController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResourceDto<CustomerOrderDto> getCustomerOrderList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                                                  @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                                               @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                                                  @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+                                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ResourceDto<CustomerOrderDto> orders = customerOrderService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksToListEntity(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToEntitiesList(orders, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return orders;
     }
 }

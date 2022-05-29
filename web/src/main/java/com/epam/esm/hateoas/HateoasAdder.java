@@ -25,5 +25,5 @@ public interface HateoasAdder<T extends RepresentationModel<T>> {
      * @param entities List<T> entities
      * @param params   int[] params
      */
-    void addLinksToListEntity(ResourceDto<T> entities, int... params);
+    void addLinksToEntitiesList(ResourceDto<T> entities, int... params);
 }

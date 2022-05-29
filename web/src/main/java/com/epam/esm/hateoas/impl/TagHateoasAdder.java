@@ -27,33 +27,40 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tagDto)).withRel("createTag"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tagDto.getId()), tagDto)).withRel("updateTag"));
         tagDto.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(String.valueOf(tagDto.getId()))).withRel("deleteTag"));
-        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(String.valueOf(5), String.valueOf(1)))
+        tagDto.add(linkTo(methodOn(TAG_CONTROLLER).getMostPopularTags(String.valueOf(5), String.valueOf(1)))
                 .withRel("getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders"));
     }
 
     @Override
-    public void addLinksToListEntity(ResourceDto<TagDto> tags, int... params) {
+    public void addLinksToEntitiesList(ResourceDto<TagDto> tags, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int numberPages = (int) Math.ceil((float) tags.getTotalNumberObjects() / rows);
         tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getListTags"));
 
-        if (pageNumber < numberPages + 1) {
+        addSimpleResourceLinks(tags, pageNumber, numberPages);
+        addLinksToResourcesListPages(tags, pageNumber, rows, numberPages);
+    }
+
+    private void addSimpleResourceLinks(ResourceDto<TagDto> tags, int pageNumber, int numberPages) {
+        if (pageNumber < (numberPages + 1)) {
             tags.getResources().forEach(t -> t.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(t.getId()))).withRel("getTagById")));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagById(String.valueOf(tags.getResources().get(0).getId()))).withRel("getTagById"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).createTag(tags.getResources().get(0))).withRel("createTag"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).updateTag(String.valueOf(tags.getResources().get(0).getId()), tags.getResources().get(0))).withRel("updateTag"));
             tags.add(linkTo(methodOn(TAG_CONTROLLER).deleteTag(String.valueOf(tags.getResources().get(0).getId()))).withRel("deleteTag"));
         }
-        tags.add(linkTo(methodOn(TAG_CONTROLLER).getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(String.valueOf(5), String.valueOf(1)))
+        tags.add(linkTo(methodOn(TAG_CONTROLLER).getMostPopularTags(String.valueOf(5), String.valueOf(1)))
                 .withRel("getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders"));
+    }
 
+    private void addLinksToResourcesListPages(ResourceDto<TagDto> tags, int pageNumber, int rows, int numberPages) {
         if (numberPages > 1) {
             tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList("1", String.valueOf(rows))).withRel("getTagList page 1"));
-            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+            if (pageNumber > 2 && pageNumber < (numberPages + 1)) {
                 tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber - 1), String.valueOf(rows))).withRel("getTagList previous page " + (pageNumber - 1)));
             }
-            if (pageNumber < numberPages - 1) {
+            if (pageNumber < (numberPages - 1)) {
                 tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(pageNumber + 1), String.valueOf(rows))).withRel("getTagList next page " + (pageNumber + 1)));
             }
             tags.add(linkTo(methodOn(TAG_CONTROLLER).getTagList(String.valueOf(numberPages), String.valueOf(rows)))

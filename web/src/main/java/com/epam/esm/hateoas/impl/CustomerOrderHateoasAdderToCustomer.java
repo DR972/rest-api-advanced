@@ -43,7 +43,7 @@ public class CustomerOrderHateoasAdderToCustomer implements HateoasAdder<Custome
     }
 
     @Override
-    public void addLinksToListEntity(ResourceDto<CustomerOrderDto> customerOrders, int... params) {
+    public void addLinksToEntitiesList(ResourceDto<CustomerOrderDto> customerOrders, int... params) {
         int rows = params[0];
         int pageNumber = params[1];
         int customerId = params[2];
@@ -51,7 +51,12 @@ public class CustomerOrderHateoasAdderToCustomer implements HateoasAdder<Custome
         customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(String.valueOf(customerId), String.valueOf(pageNumber), String.valueOf(rows)))
                 .withRel("getCustomerOrderList"));
 
-        if (pageNumber < numberPages + 1) {
+        addSimpleResourceLinks(customerOrders, customerId, pageNumber, rows, numberPages);
+        addLinksToResourcesListPages(customerOrders, customerId, pageNumber, rows, numberPages);
+    }
+
+    private void addSimpleResourceLinks(ResourceDto<CustomerOrderDto> customerOrders, int customerId, int pageNumber, int rows, int numberPages) {
+        if (pageNumber < (numberPages + 1)) {
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerById(String.valueOf(customerId))).withRel("getCustomerById"));
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerList(String.valueOf(pageNumber), String.valueOf(rows))).withRel("getCustomerList"));
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).createCustomer(new CustomerDto())).withRel("createCustomer"));
@@ -67,15 +72,17 @@ public class CustomerOrderHateoasAdderToCustomer implements HateoasAdder<Custome
                 });
             });
         }
+    }
 
+    private void addLinksToResourcesListPages(ResourceDto<CustomerOrderDto> customerOrders, int customerId, int pageNumber, int rows, int numberPages) {
         if (numberPages > 1) {
             customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(String.valueOf(customerId), "1", String.valueOf(rows)))
                     .withRel("getCustomerOrderList page 1"));
-            if (pageNumber > 2 && pageNumber < numberPages + 1) {
+            if (pageNumber > 2 && pageNumber < (numberPages + 1)) {
                 customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(String.valueOf(customerId), String.valueOf(pageNumber - 1), String.valueOf(rows)))
                         .withRel("getCustomerOrderList previous page " + (pageNumber - 1)));
             }
-            if (pageNumber < numberPages - 1) {
+            if (pageNumber < (numberPages - 1)) {
                 customerOrders.add(linkTo(methodOn(CUSTOMER_CONTROLLER).getCustomerOrderList(String.valueOf(customerId), String.valueOf(pageNumber + 1), String.valueOf(rows)))
                         .withRel("getCustomerOrderList next page " + (pageNumber + 1)));
             }

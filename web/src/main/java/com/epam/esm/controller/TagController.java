@@ -83,11 +83,11 @@ public class TagController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResourceDto<TagDto> getTagList(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                          @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
                                           @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+                                          @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ResourceDto<TagDto> tags = tagService.findListEntities(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToEntitiesList(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
 
@@ -147,12 +147,12 @@ public class TagController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public ResourceDto<TagDto> getMostWidelyUsedTagsOfCustomersWithHighestCostOfAllOrders(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
-                                                                                              @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
-                                                                                          @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
-                                                                                              @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
+    public ResourceDto<TagDto> getMostPopularTags(@RequestParam(name = PAGE_NUMBER, defaultValue = "1") @Positive(message = "ex.page")
+                                                  @Digits(integer = 6, fraction = 0, message = "ex.page") String pageNumber,
+                                                  @RequestParam(name = ROWS, defaultValue = "5") @Positive(message = "ex.rows")
+                                                  @Digits(integer = 6, fraction = 0, message = "ex.rows") String rows) {
         ResourceDto<TagDto> tags = tagService.findMostPopularTag(Integer.parseInt(pageNumber), Integer.parseInt(rows));
-        hateoasAdder.addLinksToListEntity(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
+        hateoasAdder.addLinksToEntitiesList(tags, Integer.parseInt(rows), Integer.parseInt(pageNumber));
         return tags;
     }
 }
