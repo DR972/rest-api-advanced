@@ -69,7 +69,6 @@ public class TagServiceImpl extends AbstractService<Tag, Long, TagDto> implement
     @Transactional
     public TagDto updateTag(TagDto tagDto, String id) {
         Tag tag = entityMapper.convertToEntity(tagDto);
-        System.out.println(tag);
         if (findTagByName(tag.getName()).getName() != null) {
             throw new DuplicateEntityException("ex.duplicate", tag.getName());
         }

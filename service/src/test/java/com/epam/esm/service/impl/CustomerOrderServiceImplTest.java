@@ -1,10 +1,10 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CustomerOrderDao;
+import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.CustomerDto;
 import com.epam.esm.dto.CustomerOrderDto;
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.CustomerOrderMapper;
@@ -16,10 +16,9 @@ import com.epam.esm.service.CustomerService;
 import com.epam.esm.service.DateHandler;
 import com.epam.esm.service.GiftCertificateService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,13 +29,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class CustomerOrderServiceTest {
+@SpringBootTest(classes = CustomerOrderServiceImpl.class)
+public class CustomerOrderServiceImplTest {
     private static final GiftCertificate GIFT_CERTIFICATE_1 = new GiftCertificate(1, "ATV riding",
             "Description ATV riding", new BigDecimal("100"), 10, LocalDateTime.parse("2022-04-01T10:12:45.123"),
             LocalDateTime.parse("2022-04-07T14:15:13.257"), Arrays.asList(new Tag(1, "rest"), new Tag(2, "nature"), new Tag(4, "atv")));
@@ -68,32 +66,35 @@ public class CustomerOrderServiceTest {
 
     private static final CustomerDto CUSTOMER_DTO_2 = new CustomerDto("2", "Customer2", Arrays.asList(CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_6));
 
-    @Mock
-    private CustomerOrderDao customerOrderDao = mock(CustomerOrderDao.class);
-    @Mock
-    private CustomerOrderMapper customerOrderMapper = mock(CustomerOrderMapper.class);
-    @Mock
-    private CustomerService customerService = mock(CustomerService.class);
-    @Mock
-    private GiftCertificateService certificateService = mock(GiftCertificateService.class);
-    @Mock
-    private DateHandler dateHandler = mock(DateHandler.class);
-    @InjectMocks
+    @MockBean
+    private AbstractDao<CustomerOrder, Long> dao;
+    @MockBean
+    private CustomerOrderDao customerOrderDao;
+    @MockBean
+    private CustomerOrderMapper customerOrderMapper;
+    @MockBean
+    private CustomerService customerService;
+    @MockBean
+    private GiftCertificateService certificateService;
+    @MockBean
+    private DateHandler dateHandler;
+    @Autowired
     private CustomerOrderServiceImpl customerOrderService;
 
     @Test
     void findCustomerOrderByIdShouldReturnResult() {
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_2)).thenReturn(CUSTOMER_ORDER_DTO_2);
-        when(customerOrderDao.findEntityById(2L)).thenReturn(Optional.of(CUSTOMER_ORDER_2));
+        when(dao.findEntityById(2L)).thenReturn(Optional.of(CUSTOMER_ORDER_2));
         customerOrderService.findEntityById("2");
-        verify(customerOrderDao, times(1)).findEntityById(2L);
+        verify(dao, times(1)).findEntityById(2L);
         assertEquals(CUSTOMER_ORDER_DTO_2, customerOrderService.findEntityById("2"));
     }
 
     @Test
     void findCustomerOrderByIddShouldThrowException() {
-        when(customerOrderDao.findEntityById(2L)).thenReturn(Optional.empty());
+        when(dao.findEntityById(2L)).thenReturn(Optional.empty());
         Exception exception = assertThrows(NoSuchEntityException.class, () -> customerOrderService.findEntityById("2"));
+        verify(dao, times(1)).findEntityById(2L);
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -102,10 +103,10 @@ public class CustomerOrderServiceTest {
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_1)).thenReturn(CUSTOMER_ORDER_DTO_1);
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_2)).thenReturn(CUSTOMER_ORDER_DTO_2);
         when(customerOrderMapper.convertToDto(CUSTOMER_ORDER_3)).thenReturn(CUSTOMER_ORDER_DTO_3);
-        when(customerOrderDao.countNumberEntityRows()).thenReturn(5L);
-        when(customerOrderDao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_1, CUSTOMER_ORDER_2, CUSTOMER_ORDER_3));
+        when(dao.countNumberEntityRows()).thenReturn(5L);
+        when(dao.findListEntities(0, 5)).thenReturn(Arrays.asList(CUSTOMER_ORDER_1, CUSTOMER_ORDER_2, CUSTOMER_ORDER_3));
         customerOrderService.findListEntities(1, 5);
-        verify(customerOrderDao, times(1)).findListEntities(0, 5);
+        verify(dao, times(1)).findListEntities(0, 5);
         assertEquals(new ResourceDto<>(Arrays.asList(CUSTOMER_ORDER_DTO_1, CUSTOMER_ORDER_DTO_2, CUSTOMER_ORDER_DTO_3), 1, 3, 5),
                 customerOrderService.findListEntities(1, 5));
     }
@@ -118,9 +119,9 @@ public class CustomerOrderServiceTest {
 
         when(customerOrderMapper.convertToEntity(NEW_DTO_CUSTOMER_ORDER)).thenReturn(NEW_CUSTOMER_ORDER);
         when(customerOrderMapper.convertToDto(NEW_CUSTOMER_ORDER)).thenReturn(NEW_DTO_CUSTOMER_ORDER);
-        when(customerOrderDao.createEntity(NEW_CUSTOMER_ORDER)).thenReturn(NEW_CUSTOMER_ORDER);
+        when(dao.createEntity(NEW_CUSTOMER_ORDER)).thenReturn(NEW_CUSTOMER_ORDER);
         customerOrderService.createCustomerOrder("2", NEW_DTO_CUSTOMER_ORDER);
-        verify(customerOrderDao, times(1)).createEntity(NEW_CUSTOMER_ORDER);
+        verify(dao, times(1)).createEntity(NEW_CUSTOMER_ORDER);
         assertEquals(NEW_DTO_CUSTOMER_ORDER, customerOrderService.createCustomerOrder("2", NEW_DTO_CUSTOMER_ORDER));
     }
 }

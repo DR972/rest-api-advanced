@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
 import com.epam.esm.entity.GiftCertificate;
@@ -13,10 +14,9 @@ import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.validator.SortValueValidator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -31,12 +31,11 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = GiftCertificateServiceImpl.class)
 class GiftCertificateServiceImplTest {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
@@ -130,34 +129,37 @@ class GiftCertificateServiceImplTest {
             "Description shopping at the tool store", "30", "10", LocalDateTime.parse("2022-03-25T10:12:45.123"),
             LocalDateTime.parse("2022-05-01T00:00:00.001"), Arrays.asList(new TagDto("3", "shopping"), new TagDto("7", "tool"), new TagDto("15", "new")));
 
-    @Mock
-    private GiftCertificateDao certificateDao = mock(GiftCertificateDao.class);
-    @Mock
-    private TagService tagService = mock(TagService.class);
-    @Mock
-    private SortValueValidator validator = mock(SortValueValidator.class);
-    @Mock
-    private DateHandler dateHandler = mock(DateHandler.class);
-    @Mock
-    private GiftCertificateMapper certificateMapper = mock(GiftCertificateMapper.class);
-    @Mock
-    private TagDao tagDao = mock(TagDao.class);
-    @InjectMocks
-    private GiftCertificateServiceImpl certificateServiceImpl;
+    @MockBean
+    private AbstractDao<GiftCertificate, Long> dao;
+    @MockBean
+    private GiftCertificateDao certificateDao;
+    @MockBean
+    private TagService tagService;
+    @MockBean
+    private SortValueValidator validator;
+    @MockBean
+    private DateHandler dateHandler;
+    @MockBean
+    private GiftCertificateMapper certificateMapper;
+    @MockBean
+    private TagDao tagDao;
+    @Autowired
+    private GiftCertificateServiceImpl certificateService;
 
     @Test
     void findCertificateByIdShouldReturnResult() {
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_2)).thenReturn(GIFT_CERTIFICATE_DTO_2);
-        when(certificateDao.findEntityById(2L)).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
-        certificateServiceImpl.findEntityById("2");
-        verify(certificateDao, times(1)).findEntityById(2L);
-        assertEquals(GIFT_CERTIFICATE_DTO_2, certificateServiceImpl.findEntityById("2"));
+        when(dao.findEntityById(2L)).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
+        certificateService.findEntityById("2");
+        verify(dao, times(1)).findEntityById(2L);
+        assertEquals(GIFT_CERTIFICATE_DTO_2, certificateService.findEntityById("2"));
     }
 
     @Test
     void findCertificateByIdShouldThrowException() {
-        when(certificateDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateServiceImpl.findEntityById("2"));
+        when(dao.findEntityById(2L)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateService.findEntityById("2"));
+        verify(dao, times(1)).findEntityById(2L);
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -203,7 +205,7 @@ class GiftCertificateServiceImplTest {
         when(certificateDao.countNumberEntityRows(params)).thenReturn(5L);
         when(certificateDao.findListEntities(params, 0, 5)).thenReturn(certificates);
         assertEquals(new ResourceDto<>(certificateDtos, 1, certificates.size(), 5),
-                certificateServiceImpl.findListCertificates(params, 1, 5));
+                certificateService.findListCertificates(params, 1, 5));
     }
 
     @Test
@@ -213,32 +215,33 @@ class GiftCertificateServiceImplTest {
                 when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_8.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_8.getTags().get(i)));
         when(certificateMapper.convertToEntity(GIFT_CERTIFICATE_DTO_8)).thenReturn(GIFT_CERTIFICATE_8);
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_DTO_8);
-        when(certificateDao.createEntity(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_8);
+        when(dao.createEntity(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_8);
 
-        certificateServiceImpl.createCertificate(GIFT_CERTIFICATE_DTO_8);
-        verify(certificateDao, times(1)).createEntity(GIFT_CERTIFICATE_8);
-        assertEquals(GIFT_CERTIFICATE_DTO_8, certificateServiceImpl.createCertificate(GIFT_CERTIFICATE_DTO_8));
+        certificateService.createCertificate(GIFT_CERTIFICATE_DTO_8);
+        verify(dao, times(1)).createEntity(GIFT_CERTIFICATE_8);
+        assertEquals(GIFT_CERTIFICATE_DTO_8, certificateService.createCertificate(GIFT_CERTIFICATE_DTO_8));
     }
 
     @Test
     void updateCertificateShouldReturnResult() {
         when(certificateMapper.convertToEntity(GIFT_CERTIFICATE_DTO_5)).thenReturn(GIFT_CERTIFICATE_5);
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_DTO_5);
-        when(certificateDao.findEntityById(5L)).thenReturn(Optional.of(GIFT_CERTIFICATE_5));
+        when(dao.findEntityById(5L)).thenReturn(Optional.of(GIFT_CERTIFICATE_5));
         when(dateHandler.getCurrentDate()).thenReturn(DATE_TIME);
 
         IntStream.range(0, GIFT_CERTIFICATE_DTO_9.getTags().size()).forEach(i ->
                 when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_9.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_9.getTags().get(i)));
 
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_5_NEW)).thenReturn(GIFT_CERTIFICATE_DTO_5_NEW);
-        when(certificateDao.updateEntity(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_5_NEW);
-        assertEquals(GIFT_CERTIFICATE_DTO_5_NEW, certificateServiceImpl.updateCertificate(GIFT_CERTIFICATE_DTO_9, "5"));
+        when(dao.updateEntity(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_5_NEW);
+        assertEquals(GIFT_CERTIFICATE_DTO_5_NEW, certificateService.updateCertificate(GIFT_CERTIFICATE_DTO_9, "5"));
     }
 
     @Test
     void updateCertificateShouldThrowException() {
-        when(certificateDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateServiceImpl.updateCertificate(GIFT_CERTIFICATE_DTO_5, "2"));
+        when(dao.findEntityById(2L)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateService.updateCertificate(GIFT_CERTIFICATE_DTO_5, "2"));
+        verify(dao, times(1)).findEntityById(2L);
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 
@@ -246,15 +249,16 @@ class GiftCertificateServiceImplTest {
     void deleteCertificateTest() {
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_3)).thenReturn(GIFT_CERTIFICATE_DTO_3);
         when(certificateMapper.convertToEntity(GIFT_CERTIFICATE_DTO_3)).thenReturn(GIFT_CERTIFICATE_3);
-        when(certificateDao.findEntityById(3L)).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
-        certificateServiceImpl.deleteCertificate("3");
+        when(dao.findEntityById(3L)).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
+        certificateService.deleteCertificate("3");
         verify(certificateDao, times(1)).deleteEntity(GIFT_CERTIFICATE_3);
     }
 
     @Test
     void deleteCertificateShouldThrowException() {
-        when(certificateDao.findEntityById(2L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateServiceImpl.deleteCertificate("2"));
+        when(dao.findEntityById(2L)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(NoSuchEntityException.class, () -> certificateService.deleteCertificate("2"));
+        verify(dao, times(1)).findEntityById(2L);
         assertTrue(exception.getMessage().contains("ex.noSuchEntity"));
     }
 }

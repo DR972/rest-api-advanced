@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Class {@code DateHandler} designed to work with dates.
+ * The {@code DateHandler} class is used to set the current date and time.
  *
  * @author Dzmitry Rozmysl
  * @version 1.0
