@@ -27,7 +27,7 @@ public class GiftCertificateQueryBuilderImpl implements GiftCertificateQueryBuil
     private static final String SORTING = "sorting";
     private static final String DESCRIPTION = "description";
     private static final String QUERY_PART_1 = "SELECT g FROM GiftCertificate g LEFT JOIN g.tags t ";
-    private static final String QUERY_FOR_SECOND_TAG = " having g in (SELECT ga FROM GiftCertificate ga LEFT JOIN ga.tags ta where ta.name=?";
+    private static final String QUERY_FOR_SECOND_TAG = " HAVING g IN (SELECT ga FROM GiftCertificate ga LEFT JOIN ga.tags ta WHERE ta.name=?";
 
     /**
      * This method creates a query to get a list of GiftCertificate from the database.
@@ -104,7 +104,7 @@ public class GiftCertificateQueryBuilderImpl implements GiftCertificateQueryBuil
     private List<List<String>> searchBySecondTag(List<String> requestParams, List<String> partsOfQuery, List<String> queryParams) {
         String queryForSecondTag = "";
         if ((requestParams != null) && (requestParams.size() > 1)) {
-            queryForSecondTag = QUERY_FOR_SECOND_TAG + "2)";
+            queryForSecondTag = QUERY_FOR_SECOND_TAG + (queryParams.size() + 1) + ")";
             queryParams.add(requestParams.get(1));
         }
         return Arrays.asList(partsOfQuery, queryParams, Collections.singletonList(queryForSecondTag));

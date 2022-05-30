@@ -34,12 +34,11 @@ public class GiftCertificateHateoasAdder implements HateoasAdder<GiftCertificate
         allRequestParams.add(SORTING, "name");
         allRequestParams.add(SORTING, "id");
         allRequestParams.add(SORTING, "price");
-        allRequestParams.add(SORTING, "lastUpdateDate");
         allRequestParams.add(TAG, "lobortis est");
-        allRequestParams.add(TAG, "mus vivamus");
+        allRequestParams.add(TAG, "hendrerit at");
         allRequestParams.add(NAME, "suspend");
-        allRequestParams.add(NAME, "ultric");
-        allRequestParams.add(DESCRIPTION, "vulput");
+        allRequestParams.add(NAME, "ligula");
+        allRequestParams.add(DESCRIPTION, "ipsum");
         allRequestParams.add(DESCRIPTION, "primis");
     }
 

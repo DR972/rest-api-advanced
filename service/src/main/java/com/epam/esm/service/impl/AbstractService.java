@@ -54,6 +54,7 @@ public class AbstractService<T extends BaseEntity<ID>, ID, D extends BaseEntityD
                 new NoSuchEntityException("ex.noSuchEntity", "id = " + id)));
     }
 
+    @Override
     public ResourceDto<D> findListEntities(int offset, int limit) {
         List<D> entities = dao.findListEntities((offset - 1) * limit, limit)
                 .stream().map(entityMapper::convertToDto).collect(Collectors.toList());
