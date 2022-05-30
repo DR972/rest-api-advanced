@@ -1,4 +1,4 @@
-package com.epam.esm.service.validator;
+package com.epam.esm.validator;
 
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.SortValueException;

@@ -12,7 +12,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.validator.SortValueValidator;
+import com.epam.esm.validator.SortValueValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

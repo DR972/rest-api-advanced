@@ -13,7 +13,7 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.validator.SortValueValidator;
+import com.epam.esm.validator.SortValueValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
