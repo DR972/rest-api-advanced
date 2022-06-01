@@ -5,6 +5,8 @@ import com.epam.esm.dto.CustomerOrderDto;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.entity.Customer;
 
+import java.util.Optional;
+
 /**
  * The interface {@code CustomerService} describes abstract behavior for working with {@link com.epam.esm.service.impl.CustomerServiceImpl} objects.
  *
@@ -17,9 +19,9 @@ public interface CustomerService extends BaseService<Customer, Long, CustomerDto
      * The method finds Customer by name.
      *
      * @param name Customer name
-     * @return Customer object
+     * @return Optional<Customer> object
      */
-    Customer findCustomerByName(String name);
+    Optional<Customer> findCustomerByName(String name);
 
     /**
      * The method performs the operation of saving Customer.

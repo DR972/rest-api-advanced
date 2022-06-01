@@ -1,7 +1,6 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.BaseEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
      * The method finds objects T in the table 'T' by id.
      *
      * @param id long id
-     * @return T object
+     * @return Optional<T> object
      */
     Optional<T> findEntityById(long id);
 
@@ -28,7 +27,7 @@ public interface Dao<T extends BaseEntity<ID>, ID> {
      * The method finds objects T in the table 'T' by name.
      *
      * @param name String name
-     * @return T object
+     * @return Optional<T> object
      */
     Optional<T> findEntityByName(String name);
 

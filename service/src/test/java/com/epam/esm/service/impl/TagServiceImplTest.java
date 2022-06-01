@@ -70,7 +70,7 @@ public class TagServiceImplTest {
         when(dao.findEntityByName(REST)).thenReturn(Optional.of(TAG_1));
         tagService.findTagByName(REST);
         verify(dao, times(1)).findEntityByName(REST);
-        assertEquals(TAG_1, tagService.findTagByName(REST));
+        assertEquals(Optional.of(TAG_1), tagService.findTagByName(REST));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TagServiceImplTest {
     void createTagShouldReturnResult() {
         when(tagMapper.convertToEntity(NEW_DTO_TAG)).thenReturn(NEW_TAG);
         when(tagMapper.convertToDto(NEW_TAG)).thenReturn(NEW_DTO_TAG);
-        when(dao.findEntityByName(NEW)).thenReturn(Optional.of(new Tag()));
+        when(dao.findEntityByName(NEW)).thenReturn(Optional.empty());
         when(dao.createEntity(NEW_TAG)).thenReturn(NEW_TAG);
         tagService.createTag(NEW_DTO_TAG);
         verify(dao, times(1)).createEntity(NEW_TAG);
@@ -110,7 +110,7 @@ public class TagServiceImplTest {
     void updateTagShouldReturnResult() {
         when(tagMapper.convertToEntity(NEW_DTO_TAG)).thenReturn(NEW_TAG);
         when(tagMapper.convertToDto(TAG_3)).thenReturn(NEW_DTO_TAG);
-        when(dao.findEntityByName(NEW)).thenReturn(Optional.of(new Tag()));
+        when(dao.findEntityByName(NEW)).thenReturn(Optional.empty());
         when(dao.findEntityById(3L)).thenReturn(Optional.of(TAG_3));
         when(dao.updateEntity(NEW_TAG)).thenReturn(TAG_3);
         tagService.updateTag(NEW_DTO_TAG, "3");
@@ -130,7 +130,7 @@ public class TagServiceImplTest {
     @Test
     void updateTagShouldThrowNoSuchEntityException() {
         when(tagMapper.convertToEntity(TAG_DTO_1)).thenReturn(TAG_1);
-        when(dao.findEntityByName(TAG_1.getName())).thenReturn(Optional.of(new Tag()));
+        when(dao.findEntityByName(TAG_1.getName())).thenReturn(Optional.empty());
         when(dao.findEntityById(2L)).thenReturn(Optional.empty());
         Exception exception = assertThrows(NoSuchEntityException.class, () -> tagService.updateTag(TAG_DTO_1, "2"));
         verify(dao, times(1)).findEntityById(2L);

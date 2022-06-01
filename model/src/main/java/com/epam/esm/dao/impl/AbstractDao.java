@@ -65,7 +65,7 @@ public abstract class AbstractDao<T extends BaseEntity<ID>, ID> implements Dao<T
 
     @Override
     public T createEntity(T entity) {
-        entityManager.unwrap(Session.class).save(entity);
+        entityManager.unwrap(Session.class).persist(entity);
         return entity;
     }
 

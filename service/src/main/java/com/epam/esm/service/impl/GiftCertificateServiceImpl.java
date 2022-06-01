@@ -1,13 +1,14 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.mapper.EntityMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.service.DateHandler;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.dto.GiftCertificateDto;
@@ -43,10 +44,6 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate,
      */
     private final GiftCertificateDao certificateDao;
     /**
-     * TagDao tagDao.
-     */
-    private final TagDao tagDao;
-    /**
      * DateHandler dateHandler.
      */
     private final DateHandler dateHandler;
@@ -54,6 +51,10 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate,
      * TagService tagService.
      */
     private final TagService tagService;
+    /**
+     * TagService tagService.
+     */
+    private final CustomerOrderDao orderDao;
     /**
      * GiftCertificateMapper certificateMapper.
      */
@@ -66,19 +67,19 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate,
      * @param entityMapper      EntityMapper<Tag, TagDto> entityMapper
      * @param validator         SortValueValidator
      * @param certificateDao    GiftCertificateDao certificateDao
-     * @param tagDao            TagDao tagDao
      * @param dateHandler       DateHandler dateHandler
      * @param tagService        TagService tagService
+     * @param orderDao          CustomerOrderDao orderDao
      * @param certificateMapper GiftCertificateMapper certificateMapper
      */
     @Autowired
     public GiftCertificateServiceImpl(AbstractDao<GiftCertificate, Long> dao, EntityMapper<GiftCertificate, GiftCertificateDto> entityMapper,
-                                      SortValueValidator validator, GiftCertificateDao certificateDao, TagDao tagDao, DateHandler dateHandler, TagService tagService,
-                                      GiftCertificateMapper certificateMapper) {
+                                      SortValueValidator validator, GiftCertificateDao certificateDao, DateHandler dateHandler,
+                                      TagService tagService, CustomerOrderDao orderDao, GiftCertificateMapper certificateMapper) {
         super(dao, entityMapper);
         this.validator = validator;
         this.certificateDao = certificateDao;
-        this.tagDao = tagDao;
+        this.orderDao = orderDao;
         this.dateHandler = dateHandler;
         this.tagService = tagService;
         this.certificateMapper = certificateMapper;
@@ -116,7 +117,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate,
         certificate.setTags(createListTags(certificateDto.getTags()));
 
         GiftCertificateDto updatedCertificate = entityMapper.convertToDto(dao.updateEntity(certificate));
-        tagDao.deleteTagNotAssociatedWithCertificates(tags);
+        tagService.deleteTagNotAssociatedWithCertificates(tags);
         return updatedCertificate;
     }
 
@@ -124,12 +125,14 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate,
     @Transactional
     public void deleteCertificate(String id) {
         GiftCertificate certificate = certificateMapper.convertToEntity(findEntityById(id));
+        if (orderDao.findCustomerOrderByCertificateId(Long.parseLong(id)).isPresent()) {
+            throw new DeleteEntityException("ex.deleteCertificate", id);
+        }
         certificateDao.deleteEntity(certificate);
-        tagDao.deleteTagNotAssociatedWithCertificates(certificate.getTags());
+        tagService.deleteTagNotAssociatedWithCertificates(certificate.getTags());
     }
 
     private List<Tag> createListTags(List<TagDto> tags) {
-        return tags.stream().map(t -> tagService.findTagByName(t.getName()).getName() == null ? (tagDao.createEntity(new Tag(t.getName())))
-                : (tagService.findTagByName(t.getName()))).collect(Collectors.toList());
+        return tags.stream().map(t -> tagService.findTagByName(t.getName()).orElse(new Tag(t.getName()))).collect(Collectors.toList());
     }
 }

@@ -6,7 +6,7 @@ import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.EntityMapper;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.DeleteTagException;
+import com.epam.esm.exception.DeleteEntityException;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.dto.TagDto;
@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -51,15 +52,15 @@ public class TagServiceImpl extends AbstractService<Tag, Long, TagDto> implement
     }
 
     @Override
-    public Tag findTagByName(String name) {
-        return dao.findEntityByName(name).orElse(new Tag());
+    public Optional<Tag> findTagByName(String name) {
+        return dao.findEntityByName(name);
     }
 
     @Override
     @Transactional
     public TagDto createTag(TagDto tagDto) {
         Tag tag = entityMapper.convertToEntity(tagDto);
-        if (findTagByName(tag.getName()).getName() != null) {
+        if (findTagByName(tag.getName()).isPresent()) {
             throw new DuplicateEntityException("ex.duplicate", tag.getName());
         }
         return entityMapper.convertToDto(dao.createEntity(tag));
@@ -69,7 +70,7 @@ public class TagServiceImpl extends AbstractService<Tag, Long, TagDto> implement
     @Transactional
     public TagDto updateTag(TagDto tagDto, String id) {
         Tag tag = entityMapper.convertToEntity(tagDto);
-        if (findTagByName(tag.getName()).getName() != null) {
+        if (findTagByName(tag.getName()).isPresent()) {
             throw new DuplicateEntityException("ex.duplicate", tag.getName());
         }
         findEntityById(id);
@@ -84,8 +85,13 @@ public class TagServiceImpl extends AbstractService<Tag, Long, TagDto> implement
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("tag", tag.getName());
         if (!certificateDao.findListEntities(params, 0, 1).isEmpty()) {
-            throw new DeleteTagException("ex.deleteTag", tag.getName());
+            throw new DeleteEntityException("ex.deleteTag", tag.getName());
         } else dao.deleteEntity(tag);
+    }
+
+    @Override
+    public void deleteTagNotAssociatedWithCertificates(List<Tag> tags) {
+        tagDao.deleteTagNotAssociatedWithCertificates(tags);
     }
 
     @Override

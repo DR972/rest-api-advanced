@@ -12,12 +12,28 @@ import java.util.Optional;
  * @version 1.0
  */
 public interface CustomerOrderDao extends Dao<CustomerOrder, Long> {
+
+    /**
+     * The method finds objects T in the table 'T' by id.
+     *
+     * @param customerId long customerId
+     * @param orderId    long orderId
+     * @return Optional<CustomerOrder> object
+     */
     Optional<CustomerOrder> findCustomerOrder(long customerId, long orderId);
+
+    /**
+     * The method finds objects CustomerOrder in the table 'CustomerOrder' by Certificate id.
+     *
+     * @param certificateId long certificateId
+     * @return Optional<CustomerOrder> object
+     */
+    Optional<CustomerOrder> findCustomerOrderByCertificateId(long certificateId);
 
     /**
      * The method finds list CustomerOrder objects in the table `CustomerOrder`.
      *
-     * @param customerId long customer Id
+     * @param customerId long customerId
      * @param offset     int offset
      * @param limit      int limit
      * @return list of CustomerOrder objects

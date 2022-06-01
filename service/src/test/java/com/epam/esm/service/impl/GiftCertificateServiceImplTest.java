@@ -1,7 +1,7 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dao.CustomerOrderDao;
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.impl.AbstractDao;
 import com.epam.esm.dto.ResourceDto;
 import com.epam.esm.dto.mapper.GiftCertificateMapper;
@@ -142,7 +142,7 @@ class GiftCertificateServiceImplTest {
     @MockBean
     private GiftCertificateMapper certificateMapper;
     @MockBean
-    private TagDao tagDao;
+    private CustomerOrderDao orderDao;
     @Autowired
     private GiftCertificateServiceImpl certificateService;
 
@@ -212,7 +212,7 @@ class GiftCertificateServiceImplTest {
     void createCertificateShouldReturnResult() {
         when(dateHandler.getCurrentDate()).thenReturn(DATE_TIME);
         IntStream.range(0, GIFT_CERTIFICATE_8.getTags().size()).forEach(i ->
-                when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_8.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_8.getTags().get(i)));
+                when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_8.getTags().get(i).getName())).thenReturn(Optional.ofNullable(GIFT_CERTIFICATE_8.getTags().get(i))));
         when(certificateMapper.convertToEntity(GIFT_CERTIFICATE_DTO_8)).thenReturn(GIFT_CERTIFICATE_8);
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_DTO_8);
         when(dao.createEntity(GIFT_CERTIFICATE_8)).thenReturn(GIFT_CERTIFICATE_8);
@@ -230,7 +230,7 @@ class GiftCertificateServiceImplTest {
         when(dateHandler.getCurrentDate()).thenReturn(DATE_TIME);
 
         IntStream.range(0, GIFT_CERTIFICATE_DTO_9.getTags().size()).forEach(i ->
-                when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_9.getTags().get(i).getName())).thenReturn(GIFT_CERTIFICATE_9.getTags().get(i)));
+                when(tagService.findTagByName(GIFT_CERTIFICATE_DTO_9.getTags().get(i).getName())).thenReturn(Optional.ofNullable(GIFT_CERTIFICATE_9.getTags().get(i))));
 
         when(certificateMapper.convertToDto(GIFT_CERTIFICATE_5_NEW)).thenReturn(GIFT_CERTIFICATE_DTO_5_NEW);
         when(dao.updateEntity(GIFT_CERTIFICATE_5)).thenReturn(GIFT_CERTIFICATE_5_NEW);

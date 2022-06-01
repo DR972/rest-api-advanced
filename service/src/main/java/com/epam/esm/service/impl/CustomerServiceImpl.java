@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +36,6 @@ public class CustomerServiceImpl extends AbstractService<Customer, Long, Custome
      */
     private final CustomerOrderDao customerOrderDao;
 
-
     /**
      * The constructor creates a CustomerServiceImpl object
      *
@@ -52,15 +52,15 @@ public class CustomerServiceImpl extends AbstractService<Customer, Long, Custome
     }
 
     @Override
-    public Customer findCustomerByName(String name) {
-        return dao.findEntityByName(name).orElse(new Customer());
+    public Optional<Customer> findCustomerByName(String name) {
+        return dao.findEntityByName(name);
     }
 
     @Override
     @Transactional
     public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = entityMapper.convertToEntity(customerDto);
-        if (findCustomerByName(customer.getName()).getName() != null) {
+        if (findCustomerByName(customer.getName()).isPresent()) {
             throw new DuplicateEntityException("ex.duplicate", customer.getName());
         }
         return entityMapper.convertToDto(dao.createEntity(customer));

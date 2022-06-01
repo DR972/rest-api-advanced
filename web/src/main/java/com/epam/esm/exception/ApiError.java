@@ -11,10 +11,6 @@ import lombok.Data;
 @Data
 public class ApiError {
     /**
-     * request status.
-     */
-    private int status;
-    /**
      * error message.
      */
     private String errorMessage;
@@ -30,7 +26,6 @@ public class ApiError {
      * @param errorMessage  String errorMessage
      */
     public ApiError(ExceptionCode exceptionCode, String errorMessage) {
-        status = exceptionCode.getStatus();
         this.errorMessage = errorMessage;
         errorCode = exceptionCode.getErrorCode();
     }

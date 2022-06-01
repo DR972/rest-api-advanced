@@ -25,8 +25,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = CustomerServiceImpl.class)
 public class CustomerServiceImplTest {
@@ -91,7 +92,7 @@ public class CustomerServiceImplTest {
         when(dao.findEntityByName(CUSTOMER_NAME_1)).thenReturn(Optional.of(CUSTOMER_1));
         customerService.findCustomerByName(CUSTOMER_NAME_1);
         verify(dao, times(1)).findEntityByName(CUSTOMER_NAME_1);
-        assertEquals(CUSTOMER_1, customerService.findCustomerByName(CUSTOMER_NAME_1));
+        assertEquals(Optional.of(CUSTOMER_1), customerService.findCustomerByName(CUSTOMER_NAME_1));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class CustomerServiceImplTest {
     void createCustomerShouldReturnResult() {
         when(customerMapper.convertToEntity(NEW_DTO_CUSTOMER)).thenReturn(NEW_CUSTOMER);
         when(customerMapper.convertToDto(NEW_CUSTOMER)).thenReturn(NEW_DTO_CUSTOMER);
-        when(dao.findEntityByName(NEW)).thenReturn(Optional.of(new Customer()));
+        when(dao.findEntityByName(NEW)).thenReturn(Optional.empty());
         when(dao.createEntity(NEW_CUSTOMER)).thenReturn(NEW_CUSTOMER);
         customerService.createCustomer(NEW_DTO_CUSTOMER);
         verify(dao, times(1)).createEntity(NEW_CUSTOMER);

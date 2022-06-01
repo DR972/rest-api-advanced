@@ -56,6 +56,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      HttpMessageNotReadableException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -70,6 +71,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      HttpRequestMethodNotSupportedException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -90,6 +92,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      MethodArgumentNotValidException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -106,6 +109,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      SortValueException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(SortValueException.class)
@@ -121,6 +125,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      DuplicateEntityException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(DuplicateEntityException.class)
@@ -132,17 +137,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * The {@code handleHttpDuplicateEntityException} method returns a response if DuplicateEntityException is generated.
+     * The {@code handleHttpDeleteEntityException} method returns a response if DeleteEntityException is generated.
      *
-     * @param ex      DuplicateEntityException exception
+     * @param ex      DeleteEntityException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
-    @ExceptionHandler(DeleteTagException.class)
+    @ExceptionHandler(DeleteEntityException.class)
     @ResponseStatus(FAILED_DEPENDENCY)
-    protected ApiError handleHttpDeleteTagException(DeleteTagException ex, WebRequest request, Locale locale) {
-        saveLog(DeleteTagException.class, ex, request.getParameterMap());
-        return new ApiError(ExceptionCode.DELETE_TAG_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
+    protected ApiError handleHttpDeleteEntityException(DeleteEntityException ex, WebRequest request, Locale locale) {
+        saveLog(DeleteEntityException.class, ex, request.getParameterMap());
+        return new ApiError(ExceptionCode.DELETE_ENTITY_EXCEPTION, resourceBundleMessageSource.getMessage(ex.getLocalizedMessage(),
                 new String[]{ex.getParameters()}, locale));
     }
 
@@ -151,6 +157,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      ConstraintViolationException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(ConstraintViolationException.class)
@@ -167,6 +174,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      NoHandlerFoundException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(NoHandlerFoundException.class)
@@ -182,6 +190,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      MethodArgumentTypeMismatchException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -197,6 +206,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      NoSuchEntityException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(NoSuchEntityException.class)
@@ -212,6 +222,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      DataAccessException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(DataAccessException.class)
@@ -226,6 +237,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      NullPointerException exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(NullPointerException.class)
@@ -240,6 +252,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex      Exception exception
      * @param request WebRequest request
+     * @param locale  Locale locale
      * @return ApiError object
      */
     @ExceptionHandler(Exception.class)
